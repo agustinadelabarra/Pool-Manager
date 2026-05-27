@@ -565,7 +565,7 @@ async function cargarDatos() {
     familias.filter(f => f.Activa === true || f.Activa === "TRUE" || f.Activa === "true").forEach(f => {
       const opt = document.createElement("option");
       opt.value = f.Nombre;
-      opt.textContent = f.Nombre.split(" ")[0]; // Solo primer nombre
+      opt.textContent = f.Nombre;
       if (f.Nombre === familiaSeleccionada) opt.selected = true;
       sel.appendChild(opt);
     });
@@ -583,7 +583,7 @@ async function cargarDatos() {
     familias.forEach(f => {
       const opt = document.createElement("option");
       opt.value = f.Nombre;
-      opt.textContent = f.Nombre.split(" ")[0];
+      opt.textContent = f.Nombre;
       if (f.Nombre === familiaSeleccionada) opt.selected = true;
       sel.appendChild(opt);
     });
