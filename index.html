@@ -403,11 +403,16 @@ function getEstadoFecha(fechaStr) {
   return { estado: "Activa", motivo: "" };
 }
 
+function normalizarFecha(f) {
+  if (!f) return "";
+  if (typeof f === "string" && f.includes("T")) return f.substring(0, 10);
+  if (typeof f === "string") return f.substring(0, 10);
+  if (f instanceof Date) return formatFecha(f);
+  return String(f).substring(0, 10);
+}
+
 function getAsignados(fechaStr) {
-  const disp = disponibilidad.filter(d => {
-    const ds = typeof d.Fecha === "string" ? d.Fecha : formatFecha(new Date(d.Fecha));
-    return ds === fechaStr;
-  });
+  const disp = disponibilidad.filter(d => normalizarFecha(d.Fecha) === fechaStr);
   const ida = disp.filter(d => d.Ida === true || d.Ida === "TRUE" || d.Ida === "true").map(d => d.Familia);
   const vuelta = disp.filter(d => d.Vuelta === true || d.Vuelta === "TRUE" || d.Vuelta === "true").map(d => d.Familia);
   return { ida, vuelta };
@@ -415,10 +420,7 @@ function getAsignados(fechaStr) {
 
 function getMiDisp(fechaStr) {
   if (!familiaSeleccionada) return { ida: false, vuelta: false };
-  const d = disponibilidad.find(d => {
-    const ds = typeof d.Fecha === "string" ? d.Fecha : formatFecha(new Date(d.Fecha));
-    return ds === fechaStr && d.Familia === familiaSeleccionada;
-  });
+  const d = disponibilidad.find(d => normalizarFecha(d.Fecha) === fechaStr && d.Familia === familiaSeleccionada);
   if (!d) return { ida: false, vuelta: false };
   return {
     ida: d.Ida === true || d.Ida === "TRUE" || d.Ida === "true",
