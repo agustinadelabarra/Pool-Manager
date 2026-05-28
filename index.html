@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Pool Hockey</title>
+<title id="pageTitle">Pool</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -36,17 +36,17 @@
   /* HEADER */
   .header {
     background: var(--verde);
-    padding: 12px 16px;
+    padding: 10px 14px;
     position: sticky;
     top: 0;
     z-index: 100;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
   }
 
   .pool-nombre {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
     color: var(--blanco);
     flex: 1;
@@ -59,7 +59,7 @@
     background: rgba(255,255,255,0.12);
     border: 1px solid rgba(255,255,255,0.2);
     border-radius: 8px;
-    padding: 5px 10px;
+    padding: 5px 8px;
     color: var(--blanco);
     font-family: 'DM Sans', sans-serif;
     font-size: 12px;
@@ -67,7 +67,7 @@
     cursor: pointer;
     appearance: none;
     -webkit-appearance: none;
-    max-width: 110px;
+    max-width: 130px;
   }
 
   .selector-familia option { color: var(--texto); background: var(--blanco); }
@@ -76,13 +76,13 @@
     background: rgba(255,255,255,0.12);
     border: 1px solid rgba(255,255,255,0.2);
     border-radius: 8px;
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 15px;
     flex-shrink: 0;
     text-decoration: none;
   }
@@ -93,11 +93,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 16px;
+    padding: 7px 14px;
   }
 
   .mes-label {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     color: var(--blanco);
     letter-spacing: 1px;
@@ -108,8 +108,8 @@
     background: rgba(255,255,255,0.15);
     border: none;
     border-radius: 6px;
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     color: var(--blanco);
     font-size: 14px;
     cursor: pointer;
@@ -121,8 +121,8 @@
   /* LEYENDA */
   .leyenda {
     display: flex;
-    gap: 14px;
-    padding: 7px 16px;
+    gap: 12px;
+    padding: 6px 14px;
     background: var(--blanco);
     border-bottom: 1px solid var(--gris-claro);
   }
@@ -136,14 +136,14 @@
     font-weight: 500;
   }
 
-  .dot { width: 7px; height: 7px; border-radius: 50%; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; }
   .dot-ok { background: var(--verde-light); }
   .dot-warn { background: var(--amarillo); }
   .dot-cancel { background: var(--rojo); }
 
   /* LISTA FECHAS */
   .fechas-list {
-    padding: 8px 12px;
+    padding: 8px 10px;
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -152,23 +152,23 @@
   .fecha-card {
     background: var(--blanco);
     border-radius: 10px;
-    padding: 10px 12px;
+    padding: 9px 11px;
     box-shadow: var(--sombra);
     border-left: 3px solid var(--verde-light);
   }
 
   .fecha-card.warning { border-left-color: var(--amarillo); }
-  .fecha-card.cancelada { border-left-color: var(--rojo); opacity: 0.65; }
+  .fecha-card.cancelada { border-left-color: var(--rojo); opacity: 0.6; }
 
   .fecha-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 7px;
+    margin-bottom: 6px;
   }
 
   .fecha-dia {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
     color: var(--texto);
   }
@@ -176,7 +176,7 @@
   .fecha-badge {
     font-size: 10px;
     font-weight: 600;
-    padding: 2px 8px;
+    padding: 2px 7px;
     border-radius: 20px;
   }
 
@@ -187,16 +187,15 @@
   .fecha-motivo {
     font-size: 10px;
     color: var(--gris);
-    margin-bottom: 7px;
-    margin-top: -4px;
+    margin-bottom: 6px;
+    margin-top: -3px;
   }
 
-  /* ASIGNACIONES */
-  .asignaciones {
+  /* GRILLA 2 COLUMNAS — misma para asignaciones y botones */
+  .grilla {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 6px;
-    margin-bottom: 7px;
   }
 
   .asig-box {
@@ -210,7 +209,7 @@
     font-weight: 600;
     color: var(--gris);
     text-transform: uppercase;
-    letter-spacing: 0.6px;
+    letter-spacing: 0.5px;
     margin-bottom: 2px;
   }
 
@@ -226,34 +225,16 @@
     font-style: italic;
   }
 
-  /* BOTONES IDA/VUELTA */
-  .mi-disp {
-    border-top: 1px solid var(--gris-claro);
-    padding-top: 7px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .mi-disp-label {
-    font-size: 10px;
-    color: var(--gris);
-    font-weight: 500;
-    white-space: nowrap;
-  }
-
-  .toggles {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-    flex: 1;
+  /* BOTONES — misma grilla, mismo ancho */
+  .botones-disp {
+    margin-top: 6px;
   }
 
   .toggle-btn {
     border: 1.5px solid var(--gris-claro);
     background: var(--blanco);
     border-radius: 7px;
-    padding: 5px 0;
+    padding: 6px 0;
     font-size: 11px;
     font-weight: 600;
     cursor: pointer;
@@ -276,7 +257,7 @@
   }
 
   .toggle-btn:disabled {
-    opacity: 0.35;
+    opacity: 0.3;
     cursor: not-allowed;
   }
 
@@ -284,8 +265,17 @@
     font-size: 10px;
     color: var(--amarillo);
     font-weight: 500;
-    padding-top: 5px;
+    margin-top: 6px;
+    padding-top: 6px;
     border-top: 1px solid var(--gris-claro);
+  }
+
+  /* VERSION */
+  .version {
+    text-align: center;
+    padding: 12px;
+    font-size: 10px;
+    color: var(--gris);
   }
 
   /* LOADING */
@@ -300,8 +290,8 @@
   }
 
   .spinner {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     border: 2px solid var(--gris-claro);
     border-top-color: var(--verde);
     border-radius: 50%;
@@ -337,7 +327,7 @@
   <select class="selector-familia" id="selectFamilia" onchange="onFamiliaChange()">
     <option value="">¿Quién sos?</option>
   </select>
-  <a class="btn-mapa" id="btnMapa" href="#" onclick="abrirMapa(event)">🚗</a>
+  <a class="btn-mapa" href="#" onclick="abrirMapa(event)">🚗</a>
 </div>
 
 <div class="nav-mes">
@@ -356,10 +346,13 @@
   <div class="loading"><div class="spinner"></div><span>Cargando...</span></div>
 </div>
 
+<div class="version">v1.2</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPMikYkbl8TB30yVEPGnt64E9b9vWz_7qB7qWf4MrPlxi4LaVTEAgqlbGljzWHQmfV/exec";
+const VERSION = "1.2";
 
 const MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 
@@ -382,7 +375,9 @@ let config = {};
 let familiaSeleccionada = localStorage.getItem("familiaPool") || "";
 let mesActual = new Date().getMonth();
 let anioActual = new Date().getFullYear();
-let diasEntrenamiento = [3]; // 3 = miércoles por defecto
+let diasEntrenamiento = [3];
+let mostrarIda = true;
+let mostrarVuelta = true;
 
 function formatFecha(date) {
   const y = date.getFullYear();
@@ -393,18 +388,14 @@ function formatFecha(date) {
 
 function normalizarFecha(f) {
   if (!f) return "";
-  const str = String(f);
-  if (str.includes("T")) return str.substring(0,10);
-  return str.substring(0,10);
+  return String(f).substring(0,10);
 }
 
 function getDiasEntrenamiento(mes, anio) {
   const dias = [];
   const d = new Date(anio, mes, 1);
   while (d.getMonth() === mes) {
-    if (diasEntrenamiento.includes(d.getDay())) {
-      dias.push(new Date(d));
-    }
+    if (diasEntrenamiento.includes(d.getDay())) dias.push(new Date(d));
     d.setDate(d.getDate()+1);
   }
   return dias;
@@ -419,10 +410,8 @@ function parseDias(val) {
 }
 
 function getEstadoFecha(fechaStr) {
-  // Buscar en sheet primero
   const enSheet = fechasSheet.find(f => normalizarFecha(f.Fecha) === fechaStr);
   if (enSheet) return { estado: enSheet.Estado || "Activa", motivo: enSheet.Motivo || "" };
-  // Feriado
   if (FERIADOS[fechaStr]) return { estado: "Cancelada", motivo: FERIADOS[fechaStr] };
   return { estado: "Activa", motivo: "" };
 }
@@ -449,12 +438,9 @@ function renderFechas() {
   const dias = getDiasEntrenamiento(mesActual, anioActual);
 
   if (dias.length === 0) {
-    lista.innerHTML = '<div style="text-align:center;padding:30px;color:var(--gris)">No hay días de entrenamiento este mes</div>';
+    lista.innerHTML = '<div style="text-align:center;padding:30px;color:var(--gris)">No hay días este mes</div>';
     return;
   }
-
-  const mostrarIda = config.Ida !== "FALSE" && config.Ida !== false;
-  const mostrarVuelta = config.Vuelta !== "FALSE" && config.Vuelta !== false;
 
   lista.innerHTML = dias.map(fecha => {
     const fechaStr = formatFecha(fecha);
@@ -475,6 +461,8 @@ function renderFechas() {
     const idaNombre = ida.length > 0 ? ida.join(", ") : null;
     const vueltaNombre = vuelta.length > 0 ? vuelta.join(", ") : null;
 
+    const cancelada = estado === "Cancelada";
+
     return `
     <div class="fecha-card ${cardClass}">
       <div class="fecha-header">
@@ -482,31 +470,26 @@ function renderFechas() {
         <div class="fecha-badge ${badgeClass}">${badgeText}</div>
       </div>
       ${motivo ? `<div class="fecha-motivo">${motivo}</div>` : ""}
-      <div class="asignaciones">
-        ${mostrarIda ? `
-        <div class="asig-box">
+      <div class="grilla">
+        ${mostrarIda ? `<div class="asig-box">
           <div class="asig-label">🚗 Ida</div>
           ${idaNombre ? `<div class="asig-nombre">${idaNombre}</div>` : `<div class="asig-vacio">Sin asignar</div>`}
         </div>` : ""}
-        ${mostrarVuelta ? `
-        <div class="asig-box">
+        ${mostrarVuelta ? `<div class="asig-box">
           <div class="asig-label">🏠 Vuelta</div>
           ${vueltaNombre ? `<div class="asig-nombre">${vueltaNombre}</div>` : `<div class="asig-vacio">Sin asignar</div>`}
         </div>` : ""}
       </div>
-      ${familiaSeleccionada && estado !== "Cancelada" ? `
-      <div class="mi-disp">
-        <div class="mi-disp-label">Yo puedo:</div>
-        <div class="toggles">
-          ${mostrarIda ? `<button class="toggle-btn ${miDisp.ida ? 'activo-ida' : ''}" 
-            onclick="toggleDisp(event,'${fechaStr}','ida')"
-            ${idaOcupada ? 'disabled' : ''}>Ida</button>` : ""}
-          ${mostrarVuelta ? `<button class="toggle-btn ${miDisp.vuelta ? 'activo-vuelta' : ''}" 
-            onclick="toggleDisp(event,'${fechaStr}','vuelta')"
-            ${vueltaOcupada ? 'disabled' : ''}>Vuelta</button>` : ""}
-        </div>
+      ${familiaSeleccionada && !cancelada ? `
+      <div class="botones-disp grilla">
+        ${mostrarIda ? `<button class="toggle-btn ${miDisp.ida ? 'activo-ida' : ''}"
+          onclick="toggleDisp(event,'${fechaStr}','ida')"
+          ${idaOcupada ? 'disabled' : ''}>Ida</button>` : ""}
+        ${mostrarVuelta ? `<button class="toggle-btn ${miDisp.vuelta ? 'activo-vuelta' : ''}"
+          onclick="toggleDisp(event,'${fechaStr}','vuelta')"
+          ${vueltaOcupada ? 'disabled' : ''}>Vuelta</button>` : ""}
       </div>` : ""}
-      ${!familiaSeleccionada && estado !== "Cancelada" ? `
+      ${!familiaSeleccionada && !cancelada ? `
       <div class="sin-familia">Seleccioná tu familia arriba para cargar disponibilidad</div>` : ""}
     </div>`;
   }).join("");
@@ -539,12 +522,11 @@ async function toggleDisp(event, fechaStr, tipo) {
 
 function abrirMapa(e) {
   e.preventDefault();
-  const destino = config.Destino || "Figueroa Alcorta y La Pampa, Buenos Aires";
   const dirs = familias
     .filter(f => f.Activa === true || f.Activa === "TRUE" || f.Activa === "true")
-    .map(f => encodeURIComponent(f.Dirección + ", Buenos Aires"))
+    .map(f => encodeURIComponent(f["Dirección"] + ", CABA, Argentina"))
     .join("/");
-  const url = `https://www.google.com/maps/dir/${dirs}/${encodeURIComponent(destino)}`;
+  const url = `https://www.google.com/maps/dir/${dirs}`;
   window.open(url, "_blank");
 }
 
@@ -587,39 +569,38 @@ async function cargarDatos() {
     fechasSheet = await resFechas.json();
     const configArr = await resConfig.json();
 
-    // Parsear config
     configArr.forEach(row => { config[row.Clave] = row.Valor; });
 
-    // Nombre del pool
-    if (config.Nombre) document.getElementById("poolNombre").textContent = config.Nombre;
-
-    // Días de entrenamiento
+    if (config.Nombre) {
+      document.getElementById("poolNombre").textContent = config.Nombre;
+      document.title = config.Nombre;
+    }
     if (config.Dias) diasEntrenamiento = parseDias(config.Dias);
+    if (config.Ida === false || config.Ida === "FALSE") mostrarIda = false;
+    if (config.Vuelta === false || config.Vuelta === "FALSE") mostrarVuelta = false;
 
-    // Poblar selector
     const sel = document.getElementById("selectFamilia");
     familias.filter(f => f.Activa === true || f.Activa === "TRUE" || f.Activa === "true").forEach(f => {
       const opt = document.createElement("option");
       opt.value = f.Nombre;
-      opt.textContent = f.Nombre.split(" ")[0];
+      opt.textContent = f.Nombre; // nombre completo
       if (f.Nombre === familiaSeleccionada) opt.selected = true;
       sel.appendChild(opt);
     });
 
   } catch(e) {
     console.error("Error:", e);
-    // Fallback familias
     familias = [
-      {Nombre:"Juana Sosa", Dirección:"Teodoro García 2074 1B", Activa:true},
-      {Nombre:"Oli Icazatti", Dirección:"Luis María Campos 1640 6B", Activa:true},
-      {Nombre:"Maggie Ferro", Dirección:"La Pampa 1782 4to", Activa:true},
-      {Nombre:"Josefina Amorortu", Dirección:"Arribeños 1610 7mo", Activa:true}
+      {Nombre:"Juana Sosa", "Dirección":"Teodoro García 2074 1B", Activa:true},
+      {Nombre:"Oli Icazatti", "Dirección":"Luis María Campos 1640 6B", Activa:true},
+      {Nombre:"Maggie Ferro", "Dirección":"La Pampa 1782 4to", Activa:true},
+      {Nombre:"Josefina Amorortu", "Dirección":"Arribeños 1610 7mo", Activa:true}
     ];
     const sel = document.getElementById("selectFamilia");
     familias.forEach(f => {
       const opt = document.createElement("option");
       opt.value = f.Nombre;
-      opt.textContent = f.Nombre.split(" ")[0];
+      opt.textContent = f.Nombre;
       if (f.Nombre === familiaSeleccionada) opt.selected = true;
       sel.appendChild(opt);
     });
