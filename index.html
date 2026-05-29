@@ -346,13 +346,20 @@
   <div class="loading"><div class="spinner"></div><span>Cargando...</span></div>
 </div>
 
-<div class="version">v1.2</div>
+<div class="version">v1.3</div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPMikYkbl8TB30yVEPGnt64E9b9vWz_7qB7qWf4MrPlxi4LaVTEAgqlbGljzWHQmfV/exec";
-const VERSION = "1.2";
+const POOLS = {
+  "7ma": "https://script.google.com/macros/s/AKfycbxPMikYkbl8TB30yVEPGnt64E9b9vWz_7qB7qWf4MrPlxi4LaVTEAgqlbGljzWHQmfV/exec",
+  "8va": "https://script.google.com/macros/s/AKfycbz5gylKfbGLnVfVsBEgNj-yI9hlqqmA1Uk933mRNgBjfafWdmv2EjKoL2AyqELG9vpI/exec"
+};
+const DEFAULT_POOL = "7ma";
+const params = new URLSearchParams(window.location.search);
+const poolKey = params.get("pool") || DEFAULT_POOL;
+const SCRIPT_URL = POOLS[poolKey] || POOLS[DEFAULT_POOL];
+const VERSION = "1.3";
 
 const MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 
