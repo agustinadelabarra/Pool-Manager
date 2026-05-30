@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title id="pageTitle">Pool</title>
+<title>Pool</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -33,7 +33,6 @@
     font-size: 14px;
   }
 
-  /* HEADER */
   .header {
     background: var(--verde);
     padding: 10px 14px;
@@ -46,7 +45,7 @@
   }
 
   .pool-nombre {
-    font-size: 14px;
+    font-size: 17px;
     font-weight: 700;
     color: var(--blanco);
     flex: 1;
@@ -87,18 +86,17 @@
     text-decoration: none;
   }
 
-  /* NAV MESES */
   .nav-mes {
     background: var(--verde-mid);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 7px 14px;
+    padding: 8px 14px;
   }
 
   .mes-label {
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 15px;
+    font-weight: 700;
     color: var(--blanco);
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -108,17 +106,16 @@
     background: rgba(255,255,255,0.15);
     border: none;
     border-radius: 6px;
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
     color: var(--blanco);
-    font-size: 14px;
+    font-size: 16px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  /* LEYENDA */
   .leyenda {
     display: flex;
     gap: 12px;
@@ -141,7 +138,6 @@
   .dot-warn { background: var(--amarillo); }
   .dot-cancel { background: var(--rojo); }
 
-  /* LISTA FECHAS */
   .fechas-list {
     padding: 8px 10px;
     display: flex;
@@ -168,7 +164,7 @@
   }
 
   .fecha-dia {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 700;
     color: var(--texto);
   }
@@ -191,7 +187,6 @@
     margin-top: -3px;
   }
 
-  /* GRILLA 2 COLUMNAS — misma para asignaciones y botones */
   .grilla {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -214,8 +209,8 @@
   }
 
   .asig-nombre {
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 700;
     color: var(--texto);
   }
 
@@ -225,7 +220,6 @@
     font-style: italic;
   }
 
-  /* BOTONES — misma grilla, mismo ancho */
   .botones-disp {
     margin-top: 6px;
   }
@@ -256,9 +250,39 @@
     color: var(--blanco);
   }
 
+  .toggle-btn.activo-voy {
+    background: var(--verde);
+    border-color: var(--verde);
+    color: var(--blanco);
+  }
+
   .toggle-btn:disabled {
     opacity: 0.3;
     cursor: not-allowed;
+  }
+
+  /* NOTA */
+  .nota-container {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--gris-claro);
+  }
+
+  .nota-input {
+    width: 100%;
+    border: 1px solid var(--gris-claro);
+    border-radius: 7px;
+    padding: 5px 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: var(--texto);
+    background: var(--fondo);
+    resize: none;
+    outline: none;
+  }
+
+  .nota-input:focus {
+    border-color: var(--verde-claro);
   }
 
   .sin-familia {
@@ -270,7 +294,6 @@
     border-top: 1px solid var(--gris-claro);
   }
 
-  /* VERSION */
   .version {
     text-align: center;
     padding: 12px;
@@ -278,7 +301,6 @@
     color: var(--gris);
   }
 
-  /* LOADING */
   .loading {
     display: flex;
     flex-direction: column;
@@ -300,7 +322,6 @@
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* TOAST */
   .toast {
     position: fixed;
     bottom: 20px;
@@ -346,20 +367,19 @@
   <div class="loading"><div class="spinner"></div><span>Cargando...</span></div>
 </div>
 
-<div class="version">v1.3</div>
-
+<div class="version">v1.4</div>
 <div class="toast" id="toast"></div>
 
 <script>
 const POOLS = {
-  "7ma": "https://script.google.com/macros/s/AKfycbxPMikYkbl8TB30yVEPGnt64E9b9vWz_7qB7qWf4MrPlxi4LaVTEAgqlbGljzWHQmfV/exec",
-  "8va": "https://script.google.com/macros/s/AKfycbz5gylKfbGLnVfVsBEgNj-yI9hlqqmA1Uk933mRNgBjfafWdmv2EjKoL2AyqELG9vpI/exec"
+  "pool-7ma-metro-b": "https://script.google.com/macros/s/AKfycbwn_Z9LUkv6ogBDgOAA3zkYGUgfdrV4e0ZFgg31QmjPRWlEQ7EUaE5WESo2sUoYDxEl/exec",
+  "pool-8va-miercoles": "https://script.google.com/macros/s/AKfycbz5gylKfbGLnVfVsBEgNj-yI9hlqqmA1Uk933mRNgBjfafWdmv2EjKoL2AyqELG9vpI/exec"
 };
-const DEFAULT_POOL = "7ma";
+const DEFAULT_POOL = "pool-7ma-metro-b";
 const params = new URLSearchParams(window.location.search);
 const poolKey = params.get("pool") || DEFAULT_POOL;
 const SCRIPT_URL = POOLS[poolKey] || POOLS[DEFAULT_POOL];
-const VERSION = "1.3";
+const VERSION = "1.4";
 
 const MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 
@@ -379,12 +399,12 @@ let familias = [];
 let disponibilidad = [];
 let fechasSheet = [];
 let config = {};
-let familiaSeleccionada = localStorage.getItem("familiaPool") || "";
+let tipoViaje = "ida-vuelta";
+let familiaSeleccionada = localStorage.getItem("familia_" + poolKey) || "";
 let mesActual = new Date().getMonth();
 let anioActual = new Date().getFullYear();
 let diasEntrenamiento = [3];
-let mostrarIda = true;
-let mostrarVuelta = true;
+let notasTimeout = {};
 
 function formatFecha(date) {
   const y = date.getFullYear();
@@ -418,16 +438,17 @@ function parseDias(val) {
 
 function getEstadoFecha(fechaStr) {
   const enSheet = fechasSheet.find(f => normalizarFecha(f.Fecha) === fechaStr);
-  if (enSheet) return { estado: enSheet.Estado || "Activa", motivo: enSheet.Motivo || "" };
-  if (FERIADOS[fechaStr]) return { estado: "Cancelada", motivo: FERIADOS[fechaStr] };
-  return { estado: "Activa", motivo: "" };
+  if (enSheet) return { estado: enSheet.Estado || "Activa", motivo: enSheet.Motivo || "", nota: enSheet.Nota || "" };
+  if (FERIADOS[fechaStr]) return { estado: "Cancelada", motivo: FERIADOS[fechaStr], nota: "" };
+  return { estado: "Activa", motivo: "", nota: "" };
 }
 
 function getAsignados(fechaStr) {
   const disp = disponibilidad.filter(d => normalizarFecha(d.Fecha) === fechaStr);
   const ida = disp.filter(d => d.Ida === true || d.Ida === "TRUE" || d.Ida === "true").map(d => d.Familia);
   const vuelta = disp.filter(d => d.Vuelta === true || d.Vuelta === "TRUE" || d.Vuelta === "true").map(d => d.Familia);
-  return { ida, vuelta };
+  const voy = disp.filter(d => d.Ida === true || d.Ida === "TRUE" || d.Ida === "true").map(d => d.Familia);
+  return { ida, vuelta, voy };
 }
 
 function getMiDisp(fechaStr) {
@@ -449,10 +470,15 @@ function renderFechas() {
     return;
   }
 
+  const esIdaVuelta = tipoViaje === "ida-vuelta";
+  const esRoundTrip = tipoViaje === "round-trip";
+  const soloIda = tipoViaje === "ida";
+  const soloVuelta = tipoViaje === "vuelta";
+
   lista.innerHTML = dias.map(fecha => {
     const fechaStr = formatFecha(fecha);
-    const { estado, motivo } = getEstadoFecha(fechaStr);
-    const { ida, vuelta } = getAsignados(fechaStr);
+    const { estado, motivo, nota } = getEstadoFecha(fechaStr);
+    const { ida, vuelta, voy } = getAsignados(fechaStr);
     const miDisp = getMiDisp(fechaStr);
 
     const diaNum = fecha.getDate();
@@ -461,14 +487,85 @@ function renderFechas() {
     const cardClass = estado === "Cancelada" ? "cancelada" : estado === "Warning" ? "warning" : "";
     const badgeClass = estado === "Cancelada" ? "badge-cancel" : estado === "Warning" ? "badge-warn" : "badge-ok";
     const badgeText = estado === "Cancelada" ? "❌ Cancelada" : estado === "Warning" ? "⚠️ Tránsito" : "✅ Normal";
+    const cancelada = estado === "Cancelada";
 
+    // Bloqueos
     const idaOcupada = ida.length > 0 && !miDisp.ida;
     const vueltaOcupada = vuelta.length > 0 && !miDisp.vuelta;
+    const voyOcupado = voy.length > 0 && !miDisp.ida;
 
-    const idaNombre = ida.length > 0 ? ida.join(", ") : null;
-    const vueltaNombre = vuelta.length > 0 ? vuelta.join(", ") : null;
+    // Asignaciones según tipo de viaje
+    let asignacionesHTML = "";
+    if (esIdaVuelta) {
+      asignacionesHTML = `
+        <div class="grilla">
+          <div class="asig-box">
+            <div class="asig-label">🚗 Ida</div>
+            ${ida.length > 0 ? `<div class="asig-nombre">${ida.join(", ")}</div>` : `<div class="asig-vacio">Sin asignar</div>`}
+          </div>
+          <div class="asig-box">
+            <div class="asig-label">🏠 Vuelta</div>
+            ${vuelta.length > 0 ? `<div class="asig-nombre">${vuelta.join(", ")}</div>` : `<div class="asig-vacio">Sin asignar</div>`}
+          </div>
+        </div>`;
+    } else if (esRoundTrip) {
+      asignacionesHTML = `
+        <div class="asig-box" style="margin-bottom:0">
+          <div class="asig-label">🚗 Lleva y trae</div>
+          ${voy.length > 0 ? `<div class="asig-nombre">${voy.join(", ")}</div>` : `<div class="asig-vacio">Sin asignar</div>`}
+        </div>`;
+    } else if (soloIda) {
+      asignacionesHTML = `
+        <div class="asig-box">
+          <div class="asig-label">🚗 Ida</div>
+          ${ida.length > 0 ? `<div class="asig-nombre">${ida.join(", ")}</div>` : `<div class="asig-vacio">Sin asignar</div>`}
+        </div>`;
+    } else if (soloVuelta) {
+      asignacionesHTML = `
+        <div class="asig-box">
+          <div class="asig-label">🏠 Vuelta</div>
+          ${vuelta.length > 0 ? `<div class="asig-nombre">${vuelta.join(", ")}</div>` : `<div class="asig-vacio">Sin asignar</div>`}
+        </div>`;
+    }
 
-    const cancelada = estado === "Cancelada";
+    // Botones según tipo de viaje
+    let botonesHTML = "";
+    if (familiaSeleccionada && !cancelada) {
+      if (esIdaVuelta) {
+        botonesHTML = `
+          <div class="botones-disp grilla">
+            <button class="toggle-btn ${miDisp.ida ? 'activo-ida' : ''}"
+              onclick="toggleDisp(event,'${fechaStr}','ida')"
+              ${idaOcupada ? 'disabled' : ''}>Ida</button>
+            <button class="toggle-btn ${miDisp.vuelta ? 'activo-vuelta' : ''}"
+              onclick="toggleDisp(event,'${fechaStr}','vuelta')"
+              ${vueltaOcupada ? 'disabled' : ''}>Vuelta</button>
+          </div>`;
+      } else if (esRoundTrip) {
+        botonesHTML = `
+          <div class="botones-disp">
+            <button class="toggle-btn ${miDisp.ida ? 'activo-voy' : ''}" style="width:100%"
+              onclick="toggleDisp(event,'${fechaStr}','ida')"
+              ${voyOcupado ? 'disabled' : ''}>Voy 🚗</button>
+          </div>`;
+      } else if (soloIda) {
+        botonesHTML = `
+          <div class="botones-disp">
+            <button class="toggle-btn ${miDisp.ida ? 'activo-ida' : ''}" style="width:100%"
+              onclick="toggleDisp(event,'${fechaStr}','ida')"
+              ${idaOcupada ? 'disabled' : ''}>Ida</button>
+          </div>`;
+      } else if (soloVuelta) {
+        botonesHTML = `
+          <div class="botones-disp">
+            <button class="toggle-btn ${miDisp.vuelta ? 'activo-vuelta' : ''}" style="width:100%"
+              onclick="toggleDisp(event,'${fechaStr}','vuelta')"
+              ${vueltaOcupada ? 'disabled' : ''}>Vuelta</button>
+          </div>`;
+      }
+    }
+
+    const notaValor = nota || "";
 
     return `
     <div class="fecha-card ${cardClass}">
@@ -477,29 +574,34 @@ function renderFechas() {
         <div class="fecha-badge ${badgeClass}">${badgeText}</div>
       </div>
       ${motivo ? `<div class="fecha-motivo">${motivo}</div>` : ""}
-      <div class="grilla">
-        ${mostrarIda ? `<div class="asig-box">
-          <div class="asig-label">🚗 Ida</div>
-          ${idaNombre ? `<div class="asig-nombre">${idaNombre}</div>` : `<div class="asig-vacio">Sin asignar</div>`}
-        </div>` : ""}
-        ${mostrarVuelta ? `<div class="asig-box">
-          <div class="asig-label">🏠 Vuelta</div>
-          ${vueltaNombre ? `<div class="asig-nombre">${vueltaNombre}</div>` : `<div class="asig-vacio">Sin asignar</div>`}
-        </div>` : ""}
-      </div>
-      ${familiaSeleccionada && !cancelada ? `
-      <div class="botones-disp grilla">
-        ${mostrarIda ? `<button class="toggle-btn ${miDisp.ida ? 'activo-ida' : ''}"
-          onclick="toggleDisp(event,'${fechaStr}','ida')"
-          ${idaOcupada ? 'disabled' : ''}>Ida</button>` : ""}
-        ${mostrarVuelta ? `<button class="toggle-btn ${miDisp.vuelta ? 'activo-vuelta' : ''}"
-          onclick="toggleDisp(event,'${fechaStr}','vuelta')"
-          ${vueltaOcupada ? 'disabled' : ''}>Vuelta</button>` : ""}
+      ${asignacionesHTML}
+      ${botonesHTML}
+      ${!familiaSeleccionada && !cancelada ? `<div class="sin-familia">Seleccioná tu familia arriba para cargar disponibilidad</div>` : ""}
+      ${!cancelada ? `
+      <div class="nota-container">
+        <input type="text" class="nota-input" placeholder="Nota del grupo (mate, merienda...)" 
+          value="${notaValor.replace(/"/g, '&quot;')}"
+          onchange="guardarNota('${fechaStr}', this.value)"
+          oninput="notaChanged('${fechaStr}', this.value)">
       </div>` : ""}
-      ${!familiaSeleccionada && !cancelada ? `
-      <div class="sin-familia">Seleccioná tu familia arriba para cargar disponibilidad</div>` : ""}
     </div>`;
   }).join("");
+}
+
+function notaChanged(fechaStr, valor) {
+  clearTimeout(notasTimeout[fechaStr]);
+  notasTimeout[fechaStr] = setTimeout(() => guardarNota(fechaStr, valor), 1500);
+}
+
+async function guardarNota(fechaStr, valor) {
+  clearTimeout(notasTimeout[fechaStr]);
+  try {
+    const url = `${SCRIPT_URL}?action=nota&fecha=${fechaStr}&nota=${encodeURIComponent(valor)}`;
+    await fetch(url, { mode: "no-cors" });
+    showToast("✓ Nota guardada");
+  } catch(e) {
+    showToast("Error al guardar nota");
+  }
 }
 
 async function toggleDisp(event, fechaStr, tipo) {
@@ -531,7 +633,7 @@ function abrirMapa(e) {
   e.preventDefault();
   const dirs = familias
     .filter(f => f.Activa === true || f.Activa === "TRUE" || f.Activa === "true")
-    .map(f => encodeURIComponent(f["Dirección"] + ", CABA, Argentina"))
+    .map(f => encodeURIComponent((f["Dirección"] || f["Direccion"] || "") + ", CABA, Argentina"))
     .join("/");
   const url = `https://www.google.com/maps/dir/${dirs}`;
   window.open(url, "_blank");
@@ -558,7 +660,7 @@ function actualizarMesLabel() {
 
 function onFamiliaChange() {
   familiaSeleccionada = document.getElementById("selectFamilia").value;
-  localStorage.setItem("familiaPool", familiaSeleccionada);
+  localStorage.setItem("familia_" + poolKey, familiaSeleccionada);
   renderFechas();
 }
 
@@ -583,14 +685,13 @@ async function cargarDatos() {
       document.title = config.Nombre;
     }
     if (config.Dias) diasEntrenamiento = parseDias(config.Dias);
-    if (config.Ida === false || config.Ida === "FALSE") mostrarIda = false;
-    if (config.Vuelta === false || config.Vuelta === "FALSE") mostrarVuelta = false;
+    if (config.TipoViaje) tipoViaje = config.TipoViaje.toLowerCase();
 
     const sel = document.getElementById("selectFamilia");
     familias.filter(f => f.Activa === true || f.Activa === "TRUE" || f.Activa === "true").forEach(f => {
       const opt = document.createElement("option");
       opt.value = f.Nombre;
-      opt.textContent = f.Nombre; // nombre completo
+      opt.textContent = f.Nombre;
       if (f.Nombre === familiaSeleccionada) opt.selected = true;
       sel.appendChild(opt);
     });
