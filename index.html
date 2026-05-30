@@ -367,7 +367,7 @@
   <div class="loading"><div class="spinner"></div><span>Cargando...</span></div>
 </div>
 
-<div class="version">v1.6</div>
+<div class="version">v1.7</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -380,7 +380,7 @@ const DEFAULT_POOL = "pool-7ma-metro-b";
 const params = new URLSearchParams(window.location.search);
 const poolKey = params.get("pool") || DEFAULT_POOL;
 const SCRIPT_URL = POOLS[poolKey] || POOLS[DEFAULT_POOL];
-const VERSION = "1.6";
+const VERSION = "1.7";
 
 const MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 
@@ -587,6 +587,21 @@ function renderFechas() {
       </div>` : ""}
     </div>`;
   }).join("");
+
+  // Scroll a fecha actual solo en mes en curso
+  const hoy = formatFecha(new Date());
+  if (mesActual === new Date().getMonth() && anioActual === new Date().getFullYear()) {
+    setTimeout(() => {
+      const cards = document.querySelectorAll('.fecha-card');
+      let targetIndex = -1;
+      for (let i = 0; i < dias.length; i++) {
+        if (formatFecha(dias[i]) >= hoy) { targetIndex = i; break; }
+      }
+      if (targetIndex >= 0 && cards[targetIndex]) {
+        cards[targetIndex].scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+  }
 }
 
 function notaChanged(fechaStr, valor) {
@@ -632,11 +647,14 @@ async function toggleDisp(event, fechaStr, tipo) {
 
 function abrirMapa(e) {
   e.preventDefault();
-  const dirs = familias
-    .filter(f => f.Activa === true || f.Activa === "TRUE" || f.Activa === "true")
-    .map(f => encodeURIComponent((f["Dirección"] || f["Direccion"] || "") + ", CABA, Argentina"))
-    .join("/");
-  const url = `https://www.google.com/maps/dir/${dirs}`;
+  const activas = familias.filter(f => f.Activa === true || f.Activa === "TRUE" || f.Activa === "true");
+  const waypoints = activas.map(f => {
+    if (f.Lat && f.Lng && f.Lat !== "" && f.Lng !== "") {
+      return `${f.Lat},${f.Lng}`;
+    }
+    return encodeURIComponent((f["Dirección"] || f["Direccion"] || "") + ", CABA, Argentina");
+  }).join("/");
+  const url = `https://www.google.com/maps/dir/${waypoints}`;
   window.open(url, "_blank");
 }
 
@@ -718,33 +736,6 @@ async function cargarDatos() {
 
   actualizarMesLabel();
   renderFechas();
-  scrollAHoy();
-}
-
-function scrollAHoy() {
-  const hoy = formatFecha(new Date());
-  const mesHoy = new Date().getMonth();
-  const anioHoy = new Date().getFullYear();
-  if (mesActual !== mesHoy || anioActual !== anioHoy) return;
-  
-  // Buscar la card de hoy o la próxima fecha de entrenamiento
-  const cards = document.querySelectorAll('.fecha-card');
-  const lista = document.getElementById('fechasList');
-  const dias = getDiasEntrenamiento(mesActual, anioActual);
-  
-  let targetIndex = -1;
-  for (let i = 0; i < dias.length; i++) {
-    if (formatFecha(dias[i]) >= hoy) {
-      targetIndex = i;
-      break;
-    }
-  }
-  
-  if (targetIndex >= 0 && cards[targetIndex]) {
-    setTimeout(() => {
-      cards[targetIndex].scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 300);
-  }
 }
 
 cargarDatos();
