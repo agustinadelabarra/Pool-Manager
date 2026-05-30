@@ -367,7 +367,7 @@
   <div class="loading"><div class="spinner"></div><span>Cargando...</span></div>
 </div>
 
-<div class="version">v1.5</div>
+<div class="version">v1.6</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -380,7 +380,7 @@ const DEFAULT_POOL = "pool-7ma-metro-b";
 const params = new URLSearchParams(window.location.search);
 const poolKey = params.get("pool") || DEFAULT_POOL;
 const SCRIPT_URL = POOLS[poolKey] || POOLS[DEFAULT_POOL];
-const VERSION = "1.5";
+const VERSION = "1.6";
 
 const MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 
@@ -580,7 +580,7 @@ function renderFechas() {
       ${!familiaSeleccionada && !cancelada ? `<div class="sin-familia">Seleccioná tu familia arriba para cargar disponibilidad</div>` : ""}
       ${!cancelada ? `
       <div class="nota-container">
-        <input type="text" class="nota-input" placeholder="Nota del grupo (mate, merienda...)" 
+        <input type="text" class="nota-input" placeholder="Nota del grupo" 
           value="${notaValor.replace(/"/g, '&quot;')}"
           onchange="guardarNota('${fechaStr}', this.value)"
           oninput="notaChanged('${fechaStr}', this.value)">
@@ -718,6 +718,33 @@ async function cargarDatos() {
 
   actualizarMesLabel();
   renderFechas();
+  scrollAHoy();
+}
+
+function scrollAHoy() {
+  const hoy = formatFecha(new Date());
+  const mesHoy = new Date().getMonth();
+  const anioHoy = new Date().getFullYear();
+  if (mesActual !== mesHoy || anioActual !== anioHoy) return;
+  
+  // Buscar la card de hoy o la próxima fecha de entrenamiento
+  const cards = document.querySelectorAll('.fecha-card');
+  const lista = document.getElementById('fechasList');
+  const dias = getDiasEntrenamiento(mesActual, anioActual);
+  
+  let targetIndex = -1;
+  for (let i = 0; i < dias.length; i++) {
+    if (formatFecha(dias[i]) >= hoy) {
+      targetIndex = i;
+      break;
+    }
+  }
+  
+  if (targetIndex >= 0 && cards[targetIndex]) {
+    setTimeout(() => {
+      cards[targetIndex].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 300);
+  }
 }
 
 cargarDatos();
