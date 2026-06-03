@@ -367,20 +367,21 @@
   <div class="loading"><div class="spinner"></div><span>Cargando...</span></div>
 </div>
 
-<div class="version">v1.7</div>
+<div class="version">v1.9</div>
 <div class="toast" id="toast"></div>
 
 <script>
 const POOLS = {
   "pool-7ma-metro-b": "https://script.google.com/macros/s/AKfycbw4dQT82lC1-qTZwqsqtO-vK4gGoTtPo_kPLDx1vGLH7FYuN4nIw1lDpduWy8EyFduh/exec",
   "pool-8va-miercoles": "https://script.google.com/macros/s/AKfycbyrkwFEkzwTOPwsE4ogOEsHckcD9FwZdDjKxoVOr_igIDrkYhSpYT9aIzxevarCbT82/exec",
-  "pool-sta-barbara-fadu": "https://script.google.com/macros/s/AKfycbxwc-e6Dvbio3IsXrsfO-yo5f_pN3yIpJ3yxjsaB9idyc-lTFYdWGNbntFWcnlWSWmivg/exec"
+  "pool-sta-barbara-fadu": "https://script.google.com/macros/s/AKfycbxwc-e6Dvbio3IsXrsfO-yo5f_pN3yIpJ3yxjsaB9idyc-lTFYdWGNbntFWcnlWSWmivg/exec",
+  "pool-demo": "https://script.google.com/macros/s/AKfycbwHAANQhB2i5snbFT6bDIOJokonSzyrfUlS32l911t2INb3YNspp7HZmpwHrGR6B51J/exec"
 };
 const DEFAULT_POOL = "pool-7ma-metro-b";
 const params = new URLSearchParams(window.location.search);
 const poolKey = params.get("pool") || DEFAULT_POOL;
 const SCRIPT_URL = POOLS[poolKey] || POOLS[DEFAULT_POOL];
-const VERSION = "1.7";
+const VERSION = "1.9";
 
 const MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 
@@ -597,6 +598,7 @@ function renderFechas() {
       for (let i = 0; i < dias.length; i++) {
         if (formatFecha(dias[i]) >= hoy) { targetIndex = i; break; }
       }
+      if (targetIndex < 0 && cards.length > 0) targetIndex = cards.length - 1;
       if (targetIndex >= 0 && cards[targetIndex]) {
         cards[targetIndex].scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
