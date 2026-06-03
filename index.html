@@ -367,7 +367,7 @@
   <div class="loading"><div class="spinner"></div><span>Cargando...</span></div>
 </div>
 
-<div class="version">v2.2</div>
+<div class="version">v2.3</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -375,13 +375,13 @@ const POOLS = {
   "pool-7ma-metro-b": "https://script.google.com/macros/s/AKfycbw4dQT82lC1-qTZwqsqtO-vK4gGoTtPo_kPLDx1vGLH7FYuN4nIw1lDpduWy8EyFduh/exec",
   "pool-8va-miercoles": "https://script.google.com/macros/s/AKfycbyrkwFEkzwTOPwsE4ogOEsHckcD9FwZdDjKxoVOr_igIDrkYhSpYT9aIzxevarCbT82/exec",
   "pool-sta-barbara-fadu": "https://script.google.com/macros/s/AKfycbxwc-e6Dvbio3IsXrsfO-yo5f_pN3yIpJ3yxjsaB9idyc-lTFYdWGNbntFWcnlWSWmivg/exec",
-  "pool-demo": "https://script.google.com/macros/s/AKfycbzoQufp8-AmJk0_2krOiQSKgBcqRKcKTbU0WZvEudi0e_1xApvBEEAluKzhY3KN0l2f/exec"
+  "pool-demo": "https://script.google.com/macros/s/AKfycbwO1Vy_xNys5U5ExvE3gVxTEFiVIX59e_ReIzoKtqZJ2WskeTe-t9EwlbFaf7Oj4UZQ/exec"
 };
 const DEFAULT_POOL = "pool-7ma-metro-b";
 const params = new URLSearchParams(window.location.search);
 const poolKey = params.get("pool") || DEFAULT_POOL;
 const SCRIPT_URL = POOLS[poolKey] || POOLS[DEFAULT_POOL];
-const VERSION = "2.2";
+const VERSION = "2.3";
 
 const MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 
