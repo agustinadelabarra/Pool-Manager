@@ -366,7 +366,7 @@
   <div class="loading"><div class="spinner"></div><span>Cargando...</span></div>
 </div>
 
-<div class="version">v1.0-db</div>
+<div class="version">v1.1-db</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -660,14 +660,15 @@ async function guardarNota(fechaStr, valor) {
       await sbPatch("fechas_pool", `id=eq.${existente.id}`, { nota: valor });
       existente.nota = valor;
     } else {
-      // Crear nueva fila
-      await sbPost("fechas_pool", {
+      // Crear nueva fila — el constraint unique(pool_id, fecha) evita duplicados
+      const nuevaFila = {
         pool_id: poolKey,
         fecha: fechaStr,
         estado: "Activa",
         nota: valor
-      });
-      fechasPool.push({ pool_id: poolKey, fecha: fechaStr, estado: "Activa", nota: valor });
+      };
+      await sbPost("fechas_pool", nuevaFila);
+      fechasPool.push({ ...nuevaFila });
     }
     showToast("✓ Nota guardada");
   } catch(e) {
@@ -693,14 +694,22 @@ async function toggleDisp(event, fechaStr, tipo) {
   showToast("Guardando...");
 
   try {
-    // upsert — Supabase maneja el conflicto por unique(pool_id, fecha, participante)
-    await sbPost("disponibilidad", {
-      pool_id: poolKey,
-      fecha: fechaStr,
-      participante: familiaSeleccionada,
-      ida: entry.ida,
-      vuelta: entry.vuelta
-    });
+    // Verificar si ya existe en Supabase
+    const existing = await sbGet("disponibilidad", 
+      `?pool_id=eq.${poolKey}&fecha=eq.${fechaStr}&participante=eq.${encodeURIComponent(familiaSeleccionada)}`);
+    if (existing && existing.length > 0) {
+      await sbPatch("disponibilidad", 
+        `pool_id=eq.${poolKey}&fecha=eq.${fechaStr}&participante=eq.${encodeURIComponent(familiaSeleccionada)}`,
+        { ida: entry.ida, vuelta: entry.vuelta });
+    } else {
+      await sbPost("disponibilidad", {
+        pool_id: poolKey,
+        fecha: fechaStr,
+        participante: familiaSeleccionada,
+        ida: entry.ida,
+        vuelta: entry.vuelta
+      });
+    }
     showToast("✓ Guardado");
   } catch(e) {
     console.error(e);
