@@ -81,7 +81,6 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 19px;
     flex-shrink: 0;
     text-decoration: none;
   }
@@ -347,7 +346,7 @@
   <select class="selector-familia" id="selectFamilia" onchange="onFamiliaChange()">
     <option value="">¿Quién sos?</option>
   </select>
-  <a class="btn-mapa" href="#" onclick="abrirMapa(event)">🚗</a>
+  <a class="btn-mapa" href="#" onclick="abrirMapa(event)"><img src="maps-icon.png" width="24" height="24" style="display:block;" alt="Maps"></a>
 </div>
 
 <div class="nav-mes">
@@ -366,7 +365,7 @@
   <div class="loading"><div class="spinner"></div><span>Cargando...</span></div>
 </div>
 
-<div class="version">v1.1-db</div>
+<div class="version">v1.2-db</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -653,24 +652,23 @@ function notaChanged(fechaStr, valor) {
 
 async function guardarNota(fechaStr, valor) {
   clearTimeout(notasTimeout[fechaStr]);
+  const notaFinal = valor.trim() === "" ? null : valor.trim();
   try {
-    // Buscar si ya existe la fila en fechas_pool
-    const existente = fechasPool.find(f => normalizarFecha(f.fecha) === fechaStr);
-    if (existente) {
-      await sbPatch("fechas_pool", `id=eq.${existente.id}`, { nota: valor });
-      existente.nota = valor;
+    // Buscar si ya existe la fila en fechas_pool (refrescar desde DB para tener ID actualizado)
+    const enDB = await sbGet("fechas_pool", `?pool_id=eq.${poolKey}&fecha=eq.${fechaStr}`);
+    if (enDB && enDB.length > 0) {
+      await sbPatch("fechas_pool", `id=eq.${enDB[0].id}`, { nota: notaFinal });
+      // Actualizar cache local
+      const local = fechasPool.find(f => normalizarFecha(f.fecha) === fechaStr);
+      if (local) local.nota = notaFinal;
     } else {
-      // Crear nueva fila — el constraint unique(pool_id, fecha) evita duplicados
-      const nuevaFila = {
-        pool_id: poolKey,
-        fecha: fechaStr,
-        estado: "Activa",
-        nota: valor
-      };
+      const nuevaFila = { pool_id: poolKey, fecha: fechaStr, estado: "Activa", nota: notaFinal };
       await sbPost("fechas_pool", nuevaFila);
-      fechasPool.push({ ...nuevaFila });
+      // Refrescar desde DB para obtener el ID real
+      const nueva = await sbGet("fechas_pool", `?pool_id=eq.${poolKey}&fecha=eq.${fechaStr}`);
+      if (nueva && nueva.length > 0) fechasPool.push(nueva[0]);
     }
-    showToast("✓ Nota guardada");
+    showToast(notaFinal ? "✓ Nota guardada" : "✓ Nota borrada");
   } catch(e) {
     console.error(e);
     showToast("Error al guardar nota");
@@ -690,11 +688,13 @@ async function toggleDisp(event, fechaStr, tipo) {
   if (tipo === "ida") entry.ida = !entry.ida;
   else entry.vuelta = !entry.vuelta;
 
+  // En round-trip, ida y vuelta van siempre juntos
+  if (tipoViaje === "round-trip") entry.vuelta = entry.ida;
+
   renderFechas();
   showToast("Guardando...");
 
   try {
-    // Verificar si ya existe en Supabase
     const existing = await sbGet("disponibilidad", 
       `?pool_id=eq.${poolKey}&fecha=eq.${fechaStr}&participante=eq.${encodeURIComponent(familiaSeleccionada)}`);
     if (existing && existing.length > 0) {
