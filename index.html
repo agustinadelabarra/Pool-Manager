@@ -66,7 +66,7 @@
     cursor: pointer;
     appearance: none;
     -webkit-appearance: none;
-    max-width: 130px;
+    max-width: 145px;
   }
 
   .selector-familia option { color: var(--texto); background: var(--blanco); }
@@ -75,13 +75,13 @@
     background: rgba(255,255,255,0.12);
     border: 1px solid rgba(255,255,255,0.2);
     border-radius: 8px;
-    width: 32px;
-    height: 32px;
+    width: 38px;
+    height: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 15px;
+    font-size: 19px;
     flex-shrink: 0;
     text-decoration: none;
   }
@@ -367,7 +367,7 @@
   <div class="loading"><div class="spinner"></div><span>Cargando...</span></div>
 </div>
 
-<div class="version">v2.3</div>
+<div class="version">v2.4</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -377,11 +377,19 @@ const POOLS = {
   "pool-sta-barbara-fadu": "https://script.google.com/macros/s/AKfycbxwc-e6Dvbio3IsXrsfO-yo5f_pN3yIpJ3yxjsaB9idyc-lTFYdWGNbntFWcnlWSWmivg/exec",
   "pool-demo": "https://script.google.com/macros/s/AKfycbwO1Vy_xNys5U5ExvE3gVxTEFiVIX59e_ReIzoKtqZJ2WskeTe-t9EwlbFaf7Oj4UZQ/exec"
 };
-const DEFAULT_POOL = "pool-7ma-metro-b";
 const params = new URLSearchParams(window.location.search);
-const poolKey = params.get("pool") || DEFAULT_POOL;
-const SCRIPT_URL = POOLS[poolKey] || POOLS[DEFAULT_POOL];
-const VERSION = "2.3";
+const poolKey = params.get("pool") || "";
+if (!poolKey || !POOLS[poolKey]) {
+  document.body.innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;font-family:'DM Sans',sans-serif;background:#F4F1EC;padding:24px;text-align:center;">
+      <div style="font-size:48px;margin-bottom:16px;">🚗</div>
+      <div style="font-size:20px;font-weight:700;color:#1B4332;margin-bottom:8px;">Pool Manager</div>
+      <div style="font-size:14px;color:#888;max-width:280px;line-height:1.5;">Usá el link de tu pool para acceder. Pedíselo a la coordinadora del grupo.</div>
+    </div>`;
+  throw new Error("Pool no especificado");
+}
+const SCRIPT_URL = POOLS[poolKey];
+const VERSION = "2.4";
 
 const MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 
@@ -656,7 +664,20 @@ function abrirMapa(e) {
     }
     return encodeURIComponent((f["Dirección"] || f["Direccion"] || "") + ", CABA, Argentina");
   }).join("/");
-  const url = `https://www.google.com/maps/dir/${waypoints}`;
+  // Formato mobile-friendly para Google Maps
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  let url;
+  if (isMobile) {
+    const waypointList = activas.map(f => {
+      if (f.Lat && f.Lng && f.Lat !== "" && f.Lng !== "") {
+        return `${f.Lat},${f.Lng}`;
+      }
+      return encodeURIComponent((f["Dirección"] || f["Direccion"] || "") + ", CABA, Argentina");
+    });
+    url = `https://maps.google.com/maps/dir/?api=1&waypoints=${waypointList.join("|")}&travelmode=driving`;
+  } else {
+    url = `https://www.google.com/maps/dir/${waypoints}`;
+  }
   window.open(url, "_blank");
 }
 
