@@ -19,565 +19,142 @@
     --borde: #E5D8CE;
     --blanco: #FFFFFF;
     --shadow: 0 2px 12px rgba(232,132,90,0.10);
-    --shadow-lg: 0 8px 32px rgba(232,132,90,0.16);
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(--texto); min-height: 100vh; }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--crema);
-    color: var(--texto);
-    min-height: 100vh;
-  }
-
-  /* ── PANTALLA INICIO ── */
   .screen { display: none; }
   .screen.active { display: block; }
 
-  /* Header evento */
-  .evento-header {
-    background: var(--naranja);
-    padding: 32px 20px 24px;
-    color: var(--blanco);
-    text-align: center;
-  }
+  /* HEADER */
+  .evento-header { background: var(--naranja); padding: 32px 20px 24px; color: var(--blanco); text-align: center; }
+  .evento-tag { display: inline-block; background: rgba(255,255,255,0.2); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
+  .evento-nombre { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; margin-bottom: 6px; line-height: 1.2; }
+  .evento-meta { font-size: 13px; opacity: 0.85; margin-bottom: 12px; line-height: 1.5; }
+  .evento-frase { font-size: 12px; font-style: italic; background: rgba(255,255,255,0.15); padding: 8px 14px; border-radius: 20px; display: inline-block; line-height: 1.4; }
 
-  .evento-tag {
-    display: inline-block;
-    background: rgba(255,255,255,0.2);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 3px 10px;
-    border-radius: 20px;
-    margin-bottom: 10px;
-  }
-
-  .evento-nombre {
-    font-family: 'Fraunces', serif;
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 6px;
-    line-height: 1.2;
-  }
-
-  .evento-meta {
-    font-size: 13px;
-    opacity: 0.85;
-    margin-bottom: 12px;
-    line-height: 1.5;
-  }
-
-  .evento-frase {
-    font-size: 12px;
-    font-style: italic;
-    background: rgba(255,255,255,0.15);
-    padding: 8px 14px;
-    border-radius: 20px;
-    display: inline-block;
-    line-height: 1.4;
-  }
-
-  /* Botones tramo */
-  .tramos {
-    padding: 24px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    max-width: 480px;
-    margin: 0 auto;
-  }
-
-  .btn-tramo {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 22px;
-    border-radius: 16px;
-    border: none;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 17px;
-    font-weight: 600;
-    transition: transform 0.15s, box-shadow 0.15s;
-    box-shadow: var(--shadow);
-  }
-
+  /* TRAMOS */
+  .tramos { padding: 24px 16px; display: flex; flex-direction: column; gap: 14px; max-width: 480px; margin: 0 auto; }
+  .btn-tramo { display: flex; align-items: center; justify-content: space-between; padding: 20px 22px; border-radius: 16px; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 600; box-shadow: var(--shadow); transition: transform 0.15s; }
   .btn-tramo:active { transform: scale(0.97); }
+  .btn-tramo.ida { background: var(--naranja); color: var(--blanco); }
+  .btn-tramo.vuelta { background: var(--verde); color: var(--blanco); }
+  .tramo-label { font-size: 13px; opacity: 0.8; font-weight: 500; margin-bottom: 2px; }
+  .tramo-hora { font-size: 18px; font-weight: 600; }
+  .tramo-pill { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; background: rgba(255,255,255,0.2); margin-top: 4px; display: inline-block; }
+  .tramo-arrow { font-size: 22px; opacity: 0.7; }
 
-  .btn-tramo.ida {
-    background: var(--naranja);
-    color: var(--blanco);
-  }
-
-  .btn-tramo.vuelta {
-    background: var(--verde);
-    color: var(--blanco);
-  }
-
-  .btn-tramo .tramo-info {
-    text-align: left;
-  }
-
-  .btn-tramo .tramo-label {
-    font-size: 13px;
-    opacity: 0.8;
-    font-weight: 500;
-    margin-bottom: 2px;
-  }
-
-  .btn-tramo .tramo-hora {
-    font-size: 18px;
-    font-weight: 600;
-  }
-
-  .btn-tramo .tramo-arrow {
-    font-size: 22px;
-    opacity: 0.7;
-  }
-
-  .tramo-stats {
-    display: flex;
-    gap: 8px;
-    margin-top: 4px;
-  }
-
-  .tramo-pill {
-    font-size: 11px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 10px;
-    background: rgba(255,255,255,0.2);
-  }
-
-  /* ── PANTALLA TRAMO ── */
-  .tramo-header {
-    padding: 20px 16px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    max-width: 480px;
-    margin: 0 auto;
-  }
-
-  .btn-back {
-    background: var(--blanco);
-    border: 1.5px solid var(--borde);
-    border-radius: 10px;
-    padding: 8px 12px;
-    font-size: 14px;
-    cursor: pointer;
-    color: var(--texto-soft);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 500;
-    transition: background 0.2s;
-  }
-
-  .btn-back:hover { background: var(--crema); }
-
-  .tramo-title {
-    font-family: 'Fraunces', serif;
-    font-size: 18px;
-    font-weight: 600;
-  }
-
-  .tramo-badge {
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    margin-left: auto;
-  }
-
+  /* TRAMO HEADER */
+  .tramo-header { padding: 20px 16px 16px; display: flex; align-items: center; gap: 12px; max-width: 480px; margin: 0 auto; }
+  .btn-back { background: var(--blanco); border: 1.5px solid var(--borde); border-radius: 10px; padding: 8px 12px; font-size: 14px; cursor: pointer; color: var(--texto-soft); font-family: 'DM Sans', sans-serif; font-weight: 500; }
+  .tramo-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; }
+  .tramo-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-left: auto; }
   .tramo-badge.ida { background: var(--naranja-light); color: var(--naranja-dark); }
   .tramo-badge.vuelta { background: var(--verde-light); color: var(--verde-dark); }
 
-  .tramo-content {
-    padding: 0 16px 32px;
-    max-width: 480px;
-    margin: 0 auto;
-  }
+  .tramo-content { padding: 0 16px 32px; max-width: 480px; margin: 0 auto; }
 
-  /* Mi lugar destacado */
-  .mi-lugar {
-    background: var(--naranja-light);
-    border: 1.5px solid var(--naranja);
-    border-radius: 12px;
-    padding: 12px 16px;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--naranja-dark);
-  }
+  /* MI LUGAR */
+  .mi-lugar { border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; }
+  .mi-lugar.verde { background: var(--verde-light); border: 1.5px solid var(--verde); color: var(--verde-dark); }
+  .mi-lugar.espera { background: #FFF8E8; border: 1.5px solid #E8C45A; color: #7A5A00; }
+  .mi-lugar.conductor { background: var(--naranja-light); border: 1.5px solid var(--naranja); color: var(--naranja-dark); }
 
-  .mi-lugar.espera {
-    background: #FFF8E8;
-    border-color: #E8C45A;
-    color: #7A5A00;
-  }
+  /* SECCION */
+  .seccion-titulo { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+  .seccion-count { font-size: 12px; font-weight: 500; color: var(--texto-soft); font-family: 'DM Sans', sans-serif; }
 
-  .mi-lugar.verde {
-    background: var(--verde-light);
-    border-color: var(--verde);
-    color: var(--verde-dark);
-  }
-
-  .mi-lugar-icon { font-size: 18px; }
-
-  /* Sección */
-  .seccion-titulo {
-    font-family: 'Fraunces', serif;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--texto);
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .seccion-count {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--texto-soft);
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  /* Card auto */
-  .auto-card {
-    background: var(--blanco);
-    border: 1.5px solid var(--borde);
-    border-radius: 14px;
-    padding: 14px 16px;
-    margin-bottom: 10px;
-    box-shadow: var(--shadow);
-    cursor: pointer;
-    transition: border-color 0.2s;
-  }
-
-  .auto-card:hover { border-color: var(--naranja); }
+  /* AUTO CARD */
+  .auto-card { background: var(--blanco); border: 1.5px solid var(--borde); border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; box-shadow: var(--shadow); }
   .auto-card.mio { border-color: var(--naranja); background: var(--naranja-light); }
-
-  .auto-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 8px;
-  }
-
-  .auto-conductor {
-    font-weight: 600;
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .auto-conductor .yo-tag {
-    font-size: 10px;
-    background: var(--naranja);
-    color: white;
-    padding: 1px 6px;
-    border-radius: 6px;
-    font-weight: 600;
-  }
-
-  .lugares-contador {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .lugar-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--borde);
-  }
-
+  .auto-top { display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+  .auto-conductor { font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 6px; }
+  .yo-tag { font-size: 10px; background: var(--naranja); color: white; padding: 1px 6px; border-radius: 6px; font-weight: 600; }
+  .lugares-contador { display: flex; align-items: center; gap: 4px; }
+  .lugar-dot { width: 10px; height: 10px; border-radius: 50%; }
   .lugar-dot.ocupado { background: var(--naranja); }
   .lugar-dot.libre { background: var(--verde-light); border: 1.5px solid var(--verde); }
+  .lugares-texto { font-size: 12px; color: var(--texto-soft); margin-left: 4px; }
 
-  .lugares-texto {
-    font-size: 12px;
-    color: var(--texto-soft);
-    margin-left: 4px;
-  }
-
-  /* Pasajeros en auto */
-  .auto-pasajeros {
-    display: none;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid var(--borde);
-  }
-
+  .auto-pasajeros { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--borde); }
   .auto-card.expandido .auto-pasajeros { display: block; }
 
-  .pasajero-item {
-    font-size: 13px;
-    color: var(--texto-soft);
-    padding: 3px 0;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+  .pasajero-row { display: flex; align-items: center; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid var(--borde); }
+  .pasajero-row:last-child { border-bottom: none; }
+  .pasajero-nombre { font-size: 13px; color: var(--texto); display: flex; align-items: center; gap: 6px; }
+  .btn-quitar { background: none; border: 1.5px solid var(--borde); border-radius: 6px; color: var(--texto-soft); font-size: 13px; width: 26px; height: 26px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .btn-quitar:hover { border-color: #E8845A; color: var(--naranja-dark); background: var(--naranja-light); }
 
-  .btn-sumarme {
-    width: 100%;
-    margin-top: 10px;
-    padding: 10px;
-    background: var(--verde);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
+  /* BTN AGREGAR */
+  .btn-agregar { width: 100%; padding: 14px; border: 2px dashed var(--borde); border-radius: 14px; background: transparent; color: var(--texto-soft); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-agregar:hover { border-color: var(--naranja); color: var(--naranja-dark); background: var(--naranja-light); }
 
-  .btn-sumarme:hover { background: var(--verde-dark); }
-  .btn-sumarme:disabled {
-    background: var(--borde);
-    color: var(--texto-soft);
-    cursor: not-allowed;
-  }
+  /* ESPERA CARD */
+  .espera-card { background: var(--blanco); border: 1.5px solid var(--borde); border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; box-shadow: var(--shadow); }
+  .espera-card.mia { border-color: #E8C45A; background: #FFF8E8; }
+  .espera-top { display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+  .espera-nombre { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+  .espera-pos { font-size: 12px; color: var(--texto-soft); }
 
-  /* Btn agregar auto */
-  .btn-agregar {
-    width: 100%;
-    padding: 14px;
-    border: 2px dashed var(--borde);
-    border-radius: 14px;
-    background: transparent;
-    color: var(--texto-soft);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
+  /* Selector de auto dentro de espera card */
+  .espera-selector { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--borde); }
+  .espera-card.expandida .espera-selector { display: block; }
+  .espera-selector label { font-size: 11px; font-weight: 600; color: var(--texto-soft); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 6px; }
+  .espera-selector select { width: 100%; padding: 10px 12px; border: 1.5px solid var(--borde); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--texto); background: var(--crema); outline: none; margin-bottom: 10px; }
+  .espera-selector select:focus { border-color: var(--naranja); }
+  .btn-asignar { width: 100%; padding: 10px; background: var(--verde); color: white; border: none; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+  .btn-asignar:hover { background: var(--verde-dark); }
 
-  .btn-agregar:hover {
-    border-color: var(--naranja);
-    color: var(--naranja-dark);
-    background: var(--naranja-light);
-  }
-
-  /* Lista espera */
-  .espera-card {
-    background: var(--blanco);
-    border: 1.5px solid var(--borde);
-    border-radius: 14px;
-    padding: 14px 16px;
-    margin-bottom: 10px;
-    box-shadow: var(--shadow);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .espera-card.mia {
-    border-color: #E8C45A;
-    background: #FFF8E8;
-  }
-
-  .espera-nombre {
-    font-size: 14px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .espera-pos {
-    font-size: 12px;
-    color: var(--texto-soft);
-  }
-
-  .espera-resumen {
-    background: var(--crema);
-    border: 1px solid var(--borde);
-    border-radius: 10px;
-    padding: 10px 14px;
-    font-size: 13px;
-    color: var(--texto-soft);
-    margin-bottom: 16px;
-    text-align: center;
-  }
-
-  /* Popup */
-  .overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    z-index: 100;
-    align-items: flex-end;
-    justify-content: center;
-  }
-
+  /* POPUP */
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; align-items: flex-end; justify-content: center; }
   .overlay.visible { display: flex; }
-
-  .popup {
-    background: var(--blanco);
-    border-radius: 20px 20px 0 0;
-    padding: 24px 20px 36px;
-    width: 100%;
-    max-width: 480px;
-    animation: slideUp 0.25s ease;
-  }
-
-  @keyframes slideUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
-  }
-
-  .popup-title {
-    font-family: 'Fraunces', serif;
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 16px;
-    text-align: center;
-  }
-
-  .popup-field {
-    margin-bottom: 14px;
-  }
-
-  .popup-field label {
-    display: block;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--texto-soft);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-
-  .popup-field input, .popup-field select {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1.5px solid var(--borde);
-    border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    color: var(--texto);
-    background: var(--crema);
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .popup-field input:focus, .popup-field select:focus {
-    border-color: var(--naranja);
-    background: var(--blanco);
-  }
-
-  .popup-btns {
-    display: flex;
-    gap: 10px;
-    margin-top: 16px;
-  }
-
-  .btn-cancelar {
-    flex: 1;
-    padding: 13px;
-    background: var(--crema);
-    border: 1.5px solid var(--borde);
-    border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    color: var(--texto-soft);
-  }
-
-  .btn-confirmar {
-    flex: 2;
-    padding: 13px;
-    background: var(--naranja);
-    border: none;
-    border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    color: white;
-    transition: background 0.2s;
-  }
-
+  .popup { background: var(--blanco); border-radius: 20px 20px 0 0; padding: 24px 20px 36px; width: 100%; max-width: 480px; animation: slideUp 0.25s ease; }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .popup-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; margin-bottom: 16px; text-align: center; }
+  .popup-field { margin-bottom: 14px; }
+  .popup-field label { display: block; font-size: 12px; font-weight: 600; color: var(--texto-soft); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+  .popup-field input, .popup-field select { width: 100%; padding: 12px 14px; border: 1.5px solid var(--borde); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--texto); background: var(--crema); outline: none; }
+  .popup-field input:focus, .popup-field select:focus { border-color: var(--naranja); background: var(--blanco); }
+  .popup-check { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border: 1.5px solid var(--borde); border-radius: 10px; background: var(--crema); cursor: pointer; margin-bottom: 14px; }
+  .popup-check input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--naranja); cursor: pointer; }
+  .popup-check span { font-size: 14px; color: var(--texto); }
+  .popup-btns { display: flex; gap: 10px; margin-top: 4px; }
+  .btn-cancelar { flex: 1; padding: 13px; background: var(--crema); border: 1.5px solid var(--borde); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; color: var(--texto-soft); }
+  .btn-confirmar { flex: 2; padding: 13px; background: var(--naranja); border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; color: white; }
   .btn-confirmar:hover { background: var(--naranja-dark); }
 
-  .loading {
-    text-align: center;
-    padding: 48px 20px;
-    color: var(--texto-soft);
-    font-size: 14px;
-  }
-
-  .loading-icon {
-    font-size: 32px;
-    margin-bottom: 12px;
-    animation: spin 1.5s linear infinite;
-    display: block;
-  }
-
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
+  .loading { text-align: center; padding: 48px 20px; color: var(--texto-soft); font-size: 14px; }
+  .empty-msg { text-align: center; color: #aaa; font-size: 13px; padding: 8px 0 16px; }
 </style>
 </head>
 <body>
 
-<!-- PANTALLA CARGA -->
 <div class="screen active" id="screenCarga">
-  <div class="loading">
-    <span class="loading-icon">🔄</span>
-    Cargando evento...
-  </div>
+  <div class="loading">Cargando evento...</div>
 </div>
 
 <!-- PANTALLA INICIO -->
 <div class="screen" id="screenInicio">
   <div class="evento-header">
     <div class="evento-tag">Viajes compartidos</div>
-    <div class="evento-nombre" id="eventoNombre">—</div>
-    <div class="evento-meta" id="eventoMeta">—</div>
-    <div class="evento-frase" id="eventoFrase">—</div>
+    <div class="evento-nombre" id="eventoNombre"></div>
+    <div class="evento-meta" id="eventoMeta"></div>
+    <div class="evento-frase" id="eventoFrase" style="display:none"></div>
   </div>
-
   <div class="tramos">
-    <button class="btn-tramo ida" onclick="entrarTramo('ida')">
-      <div class="tramo-info">
+    <button class="btn-tramo ida" id="btnIda" onclick="entrarTramo('ida')" style="display:none">
+      <div>
         <div class="tramo-label">🚗 Ida</div>
         <div class="tramo-hora" id="horaIda">—</div>
-        <div class="tramo-stats">
-          <div class="tramo-pill" id="statsIda">cargando...</div>
-        </div>
+        <div class="tramo-pill" id="statsIda">—</div>
       </div>
       <div class="tramo-arrow">→</div>
     </button>
-
-    <button class="btn-tramo vuelta" onclick="entrarTramo('vuelta')">
-      <div class="tramo-info">
+    <button class="btn-tramo vuelta" id="btnVuelta" onclick="entrarTramo('vuelta')" style="display:none">
+      <div>
         <div class="tramo-label">🏠 Vuelta</div>
         <div class="tramo-hora" id="horaVuelta">—</div>
-        <div class="tramo-stats">
-          <div class="tramo-pill" id="statsVuelta">cargando...</div>
-        </div>
+        <div class="tramo-pill" id="statsVuelta">—</div>
       </div>
       <div class="tramo-arrow">→</div>
     </button>
@@ -588,71 +165,63 @@
 <div class="screen" id="screenTramo">
   <div class="tramo-header">
     <button class="btn-back" onclick="volverInicio()">← Volver</button>
-    <div class="tramo-title" id="tramoTitle">Ida</div>
-    <div class="tramo-badge" id="tramoBadge">IDA</div>
+    <div class="tramo-title" id="tramoTitle"></div>
+    <div class="tramo-badge" id="tramoBadge"></div>
   </div>
-
   <div class="tramo-content">
-    <!-- Mi lugar -->
     <div id="miLugar" style="display:none"></div>
 
-    <!-- Autos -->
     <div class="seccion-titulo">
       🚗 Autos
-      <span class="seccion-count" id="countAutos">0 autos</span>
+      <span class="seccion-count" id="countAutos">—</span>
     </div>
-
-    <button class="btn-agregar" onclick="abrirPopupAuto()">
-      + Ofrezco mi auto
-    </button>
-
+    <button class="btn-agregar" onclick="abrirPopupAuto()">+ Ofrezco mi auto</button>
     <div id="listaAutos"></div>
 
-    <!-- Lista de espera -->
     <div class="seccion-titulo" style="margin-top:8px">
       ⏳ Lista de espera
-      <span class="seccion-count" id="countEspera">0 familias</span>
+      <span class="seccion-count" id="countEspera">—</span>
     </div>
-
-    <div id="resumenEspera" class="espera-resumen" style="display:none"></div>
-
-    <button class="btn-agregar" onclick="abrirPopupPasajero()">
-      + Me anoto como pasajero
-    </button>
-
+    <button class="btn-agregar" onclick="abrirPopupPasajero()">+ Me anoto como pasajero</button>
     <div id="listaEspera"></div>
   </div>
 </div>
 
-<!-- POPUP: Alta familia -->
-<div class="overlay" id="overlayFamilia">
+<!-- POPUP ALTA -->
+<div class="overlay" id="overlayAlta">
   <div class="popup">
-    <div class="popup-title" id="popupTitulo">Sumarme</div>
+    <div class="popup-title" id="popupTitulo">Alta</div>
     <div class="popup-field">
       <label>Nombre de familia</label>
       <input type="text" id="inputNombre" placeholder="Ej: Familia García">
     </div>
-    <div class="popup-field" id="campoCapacidad" style="display:none">
-      <label>Lugares disponibles</label>
-      <select id="inputCapacidad">
-        <option value="1">1 lugar</option>
-        <option value="2">2 lugares</option>
-        <option value="3">3 lugares</option>
-        <option value="4" selected>4 lugares</option>
-        <option value="5">5 lugares</option>
-        <option value="6">6 lugares</option>
-      </select>
+    <div id="campoCapacidad" style="display:none">
+      <div class="popup-field">
+        <label>Lugares disponibles (sin contar tu hija)</label>
+        <select id="inputCapacidad">
+          <option value="1">1 lugar</option>
+          <option value="2">2 lugares</option>
+          <option value="3">3 lugares</option>
+          <option value="4" selected>4 lugares</option>
+          <option value="5">5 lugares</option>
+          <option value="6">6 lugares</option>
+        </select>
+      </div>
+      <label class="popup-check">
+        <input type="checkbox" id="hijaViene">
+        <span>Mi hija también va en el auto</span>
+      </label>
     </div>
     <div class="popup-btns">
       <button class="btn-cancelar" onclick="cerrarPopup()">Cancelar</button>
-      <button class="btn-confirmar" id="btnConfirmarPopup" onclick="confirmarAlta()">Confirmar</button>
+      <button class="btn-confirmar" onclick="confirmarAlta()">Confirmar</button>
     </div>
   </div>
 </div>
 
 <script>
 const SUPABASE_URL = 'https://zvvcodeqfscqvunogppg.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2dmNvZGVxZnNjcXZ1bm9ncHBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NTgxMTksImV4cCI6MjA5NjEzNDExOX0.CrmSFILnBGoLcpzMW9QeAI_QUqbxwRWB-CTdB4Au11Y';
+const SUPABASE_KEY = 'TU_ANON_KEY_AQUI';
 
 const FRASES = {
   equidad: 'Somos un grupo que se propone que todos participen',
@@ -662,189 +231,133 @@ const FRASES = {
 
 let evento = null;
 let tramoActual = null;
-let modoPopup = null; // 'auto' | 'pasajero' | 'sumarme'
-let autoSeleccionado = null;
-let miFamilia = null; // familia registrada en esta sesión
+let modoPopup = null;
+let miFamilia = null;
 
-function getToken() {
-  return new URLSearchParams(window.location.search).get('token');
-}
-
-function formatHora(h) {
-  if (!h) return '—';
-  return h.substring(0, 5);
-}
-
+function getToken() { return new URLSearchParams(window.location.search).get('token'); }
+function formatHora(h) { return h ? h.substring(0,5) : '—'; }
 function formatFecha(f) {
   if (!f) return '';
-  const [y, m, d] = f.split('-');
+  const [y,m,d] = f.split('-');
   const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
   return `${parseInt(d)} de ${meses[parseInt(m)-1]}`;
 }
+function show(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 
-function show(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-async function supabase(path, opts = {}) {
+async function api(path, opts = {}) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
-    headers: {
-      'apikey': SUPABASE_KEY,
-      'Authorization': `Bearer ${SUPABASE_KEY}`,
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation',
-      ...opts.headers
-    },
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation', ...opts.headers },
     ...opts
   });
   if (!res.ok) throw new Error(await res.text());
-  const text = await res.text();
-  return text ? JSON.parse(text) : null;
+  const t = await res.text();
+  return t ? JSON.parse(t) : null;
 }
 
 async function init() {
   const token = getToken();
-  if (!token) {
-    document.getElementById('screenCarga').innerHTML = '<div class="loading">Link inválido.</div>';
-    return;
-  }
-
-  // Recuperar familia de sessionStorage
+  if (!token) { document.getElementById('screenCarga').innerHTML = '<div class="loading">Link inválido.</div>'; return; }
   const stored = sessionStorage.getItem('miFamilia_' + token);
   if (stored) miFamilia = JSON.parse(stored);
-
   try {
-    const data = await supabase(`evento_eventos?link_token=eq.${token}&select=*`);
-    if (!data || data.length === 0) {
-      document.getElementById('screenCarga').innerHTML = '<div class="loading">Evento no encontrado.</div>';
-      return;
-    }
+    const data = await api(`evento_eventos?link_token=eq.${token}&select=*`);
+    if (!data || !data.length) { document.getElementById('screenCarga').innerHTML = '<div class="loading">Evento no encontrado.</div>'; return; }
     evento = data[0];
     renderInicio();
     await cargarStats();
     show('screenInicio');
-  } catch(e) {
-    console.error(e);
-    document.getElementById('screenCarga').innerHTML = '<div class="loading">Error al cargar el evento.</div>';
-  }
+  } catch(e) { console.error(e); document.getElementById('screenCarga').innerHTML = `<div class="loading">Error: ${e.message}</div>`; }
 }
 
 function renderInicio() {
   document.getElementById('eventoNombre').textContent = evento.nombre;
-  document.getElementById('eventoMeta').textContent =
-    `${formatFecha(evento.fecha)} · ${evento.destino}`;
-  document.getElementById('eventoFrase').textContent = `"${FRASES[evento.proposito] || ''}"`;
-  document.getElementById('horaIda').textContent = formatHora(evento.hora_ida);
-  document.getElementById('horaVuelta').textContent = formatHora(evento.hora_vuelta);
+  document.getElementById('eventoMeta').textContent = `${formatFecha(evento.fecha)} · ${evento.destino}`;
+  if (evento.proposito && evento.proposito !== 'ninguno') {
+    const el = document.getElementById('eventoFrase');
+    el.textContent = `"${FRASES[evento.proposito]}"`;
+    el.style.display = 'inline-block';
+  }
+  if (evento.hora_ida) { document.getElementById('horaIda').textContent = formatHora(evento.hora_ida); document.getElementById('btnIda').style.display = 'flex'; }
+  if (evento.hora_vuelta) { document.getElementById('horaVuelta').textContent = formatHora(evento.hora_vuelta); document.getElementById('btnVuelta').style.display = 'flex'; }
 }
 
 async function cargarStats() {
   try {
-    const autos = await supabase(`evento_autos?evento_id=eq.${evento.id}&select=*`);
-    const asignaciones = await supabase(`evento_asignaciones?select=*,evento_autos!inner(evento_id)&evento_autos.evento_id=eq.${evento.id}`);
-
-    for (const tramo of ['ida', 'vuelta']) {
-      const autosTramo = autos.filter(a => a.tramo === tramo);
-      const totalLugares = autosTramo.reduce((s, a) => s + a.capacidad_total, 0);
-      const ocupados = autosTramo.reduce((s, a) => s + (a.capacidad_total - a.capacidad_disponible), 0);
-      const enEspera = asignaciones
-        ? asignaciones.filter(a => a.estado === 'espera' && autosTramo.find(au => au.id === a.auto_id) === undefined).length
-        : 0;
-
+    const autos = await api(`evento_autos?evento_id=eq.${evento.id}&select=*`) || [];
+    for (const tramo of ['ida','vuelta']) {
+      const at = autos.filter(a => a.tramo === tramo);
+      const total = at.reduce((s,a) => s + a.capacidad_total, 0);
+      const libres = at.reduce((s,a) => s + a.capacidad_disponible, 0);
       const el = document.getElementById(tramo === 'ida' ? 'statsIda' : 'statsVuelta');
-      el.textContent = `${autosTramo.length} autos · ${ocupados}/${totalLugares} lugares`;
+      if (el) el.textContent = `${at.length} autos · ${libres}/${total} libres`;
     }
-  } catch(e) {
-    console.log('Stats no disponibles aún');
-  }
+  } catch(e) { console.log('stats error', e); }
 }
 
 async function entrarTramo(tramo) {
   tramoActual = tramo;
-  const badge = document.getElementById('tramoBadge');
-  const title = document.getElementById('tramoTitle');
-  badge.className = `tramo-badge ${tramo}`;
-  badge.textContent = tramo.toUpperCase();
-  title.textContent = tramo === 'ida' ? '🚗 Ida' : '🏠 Vuelta';
+  document.getElementById('tramoBadge').className = `tramo-badge ${tramo}`;
+  document.getElementById('tramoBadge').textContent = tramo.toUpperCase();
+  document.getElementById('tramoTitle').textContent = tramo === 'ida' ? '🚗 Ida' : '🏠 Vuelta';
   show('screenTramo');
   await renderTramo();
 }
 
-function volverInicio() {
-  show('screenInicio');
-  cargarStats();
-}
+function volverInicio() { show('screenInicio'); cargarStats(); }
 
 async function renderTramo() {
-  document.getElementById('listaAutos').innerHTML = '<div style="text-align:center;color:#aaa;font-size:13px;padding:8px">Cargando...</div>';
+  document.getElementById('listaAutos').innerHTML = '<div class="empty-msg">Cargando...</div>';
   document.getElementById('listaEspera').innerHTML = '';
-
   try {
-    const autos = await supabase(`evento_autos?evento_id=eq.${evento.id}&tramo=eq.${tramoActual}&select=*`);
-    const familias = await supabase(`evento_familias?evento_id=eq.${evento.id}&select=*`);
-
-    // Asignaciones de cada auto
-    const autoIds = autos.map(a => a.id).join(',');
+    const autos = await api(`evento_autos?evento_id=eq.${evento.id}&tramo=eq.${tramoActual}&select=*`) || [];
+    const familias = await api(`evento_familias?evento_id=eq.${evento.id}&select=*`) || [];
+    const autoIds = autos.map(a => `"${a.id}"`).join(',');
     let asignaciones = [];
     if (autoIds.length > 0) {
-      asignaciones = await supabase(`evento_asignaciones?auto_id=in.(${autoIds})&select=*`) || [];
+      asignaciones = await api(`evento_asignaciones?auto_id=in.(${autoIds})&select=*`) || [];
     }
-
     renderMiLugar(autos, asignaciones, familias);
     renderAutos(autos, asignaciones, familias);
     renderEspera(autos, asignaciones, familias);
+  } catch(e) { console.error(e); document.getElementById('listaAutos').innerHTML = `<div style="color:red;font-size:13px">Error: ${e.message}</div>`; }
+}
 
-  } catch(e) {
-    console.error(e);
-    document.getElementById('listaAutos').innerHTML = '<div style="color:red;font-size:13px">Error al cargar datos.</div>';
-  }
+function familiaYaAsignada(familiaId, autos, asignaciones) {
+  // Es conductora de algún auto
+  if (autos.find(a => a.familia_id === familiaId)) return true;
+  // Está confirmada en algún auto
+  if (asignaciones.find(a => a.familia_id === familiaId && a.estado === 'confirmado')) return true;
+  return false;
 }
 
 function renderMiLugar(autos, asignaciones, familias) {
   const el = document.getElementById('miLugar');
   if (!miFamilia) { el.style.display = 'none'; return; }
-
-  // ¿Soy conductor?
   const miAuto = autos.find(a => a.familia_id === miFamilia.id);
   if (miAuto) {
-    el.style.display = 'flex';
-    el.className = 'mi-lugar verde';
-    el.innerHTML = `<span class="mi-lugar-icon">🚗</span> Sos conductor — ${miAuto.capacidad_disponible} lugares libres en tu auto`;
-    return;
+    el.style.display = 'flex'; el.className = 'mi-lugar conductor';
+    el.innerHTML = `🚗 Sos conductora — ${miAuto.capacidad_disponible} lugares libres en tu auto`; return;
   }
-
-  // ¿Estoy asignado a un auto?
-  const miAsignacion = asignaciones.find(a => a.familia_id === miFamilia.id && a.estado === 'confirmado');
-  if (miAsignacion) {
-    const miAutoAsig = autos.find(a => a.id === miAsignacion.auto_id);
-    const conductor = familias.find(f => f.id === miAutoAsig?.familia_id);
-    el.style.display = 'flex';
-    el.className = 'mi-lugar verde';
-    el.innerHTML = `<span class="mi-lugar-icon">✅</span> Vas en el auto de ${conductor?.nombre || '—'}`;
-    return;
+  const confirmada = asignaciones.find(a => a.familia_id === miFamilia.id && a.estado === 'confirmado');
+  if (confirmada) {
+    const autoAsig = autos.find(a => a.id === confirmada.auto_id);
+    const conductor = familias.find(f => f.id === autoAsig?.familia_id);
+    el.style.display = 'flex'; el.className = 'mi-lugar verde';
+    el.innerHTML = `✅ Vas en el auto de ${conductor?.nombre || '—'}`; return;
   }
-
-  // ¿Estoy en lista de espera?
-  const enEspera = asignaciones.find(a => a.familia_id === miFamilia.id && a.estado === 'espera');
-  if (enEspera) {
-    el.style.display = 'flex';
-    el.className = 'mi-lugar espera';
-    el.innerHTML = `<span class="mi-lugar-icon">⏳</span> Estás en lista de espera`;
-    return;
+  // En espera
+  const enEspera = familias.find(f => f.id === miFamilia.id);
+  if (enEspera && !familiaYaAsignada(miFamilia.id, autos, asignaciones)) {
+    el.style.display = 'flex'; el.className = 'mi-lugar espera';
+    el.innerHTML = `⏳ Estás en lista de espera`; return;
   }
-
   el.style.display = 'none';
 }
 
 function renderAutos(autos, asignaciones, familias) {
-  const lista = document.getElementById('listaAutos');
   document.getElementById('countAutos').textContent = `${autos.length} auto${autos.length !== 1 ? 's' : ''}`;
-
-  if (autos.length === 0) {
-    lista.innerHTML = '<div style="text-align:center;color:#aaa;font-size:13px;padding:8px 0 16px">Aún no hay autos anotados</div>';
-    return;
-  }
+  const lista = document.getElementById('listaAutos');
+  if (!autos.length) { lista.innerHTML = '<div class="empty-msg">Aún no hay autos anotados</div>'; return; }
 
   lista.innerHTML = autos.map(auto => {
     const conductor = familias.find(f => f.id === auto.familia_id);
@@ -852,94 +365,99 @@ function renderAutos(autos, asignaciones, familias) {
     const ocupados = auto.capacidad_total - auto.capacidad_disponible;
     const esMio = miFamilia && auto.familia_id === miFamilia.id;
 
-    const dots = Array.from({length: auto.capacidad_total}, (_, i) =>
+    const dots = Array.from({length: auto.capacidad_total}, (_,i) =>
       `<div class="lugar-dot ${i < ocupados ? 'ocupado' : 'libre'}"></div>`
     ).join('');
 
-    const pasajerosList = pasajeros.map(p => {
+    const pasajeroRows = pasajeros.map(p => {
       const fam = familias.find(f => f.id === p.familia_id);
-      return `<div class="pasajero-item">👤 ${fam?.nombre || '—'} ${p.cantidad_pasajeros > 1 ? `(${p.cantidad_pasajeros})` : ''}</div>`;
-    }).join('') || '<div style="font-size:13px;color:#aaa">Sin pasajeros aún</div>';
+      return `<div class="pasajero-row">
+        <div class="pasajero-nombre">👤 ${fam?.nombre || '—'}${p.cantidad_pasajeros > 1 ? ` (${p.cantidad_pasajeros})` : ''}</div>
+        <button class="btn-quitar" onclick="quitarPasajero('${p.id}','${auto.id}')" title="Volver a lista de espera">−</button>
+      </div>`;
+    }).join('') || '<div class="empty-msg" style="padding:4px 0">Sin pasajeros aún</div>';
 
-    const yaPuedeSumarse = miFamilia && !esMio && auto.capacidad_disponible > 0;
-    const yaEnAuto = miFamilia && pasajeros.find(p => p.familia_id === miFamilia.id);
-
-    return `
-    <div class="auto-card ${esMio ? 'mio' : ''}" id="auto-${auto.id}" onclick="toggleAuto('${auto.id}')">
-      <div class="auto-top">
-        <div class="auto-conductor">
-          🚗 ${conductor?.nombre || '—'}
-          ${esMio ? '<span class="yo-tag">vos</span>' : ''}
-        </div>
-        <div class="lugares-contador">
-          ${dots}
-          <span class="lugares-texto">${auto.capacidad_disponible} libres</span>
-        </div>
+    return `<div class="auto-card ${esMio ? 'mio' : ''}" id="auto-${auto.id}">
+      <div class="auto-top" onclick="toggleAuto('${auto.id}')">
+        <div class="auto-conductor">🚗 ${conductor?.nombre || '—'}${esMio ? ' <span class="yo-tag">vos</span>' : ''}</div>
+        <div class="lugares-contador">${dots}<span class="lugares-texto">${auto.capacidad_disponible} libres</span></div>
       </div>
-      <div class="auto-pasajeros">
-        ${pasajerosList}
-        ${!esMio && !yaEnAuto ? `
-          <button class="btn-sumarme" ${!yaPuedeSumarse ? 'disabled' : ''}
-            onclick="event.stopPropagation(); abrirSumarme('${auto.id}')">
-            ${yaPuedeSumarse ? '✋ Sumarme a este auto' : 'Auto lleno'}
-          </button>` : ''}
-      </div>
+      <div class="auto-pasajeros">${pasajeroRows}</div>
     </div>`;
   }).join('');
 }
 
 function renderEspera(autos, asignaciones, familias) {
-  // En espera = familias sin auto asignado confirmado y sin ser conductor
-  const conductoresIds = autos.map(a => a.familia_id);
-  const confirmadosIds = asignaciones.filter(a => a.estado === 'confirmado').map(a => a.familia_id);
-
-  const enEspera = familias.filter(f =>
-    !conductoresIds.includes(f.id) && !confirmadosIds.includes(f.id)
-  );
+  const conductoresIds = new Set(autos.map(a => a.familia_id));
+  const confirmadosIds = new Set(asignaciones.filter(a => a.estado === 'confirmado').map(a => a.familia_id));
+  const enEspera = familias.filter(f => !conductoresIds.has(f.id) && !confirmadosIds.has(f.id));
 
   document.getElementById('countEspera').textContent = `${enEspera.length} familia${enEspera.length !== 1 ? 's' : ''}`;
-
-  const resumen = document.getElementById('resumenEspera');
-  if (enEspera.length > 0) {
-    resumen.style.display = 'block';
-    resumen.textContent = `${enEspera.length} familia${enEspera.length !== 1 ? 's' : ''} esperando lugar`;
-  } else {
-    resumen.style.display = 'none';
-  }
-
   const lista = document.getElementById('listaEspera');
-  if (enEspera.length === 0) {
-    lista.innerHTML = '<div style="text-align:center;color:#aaa;font-size:13px;padding:8px 0">Nadie en espera 🎉</div>';
-    return;
-  }
+
+  if (!enEspera.length) { lista.innerHTML = '<div class="empty-msg">Nadie en espera 🎉</div>'; return; }
+
+  // Opciones de autos con lugar disponible
+  const autosConLugar = autos.filter(a => a.capacidad_disponible > 0);
+  const opcionesAutos = autosConLugar.map(a => {
+    const conductor = familias.find(f => f.id === a.familia_id);
+    return `<option value="${a.id}">${conductor?.nombre || '—'} (${a.capacidad_disponible} libres)</option>`;
+  }).join('');
 
   lista.innerHTML = enEspera.map((f, i) => {
     const esMia = miFamilia && f.id === miFamilia.id;
-    return `
-    <div class="espera-card ${esMia ? 'mia' : ''}">
-      <div class="espera-nombre">
-        ${esMia ? '⏳' : '👤'} ${f.nombre}
-        ${esMia ? '<span style="font-size:11px;background:#E8C45A;color:#5A3A00;padding:1px 6px;border-radius:6px;font-weight:600">vos</span>' : ''}
+    const selectorHtml = opcionesAutos
+      ? `<div class="espera-selector">
+          <label>Elegí un auto</label>
+          <select id="selectAuto-${f.id}">
+            <option value="">— Seleccioná —</option>
+            ${opcionesAutos}
+          </select>
+          <button class="btn-asignar" onclick="asignarDesdeEspera('${f.id}')">Confirmar lugar</button>
+        </div>`
+      : `<div class="espera-selector"><div class="empty-msg">No hay autos con lugar disponible</div></div>`;
+
+    return `<div class="espera-card ${esMia ? 'mia' : ''}" id="espera-${f.id}">
+      <div class="espera-top" onclick="toggleEspera('${f.id}')">
+        <div class="espera-nombre">${esMia ? '⏳' : '👤'} ${f.nombre}${esMia ? ' <span style="font-size:11px;background:#E8C45A;color:#5A3A00;padding:1px 6px;border-radius:6px;font-weight:600">vos</span>' : ''}</div>
+        <div style="display:flex;align-items:center;gap:8px"><span class="espera-pos">#${i+1}</span><span style="color:var(--texto-soft);font-size:12px">▾</span></div>
       </div>
-      <div class="espera-pos">#${i + 1}</div>
+      ${selectorHtml}
     </div>`;
   }).join('');
 }
 
-function toggleAuto(autoId) {
-  const card = document.getElementById(`auto-${autoId}`);
-  card.classList.toggle('expandido');
+function toggleAuto(id) { document.getElementById(`auto-${id}`)?.classList.toggle('expandido'); }
+function toggleEspera(id) { document.getElementById(`espera-${id}`)?.classList.toggle('expandida'); }
+
+async function asignarDesdeEspera(familiaId) {
+  const autoId = document.getElementById(`selectAuto-${familiaId}`)?.value;
+  if (!autoId) { alert('Elegí un auto primero.'); return; }
+  try {
+    await api(`evento_asignaciones`, { method: 'POST', body: JSON.stringify({ auto_id: autoId, familia_id: familiaId, cantidad_pasajeros: 1, estado: 'confirmado' }) });
+    const auto = await api(`evento_autos?id=eq.${autoId}&select=*`);
+    if (auto?.[0]) await api(`evento_autos?id=eq.${autoId}`, { method: 'PATCH', body: JSON.stringify({ capacidad_disponible: auto[0].capacidad_disponible - 1 }) });
+    await renderTramo();
+  } catch(e) { console.error(e); alert('Error al asignar.'); }
 }
 
-// ── POPUPS ──
+async function quitarPasajero(asignacionId, autoId) {
+  try {
+    await api(`evento_asignaciones?id=eq.${asignacionId}`, { method: 'DELETE', headers: { 'Prefer': '' } });
+    const auto = await api(`evento_autos?id=eq.${autoId}&select=*`);
+    if (auto?.[0]) await api(`evento_autos?id=eq.${autoId}`, { method: 'PATCH', body: JSON.stringify({ capacidad_disponible: auto[0].capacidad_disponible + 1 }) });
+    await renderTramo();
+  } catch(e) { console.error(e); alert('Error al quitar pasajero.'); }
+}
 
+// POPUPS
 function abrirPopupAuto() {
   modoPopup = 'auto';
   document.getElementById('popupTitulo').textContent = 'Ofrezco mi auto';
   document.getElementById('campoCapacidad').style.display = 'block';
   document.getElementById('inputNombre').value = miFamilia?.nombre || '';
-  document.getElementById('btnConfirmarPopup').textContent = 'Confirmar auto';
-  document.getElementById('overlayFamilia').classList.add('visible');
+  document.getElementById('hijaViene').checked = false;
+  document.getElementById('overlayAlta').classList.add('visible');
 }
 
 function abrirPopupPasajero() {
@@ -947,105 +465,53 @@ function abrirPopupPasajero() {
   document.getElementById('popupTitulo').textContent = 'Me anoto como pasajero';
   document.getElementById('campoCapacidad').style.display = 'none';
   document.getElementById('inputNombre').value = miFamilia?.nombre || '';
-  document.getElementById('btnConfirmarPopup').textContent = 'Anotarme';
-  document.getElementById('overlayFamilia').classList.add('visible');
+  document.getElementById('overlayAlta').classList.add('visible');
 }
 
-function abrirSumarme(autoId) {
-  modoPopup = 'sumarme';
-  autoSeleccionado = autoId;
-  document.getElementById('popupTitulo').textContent = 'Sumarme a este auto';
-  document.getElementById('campoCapacidad').style.display = 'none';
-  document.getElementById('inputNombre').value = miFamilia?.nombre || '';
-  document.getElementById('btnConfirmarPopup').textContent = 'Confirmar';
-  document.getElementById('overlayFamilia').classList.add('visible');
-}
+function cerrarPopup() { document.getElementById('overlayAlta').classList.remove('visible'); modoPopup = null; }
 
-function cerrarPopup() {
-  document.getElementById('overlayFamilia').classList.remove('visible');
-  document.getElementById('inputNombre').value = '';
-  modoPopup = null;
-  autoSeleccionado = null;
+async function getOrCreateFamilia(nombre) {
+  const existing = await api(`evento_familias?evento_id=eq.${evento.id}&nombre=eq.${encodeURIComponent(nombre)}&select=*`);
+  if (existing?.length) return existing[0];
+  const nueva = await api(`evento_familias`, { method: 'POST', body: JSON.stringify({ evento_id: evento.id, nombre, es_admin: false }) });
+  return nueva[0];
 }
 
 async function confirmarAlta() {
   const nombre = document.getElementById('inputNombre').value.trim();
   if (!nombre) { alert('Ingresá el nombre de tu familia.'); return; }
-
   try {
     if (modoPopup === 'auto') {
-      const capacidad = parseInt(document.getElementById('inputCapacidad').value);
-      // Crear o recuperar familia
-      const familia = await getOrCreateFamilia(nombre);
-      // Crear auto
-      await supabase(`evento_autos`, {
-        method: 'POST',
-        body: JSON.stringify({
-          evento_id: evento.id,
-          familia_id: familia.id,
-          tramo: tramoActual,
-          capacidad_total: capacidad,
-          capacidad_disponible: capacidad
-        })
-      });
-      miFamilia = familia;
-      sessionStorage.setItem('miFamilia_' + getToken(), JSON.stringify(familia));
-    }
+      const capacidadBase = parseInt(document.getElementById('inputCapacidad').value);
+      const hijaViene = document.getElementById('hijaViene').checked;
+      const capacidadDisponible = hijaViene ? capacidadBase - 1 : capacidadBase;
+      const capacidadTotal = capacidadBase; // total siempre incluye todos los lugares
 
-    else if (modoPopup === 'pasajero') {
       const familia = await getOrCreateFamilia(nombre);
-      miFamilia = familia;
-      sessionStorage.setItem('miFamilia_' + getToken(), JSON.stringify(familia));
-      // Queda en lista de espera — no hace falta crear asignación
-    }
+      // Verificar que no sea ya conductor en este tramo
+      const existeAuto = await api(`evento_autos?evento_id=eq.${evento.id}&familia_id=eq.${familia.id}&tramo=eq.${tramoActual}&select=id`);
+      if (existeAuto?.length) { alert('Ya tenés un auto registrado en este tramo.'); cerrarPopup(); return; }
 
-    else if (modoPopup === 'sumarme') {
-      const familia = await getOrCreateFamilia(nombre);
+      await api(`evento_autos`, { method: 'POST', body: JSON.stringify({ evento_id: evento.id, familia_id: familia.id, tramo: tramoActual, capacidad_total: capacidadTotal, capacidad_disponible: capacidadDisponible }) });
       miFamilia = familia;
       sessionStorage.setItem('miFamilia_' + getToken(), JSON.stringify(familia));
-      // Asignar al auto
-      await supabase(`evento_asignaciones`, {
-        method: 'POST',
-        body: JSON.stringify({
-          auto_id: autoSeleccionado,
-          familia_id: familia.id,
-          cantidad_pasajeros: 1,
-          estado: 'confirmado'
-        })
-      });
-      // Actualizar capacidad disponible
-      const auto = await supabase(`evento_autos?id=eq.${autoSeleccionado}&select=*`);
-      if (auto && auto[0]) {
-        await supabase(`evento_autos?id=eq.${autoSeleccionado}`, {
-          method: 'PATCH',
-          body: JSON.stringify({ capacidad_disponible: auto[0].capacidad_disponible - 1 })
-        });
+    } else if (modoPopup === 'pasajero') {
+      const familia = await getOrCreateFamilia(nombre);
+      // Verificar que no esté ya en el sistema para este tramo
+      const autosTramo = await api(`evento_autos?evento_id=eq.${evento.id}&tramo=eq.${tramoActual}&select=id`) || [];
+      const autoIds = autosTramo.map(a => `"${a.id}"`).join(',');
+      if (autoIds.length) {
+        const yaAsignada = await api(`evento_asignaciones?auto_id=in.(${autoIds})&familia_id=eq.${familia.id}&select=id`);
+        if (yaAsignada?.length) { alert('Esta familia ya está registrada en este tramo.'); cerrarPopup(); return; }
       }
+      miFamilia = familia;
+      sessionStorage.setItem('miFamilia_' + getToken(), JSON.stringify(familia));
     }
-
     cerrarPopup();
     await renderTramo();
-
-  } catch(e) {
-    console.error(e);
-    alert('Error al guardar. Revisá la consola.');
-  }
+  } catch(e) { console.error(e); alert(`Error: ${e.message}`); }
 }
 
-async function getOrCreateFamilia(nombre) {
-  // Buscar por nombre en este evento
-  const existing = await supabase(`evento_familias?evento_id=eq.${evento.id}&nombre=eq.${encodeURIComponent(nombre)}&select=*`);
-  if (existing && existing.length > 0) return existing[0];
-
-  // Crear nueva
-  const nueva = await supabase(`evento_familias`, {
-    method: 'POST',
-    body: JSON.stringify({ evento_id: evento.id, nombre, es_admin: false })
-  });
-  return nueva[0];
-}
-
-// ── INIT ──
 init();
 </script>
 </body>
