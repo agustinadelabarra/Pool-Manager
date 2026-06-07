@@ -19,8 +19,6 @@
     --borde: #E5D8CE;
     --blanco: #FFFFFF;
     --shadow: 0 2px 12px rgba(232,132,90,0.10);
-    --rojo-light: #FDF0F0;
-    --rojo: #C4423A;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(--texto); min-height: 100vh; }
@@ -28,13 +26,17 @@
   .screen.active { display: block; }
 
   /* HEADER */
-  .evento-header { padding: 28px 20px 20px; color: var(--blanco); text-align: center; }
+  .evento-header { padding: 28px 20px 20px; color: var(--blanco); text-align: center; position: relative; }
   .evento-header.ida-color { background: var(--naranja); }
   .evento-header.vuelta-color { background: var(--verde); }
   .evento-header.inicio-color { background: var(--naranja); }
-  .evento-nombre { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; margin-bottom: 4px; line-height: 1.2; }
-  .evento-meta { font-size: 13px; opacity: 0.85; margin-bottom: 0; }
+  .evento-nombre { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; margin-bottom: 6px; line-height: 1.2; }
+  .evento-meta { font-size: 16px; opacity: 0.9; font-weight: 500; margin-bottom: 0; }
   .evento-proposito { font-size: 15px; font-weight: 600; margin-top: 12px; background: rgba(255,255,255,0.18); padding: 10px 16px; border-radius: 10px; display: inline-block; line-height: 1.4; }
+
+  /* REFRESH BTN */
+  .btn-refresh { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.2); border: none; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: white; transition: background 0.2s; }
+  .btn-refresh:hover { background: rgba(255,255,255,0.35); }
 
   /* TRAMOS */
   .tramos { padding: 20px 16px; display: flex; flex-direction: column; gap: 12px; max-width: 480px; margin: 0 auto; }
@@ -43,23 +45,23 @@
   .btn-tramo.ida { background: var(--naranja); color: var(--blanco); }
   .btn-tramo.vuelta { background: var(--verde); color: var(--blanco); }
   .tramo-left { text-align: left; }
-  .tramo-label { font-size: 12px; opacity: 0.8; font-weight: 500; margin-bottom: 2px; }
-  .tramo-hora { font-size: 20px; font-weight: 700; }
-  .tramo-stats { font-size: 12px; opacity: 0.85; margin-top: 3px; }
+  .tramo-label { font-size: 20px; font-weight: 700; margin-bottom: 2px; }
+  .tramo-hora { font-size: 14px; opacity: 0.85; font-weight: 500; }
+  .tramo-stats { font-size: 12px; opacity: 0.8; margin-top: 3px; }
   .tramo-alerta { font-size: 12px; font-weight: 600; background: rgba(255,255,255,0.25); padding: 2px 8px; border-radius: 8px; margin-top: 4px; display: inline-block; }
   .tramo-arrow { font-size: 20px; opacity: 0.7; }
 
   /* TRAMO HEADER */
-  .tramo-header { display: flex; align-items: center; gap: 12px; padding: 16px; max-width: 480px; margin: 0 auto; }
-  .btn-back { background: var(--blanco); border: 1.5px solid var(--borde); border-radius: 10px; padding: 8px 12px; font-size: 13px; cursor: pointer; color: var(--texto-soft); font-family: 'DM Sans', sans-serif; font-weight: 500; }
+  .tramo-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; max-width: 480px; margin: 0 auto; }
+  .btn-back-circle { width: 36px; height: 36px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; color: white; transition: opacity 0.2s; flex-shrink: 0; }
+  .btn-back-circle.ida { background: var(--naranja); }
+  .btn-back-circle.vuelta { background: var(--verde); }
+  .btn-back-circle:hover { opacity: 0.8; }
   .tramo-title { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 600; }
-  .tramo-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-left: auto; }
-  .tramo-badge.ida { background: var(--naranja-light); color: var(--naranja-dark); }
-  .tramo-badge.vuelta { background: var(--verde-light); color: var(--verde-dark); }
 
   /* MI LUGAR */
   .mi-lugar-bar { margin: 0 16px 16px; max-width: 448px; margin-left: auto; margin-right: auto; }
-  .mi-lugar { border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; }
+  .mi-lugar { border-radius: 12px; padding: 13px 16px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; }
   .mi-lugar.conductor { background: var(--naranja-light); border: 1.5px solid var(--naranja); color: var(--naranja-dark); }
   .mi-lugar.asignada { background: var(--verde-light); border: 1.5px solid var(--verde); color: var(--verde-dark); }
   .mi-lugar.espera { background: #FFF8E8; border: 1.5px solid #E8C45A; color: #7A5A00; }
@@ -68,47 +70,53 @@
   .zona { margin: 0 16px 20px; max-width: 448px; margin-left: auto; margin-right: auto; }
   .zona-autos { background: var(--naranja-light); border-radius: 14px; padding: 14px; border: 1.5px solid #F0C4A8; }
   .zona-espera { background: var(--verde-light); border-radius: 14px; padding: 14px; border: 1.5px solid #A8C8B4; }
-  .zona-titulo { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
-  .zona-count { font-size: 12px; font-weight: 500; color: var(--texto-soft); font-family: 'DM Sans', sans-serif; }
+  .zona-titulo { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+  .zona-count { font-size: 13px; font-weight: 500; color: var(--texto-soft); font-family: 'DM Sans', sans-serif; }
 
   /* AUTO CARD */
   .auto-card { background: var(--blanco); border: 1.5px solid var(--borde); border-radius: 12px; padding: 13px 14px; margin-bottom: 8px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); }
   .auto-card:last-of-type { margin-bottom: 0; }
   .auto-card.mio { border-color: var(--naranja); }
   .auto-top { display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
-  .auto-conductor { font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 6px; }
+  .auto-conductor { font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 6px; }
   .yo-tag { font-size: 10px; background: var(--naranja); color: white; padding: 1px 6px; border-radius: 6px; font-weight: 600; }
   .lugares-contador { display: flex; align-items: center; gap: 3px; }
-  .lugar-dot { width: 9px; height: 9px; border-radius: 50%; }
+  .lugar-dot { width: 10px; height: 10px; border-radius: 50%; }
   .lugar-dot.ocupado { background: var(--naranja); }
   .lugar-dot.libre { background: var(--verde-light); border: 1.5px solid var(--verde); }
-  .lugares-texto { font-size: 11px; color: var(--texto-soft); margin-left: 4px; }
+  .lugares-texto { font-size: 12px; color: var(--texto-soft); margin-left: 4px; }
 
   .auto-pasajeros { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--borde); }
   .auto-card.expandido .auto-pasajeros { display: block; }
-  .pasajero-row { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #F5EDE6; }
+  .pasajero-row { display: flex; align-items: center; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #F5EDE6; }
   .pasajero-row:last-child { border-bottom: none; }
-  .pasajero-nombre { font-size: 13px; color: var(--texto); }
-  .btn-quitar { background: none; border: 1.5px solid var(--borde); border-radius: 6px; color: var(--texto-soft); font-size: 14px; width: 26px; height: 26px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; line-height: 1; }
+  .pasajero-nombre { font-size: 14px; color: var(--texto); }
+  .btn-quitar { background: none; border: 1.5px solid var(--borde); border-radius: 6px; color: var(--texto-soft); font-size: 14px; width: 28px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
   .btn-quitar:hover { border-color: var(--naranja); color: var(--naranja-dark); background: var(--naranja-light); }
+
+  /* Editar capacidad y dar de baja auto */
+  .auto-acciones { display: flex; gap: 8px; margin-top: 10px; }
+  .btn-auto-accion { flex: 1; padding: 8px; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; border: 1.5px solid var(--borde); background: var(--crema); color: var(--texto-soft); }
+  .btn-auto-accion:hover { background: var(--blanco); }
+  .btn-auto-accion.danger:hover { border-color: #C4423A; color: #C4423A; background: #FDF0F0; }
 
   /* ESPERA CARD */
   .espera-card { background: var(--blanco); border: 1.5px solid var(--borde); border-radius: 12px; padding: 13px 14px; margin-bottom: 8px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); }
   .espera-card:last-of-type { margin-bottom: 0; }
   .espera-card.mia { border-color: #E8C45A; }
   .espera-top { display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
-  .espera-nombre { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
-  .espera-pos { font-size: 12px; color: var(--texto-soft); }
+  .espera-nombre { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+  .espera-pos { font-size: 13px; color: var(--texto-soft); }
   .espera-selector { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--borde); }
   .espera-card.expandida .espera-selector { display: block; }
-  .espera-selector label { font-size: 11px; font-weight: 600; color: var(--texto-soft); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 6px; }
-  .espera-selector select { width: 100%; padding: 9px 12px; border: 1.5px solid var(--borde); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--texto); background: var(--crema); outline: none; margin-bottom: 8px; }
+  .espera-selector label { font-size: 12px; font-weight: 600; color: var(--texto-soft); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 6px; }
+  .espera-selector select { width: 100%; padding: 10px 12px; border: 1.5px solid var(--borde); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--texto); background: var(--crema); outline: none; margin-bottom: 8px; }
   .espera-selector select:focus { border-color: var(--verde); }
-  .btn-asignar { width: 100%; padding: 10px; background: var(--verde); color: white; border: none; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .btn-asignar { width: 100%; padding: 11px; background: var(--verde); color: white; border: none; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; }
   .btn-asignar:hover { background: var(--verde-dark); }
 
   /* BTN AGREGAR */
-  .btn-agregar { width: 100%; padding: 11px; border: 2px dashed rgba(0,0,0,0.15); border-radius: 10px; background: rgba(255,255,255,0.5); color: var(--texto-soft); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .btn-agregar { width: 100%; padding: 12px; border: 2px dashed rgba(0,0,0,0.15); border-radius: 10px; background: rgba(255,255,255,0.5); color: var(--texto-soft); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 6px; }
   .btn-agregar:hover { background: rgba(255,255,255,0.8); }
 
   /* POPUP */
@@ -119,18 +127,21 @@
   .popup-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; margin-bottom: 16px; text-align: center; }
   .popup-field { margin-bottom: 12px; }
   .popup-field label { display: block; font-size: 12px; font-weight: 600; color: var(--texto-soft); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 5px; }
-  .popup-field input, .popup-field select { width: 100%; padding: 11px 13px; border: 1.5px solid var(--borde); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--texto); background: var(--crema); outline: none; }
+  .popup-field input, .popup-field select { width: 100%; padding: 12px 13px; border: 1.5px solid var(--borde); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--texto); background: var(--crema); outline: none; }
   .popup-field input:focus, .popup-field select:focus { border-color: var(--naranja); background: var(--blanco); }
-  .popup-check { display: flex; align-items: center; gap: 10px; padding: 11px 13px; border: 1.5px solid var(--borde); border-radius: 10px; background: var(--crema); cursor: pointer; margin-bottom: 12px; }
+  .popup-check { display: flex; align-items: center; gap: 10px; padding: 12px 13px; border: 1.5px solid var(--borde); border-radius: 10px; background: var(--crema); cursor: pointer; margin-bottom: 12px; }
   .popup-check input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--naranja); cursor: pointer; }
-  .popup-check span { font-size: 14px; color: var(--texto); }
+  .popup-check span { font-size: 15px; color: var(--texto); }
   .popup-btns { display: flex; gap: 10px; }
-  .btn-cancelar { flex: 1; padding: 13px; background: var(--crema); border: 1.5px solid var(--borde); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; color: var(--texto-soft); }
-  .btn-confirmar { flex: 2; padding: 13px; background: var(--naranja); border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; color: white; }
+  .btn-cancelar { flex: 1; padding: 13px; background: var(--crema); border: 1.5px solid var(--borde); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; color: var(--texto-soft); }
+  .btn-confirmar { flex: 2; padding: 13px; background: var(--naranja); border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; color: white; }
   .btn-confirmar:hover { background: var(--naranja-dark); }
 
-  .empty-msg { text-align: center; color: #aaa; font-size: 13px; padding: 8px 0 4px; }
-  .loading { text-align: center; padding: 48px 20px; color: var(--texto-soft); font-size: 14px; }
+  .empty-msg { text-align: center; color: #aaa; font-size: 14px; padding: 8px 0 4px; }
+  .loading { text-align: center; padding: 48px 20px; color: var(--texto-soft); font-size: 15px; }
+
+  /* VERSION */
+  .version { text-align: center; font-size: 11px; color: #ccc; padding: 16px; }
 </style>
 </head>
 <body>
@@ -142,6 +153,7 @@
 <!-- PANTALLA INICIO -->
 <div class="screen" id="screenInicio">
   <div class="evento-header inicio-color">
+    <button class="btn-refresh" onclick="cargarStats()" title="Actualizar">🔄</button>
     <div class="evento-nombre" id="eventoNombre"></div>
     <div class="evento-meta" id="eventoMeta"></div>
     <div class="evento-proposito" id="eventoProposito" style="display:none"></div>
@@ -166,50 +178,45 @@
       <div class="tramo-arrow">→</div>
     </button>
   </div>
+  <div class="version">v0.2</div>
 </div>
 
 <!-- PANTALLA TRAMO -->
 <div class="screen" id="screenTramo">
   <div class="evento-header" id="tramoHeader">
+    <button class="btn-refresh" id="tramoRefresh" onclick="renderTramo()" title="Actualizar">🔄</button>
     <div class="evento-nombre" id="tramoEventoNombre"></div>
     <div class="evento-meta" id="tramoEventoMeta"></div>
   </div>
+
   <div class="tramo-header">
-    <button class="btn-back" onclick="volverInicio()">← Volver</button>
+    <button class="btn-back-circle ida" id="btnBack" onclick="volverInicio()">←</button>
     <div class="tramo-title" id="tramoTitle"></div>
-    <div class="tramo-badge" id="tramoBadge"></div>
   </div>
 
   <div class="mi-lugar-bar">
     <div id="miLugar" style="display:none"></div>
   </div>
 
-  <!-- Zona autos -->
   <div class="zona">
     <div class="zona-autos">
-      <div class="zona-titulo">
-        🚗 Autos
-        <span class="zona-count" id="countAutos">—</span>
-      </div>
+      <div class="zona-titulo">🚗 Autos <span class="zona-count" id="countAutos">—</span></div>
       <button class="btn-agregar" onclick="abrirPopupAuto()">+ Ofrezco mi auto</button>
       <div id="listaAutos"></div>
     </div>
   </div>
 
-  <!-- Zona espera -->
   <div class="zona">
     <div class="zona-espera">
-      <div class="zona-titulo">
-        ⏳ Lista de espera
-        <span class="zona-count" id="countEspera">—</span>
-      </div>
+      <div class="zona-titulo">⏳ Lista de espera <span class="zona-count" id="countEspera">—</span></div>
       <button class="btn-agregar" onclick="abrirPopupPasajero()">+ Me anoto como pasajero</button>
       <div id="listaEspera"></div>
     </div>
   </div>
+  <div class="version">v0.2</div>
 </div>
 
-<!-- POPUP -->
+<!-- POPUP ALTA -->
 <div class="overlay" id="overlayAlta">
   <div class="popup">
     <div class="popup-title" id="popupTitulo">Alta</div>
@@ -238,7 +245,31 @@
     </div>
     <div class="popup-btns">
       <button class="btn-cancelar" onclick="cerrarPopup()">Cancelar</button>
-      <button class="btn-confirmar" onclick="confirmarAlta()">Confirmar</button>
+      <button class="btn-confirmar" id="btnConfirmar" onclick="confirmarAlta()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- POPUP EDITAR AUTO -->
+<div class="overlay" id="overlayEditarAuto">
+  <div class="popup">
+    <div class="popup-title">Editar auto</div>
+    <div class="popup-field">
+      <label>Lugares disponibles</label>
+      <select id="editarCapacidad">
+        <option value="1">1 lugar</option>
+        <option value="2">2 lugares</option>
+        <option value="3">3 lugares</option>
+        <option value="4">4 lugares</option>
+        <option value="5">5 lugares</option>
+        <option value="6">6 lugares</option>
+        <option value="7">7 lugares</option>
+        <option value="8">8 lugares</option>
+      </select>
+    </div>
+    <div class="popup-btns">
+      <button class="btn-cancelar" onclick="cerrarPopupEditar()">Cancelar</button>
+      <button class="btn-confirmar" onclick="confirmarEditarAuto()">Guardar</button>
     </div>
   </div>
 </div>
@@ -257,6 +288,8 @@ let evento = null;
 let tramoActual = null;
 let modoPopup = null;
 let miFamilia = null;
+let autoEditandoId = null;
+let guardando = false;
 
 function getToken() { return new URLSearchParams(window.location.search).get('token'); }
 function formatHora(h) { return h ? h.substring(0,5) : '—'; }
@@ -324,9 +357,10 @@ async function cargarStats() {
       const statsEl = document.getElementById(`stats${sufx}`);
       const alertaEl = document.getElementById(`alerta${sufx}`);
       if (statsEl) statsEl.textContent = `${at.length} autos · ${libres}/${totalLugares} lugares libres`;
-      if (alertaEl && enEspera > libres && enEspera > 0) {
-        alertaEl.textContent = `⚠️ Faltan lugares para ${enEspera - libres} familia${enEspera - libres !== 1 ? 's' : ''}`;
-        alertaEl.style.display = 'inline-block';
+      if (alertaEl) {
+        const faltantes = enEspera - libres;
+        if (faltantes > 0) { alertaEl.textContent = `⚠️ Faltan lugares para ${faltantes} familia${faltantes !== 1 ? 's' : ''}`; alertaEl.style.display = 'inline-block'; }
+        else alertaEl.style.display = 'none';
       }
     }
   } catch(e) { console.log('stats error', e); }
@@ -337,9 +371,9 @@ async function entrarTramo(tramo) {
   const esIda = tramo === 'ida';
   document.getElementById('tramoHeader').className = `evento-header ${esIda ? 'ida-color' : 'vuelta-color'}`;
   document.getElementById('tramoEventoNombre').textContent = evento.nombre;
-  document.getElementById('tramoEventoMeta').textContent = `${formatFecha(evento.fecha)} · ${esIda ? 'Ida' : 'Vuelta'} ${formatHora(esIda ? evento.hora_ida : evento.hora_vuelta)}`;
-  document.getElementById('tramoBadge').className = `tramo-badge ${tramo}`;
-  document.getElementById('tramoBadge').textContent = tramo.toUpperCase();
+  document.getElementById('tramoEventoMeta').textContent = `${formatFecha(evento.fecha)} · ${evento.destino} · ${esIda ? 'Ida' : 'Vuelta'} ${formatHora(esIda ? evento.hora_ida : evento.hora_vuelta)}`;
+  const btnBack = document.getElementById('btnBack');
+  btnBack.className = `btn-back-circle ${tramo}`;
   document.getElementById('tramoTitle').textContent = esIda ? '🚗 Ida' : '🏠 Vuelta';
   show('screenTramo');
   await renderTramo();
@@ -366,10 +400,7 @@ function renderMiLugar(autos, asignaciones, familias) {
   const el = document.getElementById('miLugar');
   if (!miFamilia) { el.style.display = 'none'; return; }
   const miAuto = autos.find(a => a.familia_id === miFamilia.id);
-  if (miAuto) {
-    el.style.display = 'flex'; el.className = 'mi-lugar conductor';
-    el.innerHTML = `🚗 Sos conductora — ${miAuto.capacidad_disponible} lugares libres`; return;
-  }
+  if (miAuto) { el.style.display = 'flex'; el.className = 'mi-lugar conductor'; el.innerHTML = `🚗 Sos conductora — ${miAuto.capacidad_disponible} lugares libres`; return; }
   const confirmada = asignaciones.find(a => a.familia_id === miFamilia.id && a.estado === 'confirmado');
   if (confirmada) {
     const autoAsig = autos.find(a => a.id === confirmada.auto_id);
@@ -378,10 +409,7 @@ function renderMiLugar(autos, asignaciones, familias) {
     el.innerHTML = `✅ Vas en el auto de ${conductor?.nombre || '—'}`; return;
   }
   const enLista = familias.find(f => f.id === miFamilia.id);
-  if (enLista) {
-    el.style.display = 'flex'; el.className = 'mi-lugar espera';
-    el.innerHTML = `⏳ Estás en lista de espera`; return;
-  }
+  if (enLista) { el.style.display = 'flex'; el.className = 'mi-lugar espera'; el.innerHTML = `⏳ Estás en lista de espera`; return; }
   el.style.display = 'none';
 }
 
@@ -394,7 +422,7 @@ function renderAutos(autos, asignaciones, familias) {
     const pasajeros = asignaciones.filter(a => a.auto_id === auto.id && a.estado === 'confirmado');
     const ocupados = auto.capacidad_total - auto.capacidad_disponible;
     const esMio = miFamilia && auto.familia_id === miFamilia.id;
-    const dots = Array.from({length: auto.capacidad_total}, (_,i) =>
+    const dots = Array.from({length: Math.min(auto.capacidad_total, 8)}, (_,i) =>
       `<div class="lugar-dot ${i < ocupados ? 'ocupado' : 'libre'}"></div>`
     ).join('');
     const pasajeroRows = pasajeros.map(p => {
@@ -406,7 +434,13 @@ function renderAutos(autos, asignaciones, familias) {
         <div class="auto-conductor">🚗 ${conductor?.nombre || '—'}${esMio ? ' <span class="yo-tag">vos</span>' : ''}</div>
         <div class="lugares-contador">${dots}<span class="lugares-texto">${auto.capacidad_disponible} libres</span></div>
       </div>
-      <div class="auto-pasajeros">${pasajeroRows}</div>
+      <div class="auto-pasajeros">
+        ${pasajeroRows}
+        <div class="auto-acciones">
+          <button class="btn-auto-accion" onclick="abrirEditarAuto('${auto.id}', ${auto.capacidad_total})">✏️ Editar lugares</button>
+          <button class="btn-auto-accion danger" onclick="darDeBajaAuto('${auto.id}')">🗑 Dar de baja</button>
+        </div>
+      </div>
     </div>`;
   }).join('');
 }
@@ -460,6 +494,39 @@ async function quitarPasajero(asignacionId, autoId) {
   } catch(e) { console.error(e); alert('Error al quitar pasajero.'); }
 }
 
+function abrirEditarAuto(autoId, capacidadActual) {
+  autoEditandoId = autoId;
+  document.getElementById('editarCapacidad').value = capacidadActual;
+  document.getElementById('overlayEditarAuto').classList.add('visible');
+}
+
+function cerrarPopupEditar() { document.getElementById('overlayEditarAuto').classList.remove('visible'); autoEditandoId = null; }
+
+async function confirmarEditarAuto() {
+  if (!autoEditandoId) return;
+  const nuevaCapacidad = parseInt(document.getElementById('editarCapacidad').value);
+  try {
+    const auto = await api(`evento_autos?id=eq.${autoEditandoId}&select=*`);
+    if (!auto?.[0]) return;
+    const ocupados = auto[0].capacidad_total - auto[0].capacidad_disponible;
+    const nuevosLibres = Math.max(0, nuevaCapacidad - ocupados);
+    await api(`evento_autos?id=eq.${autoEditandoId}`, { method: 'PATCH', body: JSON.stringify({ capacidad_total: nuevaCapacidad, capacidad_disponible: nuevosLibres }) });
+    cerrarPopupEditar();
+    await renderTramo();
+  } catch(e) { console.error(e); alert('Error al editar.'); }
+}
+
+async function darDeBajaAuto(autoId) {
+  if (!confirm('¿Dar de baja este auto? Los pasajeros volverán a lista de espera.')) return;
+  try {
+    // Los pasajeros se borran por cascade, pero actualizamos capacidad primero
+    await api(`evento_asignaciones?auto_id=eq.${autoId}`, { method: 'DELETE', headers: { 'Prefer': '' } });
+    await api(`evento_autos?id=eq.${autoId}`, { method: 'DELETE', headers: { 'Prefer': '' } });
+    await renderTramo();
+  } catch(e) { console.error(e); alert('Error al dar de baja el auto.'); }
+}
+
+// POPUPS ALTA
 function abrirPopupAuto() {
   modoPopup = 'auto';
   document.getElementById('popupTitulo').textContent = 'Ofrezco mi auto';
@@ -487,8 +554,12 @@ async function getOrCreateFamilia(nombre) {
 }
 
 async function confirmarAlta() {
+  if (guardando) return;
+  guardando = true;
+  const btn = document.getElementById('btnConfirmar');
+  btn.disabled = true;
   const nombre = document.getElementById('inputNombre').value.trim();
-  if (!nombre) { alert('Ingresá el nombre de tu familia.'); return; }
+  if (!nombre) { alert('Ingresá el nombre de tu familia.'); guardando = false; btn.disabled = false; return; }
   try {
     if (modoPopup === 'auto') {
       const capacidadBase = parseInt(document.getElementById('inputCapacidad').value);
@@ -514,6 +585,7 @@ async function confirmarAlta() {
     cerrarPopup();
     await renderTramo();
   } catch(e) { console.error(e); alert(`Error: ${e.message}`); }
+  finally { guardando = false; btn.disabled = false; }
 }
 
 init();
