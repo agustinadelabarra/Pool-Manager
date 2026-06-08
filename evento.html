@@ -7,23 +7,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --naranja: #E8845A;
-    --naranja-light: #FDF0E8;
-    --naranja-dark: #C4623A;
-    --verde: #5A8A6A;
-    --verde-light: #E8F2EC;
-    --verde-dark: #3D6B4F;
-    --crema: #FDF6F0;
-    --texto: #2D2D2D;
-    --texto-soft: #6B6B6B;
-    --borde: #E5D8CE;
-    --blanco: #FFFFFF;
+    --naranja: #E8845A; --naranja-light: #FDF0E8; --naranja-dark: #C4623A;
+    --verde: #5A8A6A; --verde-light: #E8F2EC; --verde-dark: #3D6B4F;
+    --crema: #FDF6F0; --texto: #2D2D2D; --texto-soft: #6B6B6B;
+    --borde: #E5D8CE; --blanco: #FFFFFF;
     --shadow: 0 2px 12px rgba(232,132,90,0.10);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(--texto); min-height: 100vh; }
-  .screen { display: none; }
-  .screen.active { display: block; }
+  .screen { display: none; } .screen.active { display: block; }
 
   .evento-header { padding: 28px 20px 20px; color: var(--blanco); text-align: center; position: relative; }
   .evento-header.ida-color { background: var(--naranja); }
@@ -47,6 +39,13 @@
   .tramo-alerta { font-size: 12px; font-weight: 600; background: rgba(255,255,255,0.25); padding: 2px 8px; border-radius: 8px; margin-top: 4px; display: inline-block; }
   .tramo-arrow { font-size: 20px; opacity: 0.7; }
 
+  /* Footer inicio */
+  .inicio-footer { padding: 8px 16px 32px; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .btn-nuevo-evento { width: 100%; padding: 13px; background: transparent; border: 1.5px solid var(--borde); border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: var(--texto-soft); cursor: pointer; transition: all 0.2s; }
+  .btn-nuevo-evento:hover { border-color: var(--naranja); color: var(--naranja-dark); background: var(--naranja-light); }
+  .contacto-link { font-size: 12px; color: var(--texto-soft); text-decoration: none; }
+  .contacto-link:hover { color: var(--naranja-dark); }
+
   .tramo-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; max-width: 480px; margin: 0 auto; }
   .btn-back-circle { width: 36px; height: 36px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; color: white; flex-shrink: 0; }
   .btn-back-circle.ida { background: var(--naranja); }
@@ -69,14 +68,19 @@
   .auto-card { background: var(--blanco); border: 1.5px solid var(--borde); border-radius: 12px; padding: 13px 14px; margin-bottom: 8px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); }
   .auto-card:last-of-type { margin-bottom: 0; }
   .auto-card.mio { border-color: var(--naranja); }
-  .auto-top { display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
-  .auto-conductor { font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 6px; }
+  .auto-top { display: flex; align-items: center; justify-content: space-between; cursor: pointer; gap: 8px; }
+  .auto-conductor-info { flex: 1; min-width: 0; }
+  .auto-conductor { font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .auto-zona { font-size: 11px; color: var(--texto-soft); margin-top: 1px; }
   .yo-tag { font-size: 10px; background: var(--naranja); color: white; padding: 1px 6px; border-radius: 6px; font-weight: 600; }
+  .auto-top-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
   .lugares-contador { display: flex; align-items: center; gap: 3px; }
   .lugar-dot { width: 10px; height: 10px; border-radius: 50%; }
   .lugar-dot.ocupado { background: var(--naranja); }
   .lugar-dot.libre { background: var(--verde-light); border: 1.5px solid var(--verde); }
   .lugares-texto { font-size: 12px; color: var(--texto-soft); margin-left: 4px; }
+  .btn-maps { background: none; border: none; cursor: pointer; padding: 2px; display: flex; align-items: center; }
+  .btn-maps img { width: 22px; height: 22px; }
 
   .auto-pasajeros { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--borde); }
   .auto-card.expandido .auto-pasajeros { display: block; }
@@ -86,7 +90,6 @@
   .btn-quitar { background: none; border: 1.5px solid var(--borde); border-radius: 6px; color: var(--texto-soft); font-size: 14px; width: 28px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
   .btn-quitar:hover { border-color: var(--naranja); color: var(--naranja-dark); background: var(--naranja-light); }
 
-  /* Acciones auto — más compactas */
   .auto-acciones { display: flex; gap: 8px; margin-top: 8px; }
   .btn-auto-accion { flex: 1; padding: 5px 8px; border-radius: 7px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; border: 1.5px solid var(--borde); background: var(--crema); color: var(--texto-soft); }
   .btn-auto-accion:hover { background: var(--blanco); }
@@ -128,7 +131,7 @@
 
   .empty-msg { text-align: center; color: #aaa; font-size: 14px; padding: 8px 0 4px; }
   .loading { text-align: center; padding: 48px 20px; color: var(--texto-soft); font-size: 15px; }
-  .version { text-align: center; font-size: 11px; color: #ccc; padding: 16px; }
+  .version { text-align: center; font-size: 11px; color: #ccc; padding: 8px; }
 </style>
 </head>
 <body>
@@ -164,7 +167,11 @@
       <div class="tramo-arrow">→</div>
     </button>
   </div>
-  <div class="version">v0.3</div>
+  <div class="inicio-footer">
+    <button class="btn-nuevo-evento" onclick="crearNuevoEvento()">+ Crear nuevo evento para este grupo</button>
+    <a href="mailto:agustinadelabarra@gmail.com" class="contacto-link">¿Problemas o sugerencias? Escribinos</a>
+    <div class="version">v0.4</div>
+  </div>
 </div>
 
 <div class="screen" id="screenTramo">
@@ -177,9 +184,7 @@
     <button class="btn-back-circle ida" id="btnBack" onclick="volverInicio()">←</button>
     <div class="tramo-title" id="tramoTitle"></div>
   </div>
-  <div class="mi-lugar-bar">
-    <div id="miLugar" style="display:none"></div>
-  </div>
+  <div class="mi-lugar-bar"><div id="miLugar" style="display:none"></div></div>
   <div class="zona">
     <div class="zona-autos">
       <div class="zona-titulo">🚗 Autos <span class="zona-count" id="countAutos">—</span></div>
@@ -188,13 +193,13 @@
     </div>
   </div>
   <div class="zona">
-    <div class="zona-espera" id="zonaEspera">
+    <div class="zona-espera">
       <div class="zona-titulo"><span id="iconoEspera">⏳</span> Lista de espera <span class="zona-count" id="countEspera">—</span></div>
       <button class="btn-agregar" onclick="abrirPopupPasajero()">+ Me anoto como pasajero</button>
       <div id="listaEspera"></div>
     </div>
   </div>
-  <div class="version">v0.3</div>
+  <div class="version">v0.4</div>
 </div>
 
 <!-- POPUP ALTA -->
@@ -202,10 +207,18 @@
   <div class="popup">
     <div class="popup-title" id="popupTitulo">Alta</div>
     <div class="popup-field">
-      <label>Nombre de familia</label>
-      <input type="text" id="inputNombre" placeholder="Ej: Familia García">
+      <label>Nombre de la nena</label>
+      <input type="text" id="inputNombre" placeholder="Ej: Familia García / Sol García">
     </div>
-    <div id="campoCapacidad" style="display:none">
+    <div class="popup-field">
+      <label>Dirección <span style="font-weight:400;text-transform:none;letter-spacing:0">(para la vuelta)</span></label>
+      <input type="text" id="inputDireccion" placeholder="Ej: Blanco Encalada 3456, San Isidro">
+    </div>
+    <div id="campoAuto" style="display:none">
+      <div class="popup-field">
+        <label>Zona de referencia</label>
+        <input type="text" id="inputZona" placeholder="Ej: Palermo / Villa Crespo">
+      </div>
       <div class="popup-field">
         <label>Lugares disponibles (sin contar tu hija)</label>
         <select id="inputCapacidad">
@@ -236,6 +249,10 @@
   <div class="popup">
     <div class="popup-title">Editar auto</div>
     <div class="popup-field">
+      <label>Zona de referencia</label>
+      <input type="text" id="editarZona" placeholder="Ej: Palermo / Villa Crespo">
+    </div>
+    <div class="popup-field">
       <label>Lugares disponibles (sin contar tu hija)</label>
       <select id="editarCapacidad">
         <option value="1">1 lugar</option>
@@ -262,6 +279,7 @@
 <script>
 const SUPABASE_URL = 'https://zvvcodeqfscqvunogppg.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2dmNvZGVxZnNjcXZ1bm9ncHBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NTgxMTksImV4cCI6MjA5NjEzNDExOX0.CrmSFILnBGoLcpzMW9QeAI_QUqbxwRWB-CTdB4Au11Y';
+const MAPS_ICON = 'https://agustinadelabarra.github.io/Pool-Manager/maps-icon.png';
 
 const FRASES = {
   equidad: 'Somos un grupo que se propone que todos participen',
@@ -269,12 +287,7 @@ const FRASES = {
   ambos: 'Nos proponemos que todos participen, organizándonos de la forma más eficiente'
 };
 
-let evento = null;
-let tramoActual = null;
-let modoPopup = null;
-let miFamilia = null;
-let autoEditandoId = null;
-let guardando = false;
+let evento = null, tramoActual = null, modoPopup = null, miFamilia = null, autoEditandoId = null, guardando = false;
 
 function getToken() { return new URLSearchParams(window.location.search).get('token'); }
 function formatHora(h) { return h ? h.substring(0,5) : '—'; }
@@ -294,6 +307,18 @@ async function api(path, opts = {}) {
   if (!res.ok) throw new Error(await res.text());
   const t = await res.text();
   return t ? JSON.parse(t) : null;
+}
+
+function mapsLinkIda(conductorDir, pasajerosDir, destino) {
+  const dirs = [conductorDir, ...pasajerosDir, destino].filter(Boolean);
+  if (dirs.length < 2) return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(destino)}`;
+  return `https://www.google.com/maps/dir/${dirs.map(d => encodeURIComponent(d)).join('/')}`;
+}
+
+function mapsLinkVuelta(destino, pasajerosDir, conductorDir) {
+  const dirs = [destino, ...pasajerosDir, conductorDir].filter(Boolean);
+  if (dirs.length < 2) return null;
+  return `https://www.google.com/maps/dir/${dirs.map(d => encodeURIComponent(d)).join('/')}`;
 }
 
 async function init() {
@@ -321,6 +346,11 @@ function renderInicio() {
   }
   if (evento.hora_ida) { document.getElementById('horaIda').textContent = formatHora(evento.hora_ida); document.getElementById('btnIda').style.display = 'flex'; }
   if (evento.hora_vuelta) { document.getElementById('horaVuelta').textContent = formatHora(evento.hora_vuelta); document.getElementById('btnVuelta').style.display = 'flex'; }
+}
+
+function crearNuevoEvento() {
+  const base = window.location.pathname.replace('evento.html', 'eventos.html');
+  window.location.href = `${window.location.origin}${base}?desde=${getToken()}`;
 }
 
 async function cargarStats() {
@@ -401,6 +431,8 @@ function renderAutos(autos, asignaciones, familias) {
   document.getElementById('countAutos').textContent = `${autos.length} auto${autos.length !== 1 ? 's' : ''}`;
   const lista = document.getElementById('listaAutos');
   if (!autos.length) { lista.innerHTML = '<div class="empty-msg">Aún no hay autos anotados</div>'; return; }
+  const esIda = tramoActual === 'ida';
+
   lista.innerHTML = autos.map(auto => {
     const conductor = familias.find(f => f.id === auto.familia_id);
     const pasajeros = asignaciones.filter(a => a.auto_id === auto.id && a.estado === 'confirmado');
@@ -409,19 +441,41 @@ function renderAutos(autos, asignaciones, familias) {
     const dots = Array.from({length: Math.min(auto.capacidad_total, 8)}, (_,i) =>
       `<div class="lugar-dot ${i < ocupados ? 'ocupado' : 'libre'}"></div>`
     ).join('');
+
+    // Maps link con conductor incluido
+    let mapsLink = null;
+    const conductorDir = conductor?.direccion;
+    const pasajerosDir = pasajeros.map(p => familias.find(f => f.id === p.familia_id)?.direccion).filter(Boolean);
+    if (esIda) {
+      mapsLink = mapsLinkIda(conductorDir, pasajerosDir, evento.destino);
+    } else {
+      mapsLink = mapsLinkVuelta(evento.destino, pasajerosDir, conductorDir);
+    }
+
+    const mapsBtn = mapsLink
+      ? `<a href="${mapsLink}" target="_blank" class="btn-maps" onclick="event.stopPropagation()"><img src="${MAPS_ICON}" alt="Maps"></a>`
+      : '';
+
     const pasajeroRows = pasajeros.map(p => {
       const fam = familias.find(f => f.id === p.familia_id);
-      return `<div class="pasajero-row"><div class="pasajero-nombre">👤 ${fam?.nombre || '—'}${p.cantidad_pasajeros > 1 ? ` (${p.cantidad_pasajeros})` : ''}</div><button class="btn-quitar" onclick="quitarPasajero('${p.id}','${auto.id}')" title="Devolver a espera">−</button></div>`;
+      return `<div class="pasajero-row"><div class="pasajero-nombre">👤 ${fam?.nombre || '—'}${fam?.direccion ? ` <span style="font-size:11px;color:var(--texto-soft)">· ${fam.direccion}</span>` : ''}</div><button class="btn-quitar" onclick="quitarPasajero('${p.id}','${auto.id}')" title="Devolver a espera">−</button></div>`;
     }).join('') || '<div class="empty-msg" style="padding:4px 0">Sin pasajeros aún</div>';
+
     return `<div class="auto-card ${esMio ? 'mio' : ''}" id="auto-${auto.id}">
       <div class="auto-top" onclick="toggleAuto('${auto.id}')">
-        <div class="auto-conductor">🚗 ${conductor?.nombre || '—'}${esMio ? ' <span class="yo-tag">vos</span>' : ''}</div>
-        <div class="lugares-contador">${dots}<span class="lugares-texto">${auto.capacidad_disponible} libres</span></div>
+        <div class="auto-conductor-info">
+          <div class="auto-conductor">🚗 ${conductor?.nombre || '—'}${esMio ? ' <span class="yo-tag">vos</span>' : ''}</div>
+          ${auto.zona ? `<div class="auto-zona">📍 ${auto.zona}</div>` : ''}
+        </div>
+        <div class="auto-top-right">
+          <div class="lugares-contador">${dots}<span class="lugares-texto">${auto.capacidad_disponible} libres</span></div>
+          ${mapsBtn}
+        </div>
       </div>
       <div class="auto-pasajeros">
         ${pasajeroRows}
         <div class="auto-acciones">
-          <button class="btn-auto-accion" onclick="abrirEditarAuto('${auto.id}', ${auto.capacidad_total})">✏️ Editar lugares</button>
+          <button class="btn-auto-accion" onclick="abrirEditarAuto('${auto.id}', ${auto.capacidad_total}, '${auto.zona || ''}')">✏️ Editar</button>
           <button class="btn-auto-accion danger" onclick="darDeBajaAuto('${auto.id}')">🗑 Dar de baja</button>
         </div>
       </div>
@@ -439,7 +493,8 @@ function renderEspera(autos, asignaciones, familias) {
   const autosConLugar = autos.filter(a => a.capacidad_disponible > 0);
   const opcionesAutos = autosConLugar.map(a => {
     const c = familias.find(f => f.id === a.familia_id);
-    return `<option value="${a.id}">${c?.nombre || '—'} (${a.capacidad_disponible} libres)</option>`;
+    const zona = a.zona ? ` — ${a.zona}` : '';
+    return `<option value="${a.id}">${c?.nombre || '—'}${zona} (${a.capacidad_disponible} libres)</option>`;
   }).join('');
   lista.innerHTML = enEspera.map((f, i) => {
     const esMia = miFamilia && f.id === miFamilia.id;
@@ -478,26 +533,27 @@ async function quitarPasajero(asignacionId, autoId) {
   } catch(e) { console.error(e); alert('Error al quitar pasajero.'); }
 }
 
-function abrirEditarAuto(autoId, capacidadActual) {
+function abrirEditarAuto(autoId, capacidadActual, zonaActual) {
   autoEditandoId = autoId;
   document.getElementById('editarCapacidad').value = capacidadActual;
+  document.getElementById('editarZona').value = zonaActual || '';
   document.getElementById('editarHijaViene').checked = false;
   document.getElementById('overlayEditarAuto').classList.add('visible');
 }
-
 function cerrarPopupEditar() { document.getElementById('overlayEditarAuto').classList.remove('visible'); autoEditandoId = null; }
 
 async function confirmarEditarAuto() {
   if (!autoEditandoId) return;
   const nuevaCapacidad = parseInt(document.getElementById('editarCapacidad').value);
   const hijaViene = document.getElementById('editarHijaViene').checked;
+  const zona = document.getElementById('editarZona').value.trim();
   try {
     const auto = await api(`evento_autos?id=eq.${autoEditandoId}&select=*`);
     if (!auto?.[0]) return;
     const ocupados = auto[0].capacidad_total - auto[0].capacidad_disponible;
     const ocupadosConHija = hijaViene ? ocupados + 1 : ocupados;
     const nuevosLibres = Math.max(0, nuevaCapacidad - ocupadosConHija);
-    await api(`evento_autos?id=eq.${autoEditandoId}`, { method: 'PATCH', body: JSON.stringify({ capacidad_total: nuevaCapacidad, capacidad_disponible: nuevosLibres }) });
+    await api(`evento_autos?id=eq.${autoEditandoId}`, { method: 'PATCH', body: JSON.stringify({ capacidad_total: nuevaCapacidad, capacidad_disponible: nuevosLibres, zona: zona || null }) });
     cerrarPopupEditar();
     await renderTramo();
   } catch(e) { console.error(e); alert('Error al editar.'); }
@@ -515,8 +571,10 @@ async function darDeBajaAuto(autoId) {
 function abrirPopupAuto() {
   modoPopup = 'auto';
   document.getElementById('popupTitulo').textContent = 'Ofrezco mi auto';
-  document.getElementById('campoCapacidad').style.display = 'block';
+  document.getElementById('campoAuto').style.display = 'block';
   document.getElementById('inputNombre').value = miFamilia?.nombre || '';
+  document.getElementById('inputDireccion').value = miFamilia?.direccion || '';
+  document.getElementById('inputZona').value = '';
   document.getElementById('hijaViene').checked = false;
   document.getElementById('overlayAlta').classList.add('visible');
 }
@@ -524,17 +582,24 @@ function abrirPopupAuto() {
 function abrirPopupPasajero() {
   modoPopup = 'pasajero';
   document.getElementById('popupTitulo').textContent = 'Me anoto como pasajero';
-  document.getElementById('campoCapacidad').style.display = 'none';
+  document.getElementById('campoAuto').style.display = 'none';
   document.getElementById('inputNombre').value = miFamilia?.nombre || '';
+  document.getElementById('inputDireccion').value = miFamilia?.direccion || '';
   document.getElementById('overlayAlta').classList.add('visible');
 }
 
 function cerrarPopup() { document.getElementById('overlayAlta').classList.remove('visible'); modoPopup = null; }
 
-async function getOrCreateFamilia(nombre) {
+async function getOrCreateFamilia(nombre, direccion) {
   const existing = await api(`evento_familias?evento_id=eq.${evento.id}&nombre=eq.${encodeURIComponent(nombre)}&select=*`);
-  if (existing?.length) return existing[0];
-  const nueva = await api(`evento_familias`, { method: 'POST', body: JSON.stringify({ evento_id: evento.id, nombre, es_admin: false }) });
+  if (existing?.length) {
+    if (direccion && existing[0].direccion !== direccion) {
+      await api(`evento_familias?id=eq.${existing[0].id}`, { method: 'PATCH', body: JSON.stringify({ direccion }) });
+      existing[0].direccion = direccion;
+    }
+    return existing[0];
+  }
+  const nueva = await api(`evento_familias`, { method: 'POST', body: JSON.stringify({ evento_id: evento.id, nombre, es_admin: false, direccion: direccion || null }) });
   return nueva[0];
 }
 
@@ -544,28 +609,30 @@ async function confirmarAlta() {
   const btn = document.getElementById('btnConfirmar');
   btn.disabled = true;
   const nombre = document.getElementById('inputNombre').value.trim();
-  if (!nombre) { alert('Ingresá el nombre de tu familia.'); guardando = false; btn.disabled = false; return; }
+  const direccion = document.getElementById('inputDireccion').value.trim();
+  if (!nombre) { alert('Ingresá el nombre.'); guardando = false; btn.disabled = false; return; }
   try {
     if (modoPopup === 'auto') {
       const capacidadBase = parseInt(document.getElementById('inputCapacidad').value);
       const hijaViene = document.getElementById('hijaViene').checked;
+      const zona = document.getElementById('inputZona').value.trim();
       const capacidadDisponible = hijaViene ? capacidadBase - 1 : capacidadBase;
-      const familia = await getOrCreateFamilia(nombre);
+      const familia = await getOrCreateFamilia(nombre, direccion);
       const existeAuto = await api(`evento_autos?evento_id=eq.${evento.id}&familia_id=eq.${familia.id}&tramo=eq.${tramoActual}&select=id`);
       if (existeAuto?.length) { alert('Ya tenés un auto registrado en este tramo.'); cerrarPopup(); return; }
-      await api(`evento_autos`, { method: 'POST', body: JSON.stringify({ evento_id: evento.id, familia_id: familia.id, tramo: tramoActual, capacidad_total: capacidadBase, capacidad_disponible: capacidadDisponible }) });
-      miFamilia = familia;
-      sessionStorage.setItem('miFamilia_' + getToken(), JSON.stringify(familia));
+      await api(`evento_autos`, { method: 'POST', body: JSON.stringify({ evento_id: evento.id, familia_id: familia.id, tramo: tramoActual, capacidad_total: capacidadBase, capacidad_disponible: capacidadDisponible, zona: zona || null }) });
+      miFamilia = { ...familia, direccion };
+      sessionStorage.setItem('miFamilia_' + getToken(), JSON.stringify(miFamilia));
     } else if (modoPopup === 'pasajero') {
-      const familia = await getOrCreateFamilia(nombre);
+      const familia = await getOrCreateFamilia(nombre, direccion);
       const autosTramo = await api(`evento_autos?evento_id=eq.${evento.id}&tramo=eq.${tramoActual}&select=id`) || [];
       const autoIds = autosTramo.map(a => `"${a.id}"`).join(',');
       if (autoIds.length) {
         const yaAsignada = await api(`evento_asignaciones?auto_id=in.(${autoIds})&familia_id=eq.${familia.id}&select=id`);
         if (yaAsignada?.length) { alert('Esta familia ya está registrada en este tramo.'); cerrarPopup(); return; }
       }
-      miFamilia = familia;
-      sessionStorage.setItem('miFamilia_' + getToken(), JSON.stringify(familia));
+      miFamilia = { ...familia, direccion };
+      sessionStorage.setItem('miFamilia_' + getToken(), JSON.stringify(miFamilia));
     }
     cerrarPopup();
     await renderTramo();
