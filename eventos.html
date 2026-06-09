@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nuevo CPool</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --naranja: #E8845A; --naranja-light: #FDF0E8; --naranja-dark: #C4623A;
+    --verde: #5A8A6A; --verde-light: #E8F2EC; --verde-dark: #3D6B4F;
+    --crema: #FDF6F0; --texto: #2D2D2D; --texto-soft: #6B6B6B;
+    --borde: #E5D8CE; --blanco: #FFFFFF;
+    --shadow: 0 2px 12px rgba(232,132,90,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(--texto); min-height: 100vh; padding: 0 0 48px; }
+
+  /* HEADER */
+  .page-header { background: var(--naranja); padding: 32px 20px 24px; text-align: center; color: var(--blanco); }
+  .page-header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .page-header p { font-size: 14px; opacity: 0.85; font-weight: 500; }
+
+  .content { padding: 20px 16px; max-width: 480px; margin: 0 auto; }
+
+  .card { background: var(--blanco); border-radius: 16px; padding: 20px; margin-bottom: 14px; box-shadow: var(--shadow); border: 1px solid var(--borde); }
+
+  .field { margin-bottom: 14px; }
+  .field:last-child { margin-bottom: 0; }
+  .field label { display: block; font-size: 12px; font-weight: 600; color: var(--texto-soft); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
+  .field input, .field select { width: 100%; padding: 11px 13px; border: 1.5px solid var(--borde); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--texto); background: var(--crema); outline: none; transition: border-color 0.2s; }
+  .field input:focus, .field select:focus { border-color: var(--naranja); background: var(--blanco); }
+  .field input::placeholder { color: #BDB0A8; }
+
+  /* Tramos */
+  .tramos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tramo-check { position: relative; }
+  .tramo-check input[type="checkbox"] { position: absolute; opacity: 0; width: 0; height: 0; }
+  .tramo-check-card { display: flex; flex-direction: column; gap: 8px; padding: 12px; border: 1.5px solid var(--borde); border-radius: 12px; background: var(--crema); cursor: pointer; transition: all 0.2s; }
+  .tramo-check input[type="checkbox"]:checked + .tramo-check-card { border-color: var(--naranja); background: var(--naranja-light); }
+  .tramo-check-label { font-size: 14px; font-weight: 600; color: var(--texto); }
+  .tramo-check input[type="checkbox"]:checked + .tramo-check-card .tramo-check-label { color: var(--naranja-dark); }
+  .tramo-hora-select { width: 100%; padding: 8px 10px; border: 1.5px solid var(--borde); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--texto); background: var(--blanco); outline: none; }
+  .tramo-check input[type="checkbox"]:not(:checked) + .tramo-check-card .tramo-hora-select { opacity: 0.4; pointer-events: none; }
+
+  /* Propósito */
+  .seccion-label { font-size: 12px; font-weight: 600; color: var(--texto-soft); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; display: block; }
+  .proposito-options { display: flex; flex-direction: column; gap: 6px; }
+  .proposito-option { position: relative; cursor: pointer; }
+  .proposito-option input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+  .proposito-card { display: flex; align-items: center; padding: 10px 14px; border: 1.5px solid var(--borde); border-radius: 10px; background: var(--crema); transition: all 0.2s; cursor: pointer; }
+  .proposito-option input[type="radio"]:checked + .proposito-card { border-color: var(--naranja); background: var(--naranja-light); }
+  .proposito-label { font-size: 14px; font-weight: 600; color: var(--texto); }
+  .proposito-frase { font-size: 12px; color: var(--texto-soft); line-height: 1.3; margin-top: 1px; }
+  .proposito-option input[type="radio"]:checked + .proposito-card .proposito-label { color: var(--naranja-dark); }
+  .proposito-option input[type="radio"]:checked + .proposito-card .proposito-frase { color: var(--naranja-dark); opacity: 0.75; }
+
+  .btn-crear { width: 100%; padding: 16px; background: var(--naranja); color: var(--blanco); border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s, transform 0.1s; margin-top: 4px; }
+  .btn-crear:hover { background: var(--naranja-dark); }
+  .btn-crear:active { transform: scale(0.98); }
+
+  /* Pantalla éxito */
+  .link-screen { display: none; padding: 24px 16px 48px; max-width: 480px; margin: 0 auto; }
+  .link-screen.visible { display: block; }
+
+  .panfleto { background: var(--blanco); border: 1px solid var(--borde); border-radius: 20px; padding: 28px 22px; margin-bottom: 16px; box-shadow: var(--shadow); text-align: center; }
+  .panfleto-icon { font-size: 36px; margin-bottom: 12px; }
+  .panfleto-titulo { font-size: 11px; font-weight: 600; color: var(--naranja); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 8px; }
+  .panfleto-nombre { font-size: 22px; font-weight: 700; margin-bottom: 6px; color: var(--texto); }
+  .panfleto-meta { font-size: 14px; color: var(--texto-soft); margin-bottom: 14px; line-height: 1.5; }
+  .panfleto-frase { font-size: 13px; color: var(--naranja-dark); background: var(--naranja-light); padding: 10px 14px; border-radius: 10px; line-height: 1.4; font-weight: 500; display: none; }
+
+  .btn-copiar { width: 100%; padding: 14px; background: var(--naranja); color: var(--blanco); border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+  .btn-copiar:hover { background: var(--naranja-dark); }
+  .btn-copiar.copiado { background: var(--naranja-dark); }
+
+  .form-screen.hidden { display: none; }
+  .version { text-align: center; font-size: 11px; color: #ccc; padding: 16px; }
+</style>
+</head>
+<body>
+
+<div class="form-screen" id="formScreen">
+  <div class="page-header">
+    <h1>Nuevo CPool</h1>
+    <p>Comunidad en movimiento</p>
+  </div>
+
+  <div class="content">
+    <div class="card">
+      <div class="field">
+        <label>Nombre del CPool</label>
+        <input type="text" id="nombre" placeholder="Ej: Final de temporada hockey">
+      </div>
+      <div class="field">
+        <label>Destino</label>
+        <input type="text" id="destino" placeholder="Ej: Club San Isidro, Blanco Encalada 3456">
+      </div>
+      <div class="field">
+        <label>Fecha</label>
+        <input type="date" id="fecha">
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="field" style="margin-bottom:0">
+        <label style="margin-bottom:10px">Tramos</label>
+        <div class="tramos-grid">
+          <label class="tramo-check">
+            <input type="checkbox" id="tieneIda" checked>
+            <div class="tramo-check-card">
+              <div class="tramo-check-label">🚗 Ida</div>
+              <select class="tramo-hora-select" id="hora_ida">
+                <option value="">Sin hora</option>
+                <option value="06:00">06:00</option>
+                <option value="06:30">06:30</option>
+                <option value="07:00">07:00</option>
+                <option value="07:30">07:30</option>
+                <option value="08:00">08:00</option>
+                <option value="08:30">08:30</option>
+                <option value="09:00">09:00</option>
+                <option value="09:30">09:30</option>
+                <option value="10:00">10:00</option>
+                <option value="10:30">10:30</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00">13:00</option>
+                <option value="13:30">13:30</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00" selected>18:00</option>
+                <option value="18:30">18:30</option>
+                <option value="19:00">19:00</option>
+                <option value="19:30">19:30</option>
+                <option value="20:00">20:00</option>
+                <option value="20:30">20:30</option>
+                <option value="21:00">21:00</option>
+                <option value="21:30">21:30</option>
+                <option value="22:00">22:00</option>
+                <option value="22:30">22:30</option>
+                <option value="23:00">23:00</option>
+                <option value="23:30">23:30</option>
+                <option value="00:00">00:00</option>
+                <option value="00:30">00:30</option>
+                <option value="01:00">01:00</option>
+                <option value="01:30">01:30</option>
+                <option value="02:00">02:00</option>
+                <option value="02:30">02:30</option>
+                <option value="03:00">03:00</option>
+                <option value="03:30">03:30</option>
+                <option value="04:00">04:00</option>
+                <option value="04:30">04:30</option>
+                <option value="05:00">05:00</option>
+                <option value="05:30">05:30</option>
+              </select>
+            </div>
+          </label>
+          <label class="tramo-check">
+            <input type="checkbox" id="tieneVuelta" checked>
+            <div class="tramo-check-card">
+              <div class="tramo-check-label">🏠 Vuelta</div>
+              <select class="tramo-hora-select" id="hora_vuelta">
+                <option value="">Sin hora</option>
+                <option value="06:00">06:00</option>
+                <option value="06:30">06:30</option>
+                <option value="07:00">07:00</option>
+                <option value="07:30">07:30</option>
+                <option value="08:00">08:00</option>
+                <option value="08:30">08:30</option>
+                <option value="09:00">09:00</option>
+                <option value="09:30">09:30</option>
+                <option value="10:00">10:00</option>
+                <option value="10:30">10:30</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00">13:00</option>
+                <option value="13:30">13:30</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00">18:00</option>
+                <option value="18:30">18:30</option>
+                <option value="19:00">19:00</option>
+                <option value="19:30">19:30</option>
+                <option value="20:00" selected>20:00</option>
+                <option value="20:30">20:30</option>
+                <option value="21:00">21:00</option>
+                <option value="21:30">21:30</option>
+                <option value="22:00">22:00</option>
+                <option value="22:30">22:30</option>
+                <option value="23:00">23:00</option>
+                <option value="23:30">23:30</option>
+                <option value="00:00">00:00</option>
+                <option value="00:30">00:30</option>
+                <option value="01:00">01:00</option>
+                <option value="01:30">01:30</option>
+                <option value="02:00">02:00</option>
+                <option value="02:30">02:30</option>
+                <option value="03:00">03:00</option>
+                <option value="03:30">03:30</option>
+                <option value="04:00">04:00</option>
+                <option value="04:30">04:30</option>
+                <option value="05:00">05:00</option>
+                <option value="05:30">05:30</option>
+              </select>
+            </div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="seccion-label">Propósito</span>
+      <div class="proposito-options">
+        <label class="proposito-option">
+          <input type="radio" name="proposito" value="equidad" checked>
+          <div class="proposito-card">
+            <div>
+              <div class="proposito-label">Somos inclusivos</div>
+              <div class="proposito-frase">Nos proponemos que todos participen</div>
+            </div>
+          </div>
+        </label>
+        <label class="proposito-option">
+          <input type="radio" name="proposito" value="logistica">
+          <div class="proposito-card">
+            <div>
+              <div class="proposito-label">Logística</div>
+              <div class="proposito-frase">Nos organizamos para llegar de la forma más eficiente</div>
+            </div>
+          </div>
+        </label>
+        <label class="proposito-option">
+          <input type="radio" name="proposito" value="ambos">
+          <div class="proposito-card">
+            <div>
+              <div class="proposito-label">Inclusivos + Logística</div>
+              <div class="proposito-frase">Nos proponemos que todos participen, organizándonos eficientemente</div>
+            </div>
+          </div>
+        </label>
+        <label class="proposito-option">
+          <input type="radio" name="proposito" value="ninguno">
+          <div class="proposito-card">
+            <div>
+              <div class="proposito-label">Sin propósito declarado</div>
+              <div class="proposito-frase">Solo coordinamos los viajes</div>
+            </div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <button class="btn-crear" onclick="crearEvento()">Crear CPool →</button>
+    <div class="version">v0.5</div>
+  </div>
+</div>
+
+<div class="link-screen" id="linkScreen">
+  <div class="panfleto">
+    <div class="panfleto-icon">🚗</div>
+    <div class="panfleto-titulo">CPool creado</div>
+    <div class="panfleto-nombre" id="preview-nombre"></div>
+    <div class="panfleto-meta" id="preview-meta"></div>
+    <div class="panfleto-frase" id="preview-frase"></div>
+  </div>
+
+  <button class="btn-copiar" id="btnCopiar" onclick="copiarLink()">📋 Copiar link para compartir</button>
+  <div class="version">v0.5</div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://zvvcodeqfscqvunogppg.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2dmNvZGVxZnNjcXZ1bm9ncHBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NTgxMTksImV4cCI6MjA5NjEzNDExOX0.CrmSFILnBGoLcpzMW9QeAI_QUqbxwRWB-CTdB4Au11Y';
+
+const FRASES = {
+  equidad: 'Somos un grupo que se propone que todos participen',
+  logistica: 'Nos organizamos para llegar de la forma más eficiente',
+  ambos: 'Nos proponemos que todos participen, organizándonos de la forma más eficiente'
+};
+
+let linkGenerado = '';
+
+function generarToken() { return Math.random().toString(36).substring(2,10) + Math.random().toString(36).substring(2,10); }
+function formatFecha(f) {
+  if (!f) return '';
+  const [y,m,d] = f.split('-');
+  const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  return `${parseInt(d)} de ${meses[parseInt(m)-1]} de ${y}`;
+}
+
+async function crearEvento() {
+  const nombre = document.getElementById('nombre').value.trim();
+  const destino = document.getElementById('destino').value.trim();
+  const fecha = document.getElementById('fecha').value;
+  const tieneIda = document.getElementById('tieneIda').checked;
+  const tieneVuelta = document.getElementById('tieneVuelta').checked;
+  const hora_ida = tieneIda ? document.getElementById('hora_ida').value : null;
+  const hora_vuelta = tieneVuelta ? document.getElementById('hora_vuelta').value : null;
+  const proposito = document.querySelector('input[name="proposito"]:checked').value;
+
+  if (!nombre || !destino || !fecha) { alert('Completá nombre, destino y fecha.'); return; }
+  if (!tieneIda && !tieneVuelta) { alert('Activá al menos un tramo.'); return; }
+
+  const token = generarToken();
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/evento_eventos`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Prefer': 'return=representation' },
+      body: JSON.stringify({ nombre, destino, fecha, hora_ida: hora_ida || null, hora_vuelta: hora_vuelta || null, proposito, link_token: token })
+    });
+    if (!res.ok) throw new Error(await res.text());
+    mostrarExito(nombre, destino, fecha, hora_ida, hora_vuelta, proposito, token);
+  } catch(e) { console.error(e); alert('Error al crear el CPool.'); }
+}
+
+function mostrarExito(nombre, destino, fecha, hora_ida, hora_vuelta, proposito, token) {
+  linkGenerado = `${window.location.origin}${window.location.pathname.replace('eventos.html','evento.html')}?token=${token}`;
+  document.getElementById('preview-nombre').textContent = nombre;
+  let meta = formatFecha(fecha);
+  if (destino) meta += ` · ${destino}`;
+  if (hora_ida) meta += ` · Ida ${hora_ida}`;
+  if (hora_vuelta) meta += ` · Vuelta ${hora_vuelta}`;
+  document.getElementById('preview-meta').textContent = meta;
+  if (proposito !== 'ninguno') {
+    const el = document.getElementById('preview-frase');
+    el.textContent = FRASES[proposito];
+    el.style.display = 'block';
+  }
+  document.getElementById('formScreen').classList.add('hidden');
+  document.getElementById('linkScreen').classList.add('visible');
+}
+
+function copiarLink() {
+  navigator.clipboard.writeText(linkGenerado).then(() => {
+    const btn = document.getElementById('btnCopiar');
+    btn.textContent = '✅ Link copiado';
+    btn.classList.add('copiado');
+    setTimeout(() => { btn.textContent = '📋 Copiar link para compartir'; btn.classList.remove('copiado'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>
