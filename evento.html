@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Evento — Viajes Compartidos</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<title>CPool — Viajes Compartidos</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --naranja: #E8845A; --naranja-light: #FDF0E8; --naranja-dark: #C4623A;
@@ -21,7 +21,7 @@
   .evento-header.ida-color { background: var(--naranja); }
   .evento-header.vuelta-color { background: var(--verde); }
   .evento-header.inicio-color { background: var(--naranja); }
-  .evento-nombre { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; margin-bottom: 6px; line-height: 1.2; }
+  .evento-nombre { font-size: 24px; font-weight: 700; margin-bottom: 6px; line-height: 1.2; }
   .evento-meta { font-size: 16px; opacity: 0.9; font-weight: 500; }
   .evento-proposito { font-size: 15px; font-weight: 600; margin-top: 12px; background: rgba(255,255,255,0.18); padding: 10px 16px; border-radius: 10px; display: inline-block; line-height: 1.4; }
   .btn-refresh { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.2); border: none; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: white; }
@@ -39,7 +39,6 @@
   .tramo-alerta { font-size: 12px; font-weight: 600; background: rgba(255,255,255,0.25); padding: 2px 8px; border-radius: 8px; margin-top: 4px; display: inline-block; }
   .tramo-arrow { font-size: 20px; opacity: 0.7; }
 
-  /* Footer inicio */
   .inicio-footer { padding: 8px 16px 32px; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 12px; }
   .btn-nuevo-evento { width: 100%; padding: 13px; background: transparent; border: 1.5px solid var(--borde); border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: var(--texto-soft); cursor: pointer; transition: all 0.2s; }
   .btn-nuevo-evento:hover { border-color: var(--naranja); color: var(--naranja-dark); background: var(--naranja-light); }
@@ -51,7 +50,7 @@
   .btn-back-circle.ida { background: var(--naranja); }
   .btn-back-circle.vuelta { background: var(--verde); }
   .btn-back-circle:hover { opacity: 0.8; }
-  .tramo-title { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 600; }
+  .tramo-title { font-size: 17px; font-weight: 700; }
 
   .mi-lugar-bar { margin: 0 16px 16px; max-width: 448px; margin-left: auto; margin-right: auto; }
   .mi-lugar { border-radius: 12px; padding: 13px 16px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; }
@@ -62,8 +61,8 @@
   .zona { margin: 0 16px 20px; max-width: 448px; margin-left: auto; margin-right: auto; }
   .zona-autos { background: var(--naranja-light); border-radius: 14px; padding: 14px; border: 1.5px solid #F0C4A8; }
   .zona-espera { background: var(--verde-light); border-radius: 14px; padding: 14px; border: 1.5px solid #A8C8B4; }
-  .zona-titulo { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
-  .zona-count { font-size: 13px; font-weight: 500; color: var(--texto-soft); font-family: 'DM Sans', sans-serif; }
+  .zona-titulo { font-size: 16px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+  .zona-count { font-size: 13px; font-weight: 500; color: var(--texto-soft); }
 
   .auto-card { background: var(--blanco); border: 1.5px solid var(--borde); border-radius: 12px; padding: 13px 14px; margin-bottom: 8px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); }
   .auto-card:last-of-type { margin-bottom: 0; }
@@ -116,7 +115,7 @@
   .overlay.visible { display: flex; }
   .popup { background: var(--blanco); border-radius: 20px 20px 0 0; padding: 24px 20px 36px; width: 100%; max-width: 480px; animation: slideUp 0.25s ease; }
   @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-  .popup-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; margin-bottom: 16px; text-align: center; }
+  .popup-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; text-align: center; }
   .popup-field { margin-bottom: 12px; }
   .popup-field label { display: block; font-size: 12px; font-weight: 600; color: var(--texto-soft); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 5px; }
   .popup-field input, .popup-field select { width: 100%; padding: 12px 13px; border: 1.5px solid var(--borde); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--texto); background: var(--crema); outline: none; }
@@ -131,13 +130,13 @@
 
   .empty-msg { text-align: center; color: #aaa; font-size: 14px; padding: 8px 0 4px; }
   .loading { text-align: center; padding: 48px 20px; color: var(--texto-soft); font-size: 15px; }
-  .version { text-align: center; font-size: 11px; color: #ccc; padding: 8px; }
+  .version { text-align: center; font-size: 11px; color: #ccc; padding: 16px; }
 </style>
 </head>
 <body>
 
 <div class="screen active" id="screenCarga">
-  <div class="loading">Cargando evento...</div>
+  <div class="loading">Cargando CPool...</div>
 </div>
 
 <div class="screen" id="screenInicio">
@@ -168,9 +167,9 @@
     </button>
   </div>
   <div class="inicio-footer">
-    <button class="btn-nuevo-evento" onclick="crearNuevoEvento()">+ Crear nuevo evento para este grupo</button>
+    <button class="btn-nuevo-evento" onclick="crearNuevoEvento()">+ Crear nuevo CPool para este grupo</button>
     <a href="mailto:agustinadelabarra@gmail.com" class="contacto-link">¿Problemas o sugerencias? Escribinos</a>
-    <div class="version">v0.4</div>
+    <div class="version">v0.5</div>
   </div>
 </div>
 
@@ -199,7 +198,7 @@
       <div id="listaEspera"></div>
     </div>
   </div>
-  <div class="version">v0.4</div>
+  <div class="version">v0.5</div>
 </div>
 
 <!-- POPUP ALTA -->
@@ -207,12 +206,12 @@
   <div class="popup">
     <div class="popup-title" id="popupTitulo">Alta</div>
     <div class="popup-field">
-      <label>Nombre de la nena</label>
+      <label>Nombre de hijo/hija</label>
       <input type="text" id="inputNombre" placeholder="Ej: Familia García / Sol García">
     </div>
     <div class="popup-field">
       <label>Dirección <span style="font-weight:400;text-transform:none;letter-spacing:0">(para la vuelta)</span></label>
-      <input type="text" id="inputDireccion" placeholder="Ej: Blanco Encalada 3456, San Isidro">
+      <input type="text" id="inputDireccion" placeholder="Ej: Paraguay 1420, Recoleta, Buenos Aires">
     </div>
     <div id="campoAuto" style="display:none">
       <div class="popup-field">
@@ -220,7 +219,7 @@
         <input type="text" id="inputZona" placeholder="Ej: Palermo / Villa Crespo">
       </div>
       <div class="popup-field">
-        <label>Lugares disponibles (sin contar tu hija)</label>
+        <label>Lugares disponibles (sin contar tu hijo/hija)</label>
         <select id="inputCapacidad">
           <option value="1">1 lugar</option>
           <option value="2">2 lugares</option>
@@ -234,7 +233,7 @@
       </div>
       <label class="popup-check">
         <input type="checkbox" id="hijaViene">
-        <span>Mi hija también va en el auto</span>
+        <span>Mi hijo/hija también va en el auto</span>
       </label>
     </div>
     <div class="popup-btns">
@@ -249,11 +248,15 @@
   <div class="popup">
     <div class="popup-title">Editar auto</div>
     <div class="popup-field">
+      <label>Dirección</label>
+      <input type="text" id="editarDireccion" placeholder="Ej: Paraguay 1420, Recoleta, Buenos Aires">
+    </div>
+    <div class="popup-field">
       <label>Zona de referencia</label>
       <input type="text" id="editarZona" placeholder="Ej: Palermo / Villa Crespo">
     </div>
     <div class="popup-field">
-      <label>Lugares disponibles (sin contar tu hija)</label>
+      <label>Lugares disponibles (sin contar tu hijo/hija)</label>
       <select id="editarCapacidad">
         <option value="1">1 lugar</option>
         <option value="2">2 lugares</option>
@@ -267,7 +270,7 @@
     </div>
     <label class="popup-check">
       <input type="checkbox" id="editarHijaViene">
-      <span>Mi hija también va en el auto</span>
+      <span>Mi hijo/hija también va en el auto</span>
     </label>
     <div class="popup-btns">
       <button class="btn-cancelar" onclick="cerrarPopupEditar()">Cancelar</button>
@@ -278,7 +281,7 @@
 
 <script>
 const SUPABASE_URL = 'https://zvvcodeqfscqvunogppg.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2dmNvZGVxZnNjcXZ1bm9ncHBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NTgxMTksImV4cCI6MjA5NjEzNDExOX0.CrmSFILnBGoLcpzMW9QeAI_QUqbxwRWB-CTdB4Au11Y';
+const SUPABASE_KEY = 'TU_ANON_KEY_AQUI';
 const MAPS_ICON = 'https://agustinadelabarra.github.io/Pool-Manager/maps-icon.png';
 
 const FRASES = {
@@ -300,9 +303,18 @@ function formatFecha(f) {
 function show(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 
 async function api(path, opts = {}) {
+  const method = opts.method || 'GET';
+  const isDelete = method === 'DELETE';
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
-    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation', ...opts.headers },
-    ...opts
+    method,
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      ...(isDelete ? {} : { 'Prefer': 'return=representation' }),
+      ...opts.headers
+    },
+    ...(opts.body ? { body: opts.body } : {})
   });
   if (!res.ok) throw new Error(await res.text());
   const t = await res.text();
@@ -328,7 +340,7 @@ async function init() {
   if (stored) miFamilia = JSON.parse(stored);
   try {
     const data = await api(`evento_eventos?link_token=eq.${token}&select=*`);
-    if (!data?.length) { document.getElementById('screenCarga').innerHTML = '<div class="loading">Evento no encontrado.</div>'; return; }
+    if (!data?.length) { document.getElementById('screenCarga').innerHTML = '<div class="loading">CPool no encontrado.</div>'; return; }
     evento = data[0];
     renderInicio();
     await cargarStats();
@@ -442,15 +454,11 @@ function renderAutos(autos, asignaciones, familias) {
       `<div class="lugar-dot ${i < ocupados ? 'ocupado' : 'libre'}"></div>`
     ).join('');
 
-    // Maps link con conductor incluido
-    let mapsLink = null;
     const conductorDir = conductor?.direccion;
     const pasajerosDir = pasajeros.map(p => familias.find(f => f.id === p.familia_id)?.direccion).filter(Boolean);
-    if (esIda) {
-      mapsLink = mapsLinkIda(conductorDir, pasajerosDir, evento.destino);
-    } else {
-      mapsLink = mapsLinkVuelta(evento.destino, pasajerosDir, conductorDir);
-    }
+    const mapsLink = esIda
+      ? mapsLinkIda(conductorDir, pasajerosDir, evento.destino)
+      : mapsLinkVuelta(evento.destino, pasajerosDir, conductorDir);
 
     const mapsBtn = mapsLink
       ? `<a href="${mapsLink}" target="_blank" class="btn-maps" onclick="event.stopPropagation()"><img src="${MAPS_ICON}" alt="Maps"></a>`
@@ -475,7 +483,7 @@ function renderAutos(autos, asignaciones, familias) {
       <div class="auto-pasajeros">
         ${pasajeroRows}
         <div class="auto-acciones">
-          <button class="btn-auto-accion" onclick="abrirEditarAuto('${auto.id}', ${auto.capacidad_total}, '${auto.zona || ''}')">✏️ Editar</button>
+          <button class="btn-auto-accion" onclick="abrirEditarAuto('${auto.id}', ${auto.capacidad_total}, '${(auto.zona||'').replace(/'/g,"\\'")}', '${(conductor?.direccion||'').replace(/'/g,"\\'")}', ${auto.hija_incluida || false})">✏️ Editar</button>
           <button class="btn-auto-accion danger" onclick="darDeBajaAuto('${auto.id}')">🗑 Dar de baja</button>
         </div>
       </div>
@@ -526,18 +534,19 @@ async function asignarDesdeEspera(familiaId) {
 
 async function quitarPasajero(asignacionId, autoId) {
   try {
-    await api(`evento_asignaciones?id=eq.${asignacionId}`, { method: 'DELETE', headers: { 'Prefer': '' } });
+    await api(`evento_asignaciones?id=eq.${asignacionId}`, { method: 'DELETE' });
     const auto = await api(`evento_autos?id=eq.${autoId}&select=*`);
     if (auto?.[0]) await api(`evento_autos?id=eq.${autoId}`, { method: 'PATCH', body: JSON.stringify({ capacidad_disponible: auto[0].capacidad_disponible + 1 }) });
     await renderTramo();
   } catch(e) { console.error(e); alert('Error al quitar pasajero.'); }
 }
 
-function abrirEditarAuto(autoId, capacidadActual, zonaActual) {
+function abrirEditarAuto(autoId, capacidadActual, zonaActual, direccionActual, hijaIncluida) {
   autoEditandoId = autoId;
   document.getElementById('editarCapacidad').value = capacidadActual;
   document.getElementById('editarZona').value = zonaActual || '';
-  document.getElementById('editarHijaViene').checked = false;
+  document.getElementById('editarDireccion').value = direccionActual || '';
+  document.getElementById('editarHijaViene').checked = hijaIncluida || false;
   document.getElementById('overlayEditarAuto').classList.add('visible');
 }
 function cerrarPopupEditar() { document.getElementById('overlayEditarAuto').classList.remove('visible'); autoEditandoId = null; }
@@ -547,13 +556,34 @@ async function confirmarEditarAuto() {
   const nuevaCapacidad = parseInt(document.getElementById('editarCapacidad').value);
   const hijaViene = document.getElementById('editarHijaViene').checked;
   const zona = document.getElementById('editarZona').value.trim();
+  const direccion = document.getElementById('editarDireccion').value.trim();
   try {
     const auto = await api(`evento_autos?id=eq.${autoEditandoId}&select=*`);
     if (!auto?.[0]) return;
-    const ocupados = auto[0].capacidad_total - auto[0].capacidad_disponible;
-    const ocupadosConHija = hijaViene ? ocupados + 1 : ocupados;
-    const nuevosLibres = Math.max(0, nuevaCapacidad - ocupadosConHija);
-    await api(`evento_autos?id=eq.${autoEditandoId}`, { method: 'PATCH', body: JSON.stringify({ capacidad_total: nuevaCapacidad, capacidad_disponible: nuevosLibres, zona: zona || null }) });
+
+    const hijaAntes = auto[0].hija_incluida || false;
+
+    // Manejar asignación de hija
+    if (hijaViene && !hijaAntes) {
+      // Agregar hija como asignación
+      await api(`evento_asignaciones`, { method: 'POST', body: JSON.stringify({ auto_id: autoEditandoId, familia_id: auto[0].familia_id, cantidad_pasajeros: 1, estado: 'confirmado' }) });
+    } else if (!hijaViene && hijaAntes) {
+      // Quitar asignación de hija (la del conductor en su propio auto)
+      const asigs = await api(`evento_asignaciones?auto_id=eq.${autoEditandoId}&familia_id=eq.${auto[0].familia_id}&select=*`) || [];
+      if (asigs.length) await api(`evento_asignaciones?id=eq.${asigs[0].id}`, { method: 'DELETE' });
+    }
+
+    // Recalcular capacidad disponible
+    const asigsTotales = await api(`evento_asignaciones?auto_id=eq.${autoEditandoId}&estado=eq.confirmado&select=*`) || [];
+    const nuevosLibres = Math.max(0, nuevaCapacidad - asigsTotales.length);
+
+    await api(`evento_autos?id=eq.${autoEditandoId}`, { method: 'PATCH', body: JSON.stringify({ capacidad_total: nuevaCapacidad, capacidad_disponible: nuevosLibres, zona: zona || null, hija_incluida: hijaViene }) });
+
+    // Actualizar dirección de la familia conductora
+    if (direccion) {
+      await api(`evento_familias?id=eq.${auto[0].familia_id}`, { method: 'PATCH', body: JSON.stringify({ direccion }) });
+    }
+
     cerrarPopupEditar();
     await renderTramo();
   } catch(e) { console.error(e); alert('Error al editar.'); }
@@ -562,8 +592,8 @@ async function confirmarEditarAuto() {
 async function darDeBajaAuto(autoId) {
   if (!confirm('¿Dar de baja este auto? Los pasajeros volverán a lista de espera.')) return;
   try {
-    await api(`evento_asignaciones?auto_id=eq.${autoId}`, { method: 'DELETE', headers: { 'Prefer': '' } });
-    await api(`evento_autos?id=eq.${autoId}`, { method: 'DELETE', headers: { 'Prefer': '' } });
+    await api(`evento_asignaciones?auto_id=eq.${autoId}`, { method: 'DELETE' });
+    await api(`evento_autos?id=eq.${autoId}`, { method: 'DELETE' });
     await renderTramo();
   } catch(e) { console.error(e); alert('Error al dar de baja el auto.'); }
 }
@@ -620,7 +650,14 @@ async function confirmarAlta() {
       const familia = await getOrCreateFamilia(nombre, direccion);
       const existeAuto = await api(`evento_autos?evento_id=eq.${evento.id}&familia_id=eq.${familia.id}&tramo=eq.${tramoActual}&select=id`);
       if (existeAuto?.length) { alert('Ya tenés un auto registrado en este tramo.'); cerrarPopup(); return; }
-      await api(`evento_autos`, { method: 'POST', body: JSON.stringify({ evento_id: evento.id, familia_id: familia.id, tramo: tramoActual, capacidad_total: capacidadBase, capacidad_disponible: capacidadDisponible, zona: zona || null }) });
+
+      const nuevoAuto = await api(`evento_autos`, { method: 'POST', body: JSON.stringify({ evento_id: evento.id, familia_id: familia.id, tramo: tramoActual, capacidad_total: capacidadBase, capacidad_disponible: capacidadDisponible, zona: zona || null, hija_incluida: hijaViene }) });
+
+      // Si hija viene, crear asignación
+      if (hijaViene && nuevoAuto?.[0]) {
+        await api(`evento_asignaciones`, { method: 'POST', body: JSON.stringify({ auto_id: nuevoAuto[0].id, familia_id: familia.id, cantidad_pasajeros: 1, estado: 'confirmado' }) });
+      }
+
       miFamilia = { ...familia, direccion };
       sessionStorage.setItem('miFamilia_' + getToken(), JSON.stringify(miFamilia));
     } else if (modoPopup === 'pasajero') {
