@@ -169,7 +169,7 @@
   <div class="inicio-footer">
     <button class="btn-nuevo-evento" onclick="crearNuevoEvento()">+ Crear nuevo CPool para este grupo</button>
     <a href="mailto:agustinadelabarra@gmail.com" class="contacto-link">¿Problemas o sugerencias? Escribinos</a>
-    <div class="version">v0.5</div>
+    <div class="version">v0.6</div>
   </div>
 </div>
 
@@ -198,7 +198,7 @@
       <div id="listaEspera"></div>
     </div>
   </div>
-  <div class="version">v0.5</div>
+  <div class="version">v0.6</div>
 </div>
 
 <!-- POPUP ALTA -->
@@ -207,11 +207,14 @@
     <div class="popup-title" id="popupTitulo">Alta</div>
     <div class="popup-field">
       <label>Nombre de hijo/hija</label>
-      <input type="text" id="inputNombre" placeholder="Ej: Familia García / Sol García">
+      <input type="text" id="inputNombre" placeholder="Ej: Cata Rodríguez C.">
     </div>
     <div class="popup-field">
       <label>Dirección <span style="font-weight:400;text-transform:none;letter-spacing:0">(para la vuelta)</span></label>
-      <input type="text" id="inputDireccion" placeholder="Ej: Paraguay 1420, Recoleta, Buenos Aires">
+      <input type="text" id="inputDireccion" placeholder="Ej: Callao 1245, CABA">
+    </div>
+    <div id="mensajeConductora" style="display:none;background:#FFF8E8;border:1.5px solid #E8C45A;border-radius:10px;padding:10px 14px;font-size:13px;color:#7A5A00;margin-bottom:12px">
+      ⚠️ Si sos conductora, agregá a tu hijo/hija desde el botón "Editar" en tu auto.
     </div>
     <div id="campoAuto" style="display:none">
       <div class="popup-field">
@@ -455,7 +458,11 @@ function renderAutos(autos, asignaciones, familias) {
     ).join('');
 
     const conductorDir = conductor?.direccion;
-    const pasajerosDir = pasajeros.map(p => familias.find(f => f.id === p.familia_id)?.direccion).filter(Boolean);
+    // Excluir al conductor de los pasajeros para Maps
+    const pasajerosDir = pasajeros
+      .filter(p => p.familia_id !== auto.familia_id)
+      .map(p => familias.find(f => f.id === p.familia_id)?.direccion)
+      .filter(Boolean);
     const mapsLink = esIda
       ? mapsLinkIda(conductorDir, pasajerosDir, evento.destino)
       : mapsLinkVuelta(evento.destino, pasajerosDir, conductorDir);
@@ -534,9 +541,18 @@ async function asignarDesdeEspera(familiaId) {
 
 async function quitarPasajero(asignacionId, autoId) {
   try {
-    await api(`evento_asignaciones?id=eq.${asignacionId}`, { method: 'DELETE' });
+    // Antes de borrar, ver si es la hija del conductor
+    const asig = await api(`evento_asignaciones?id=eq.${asignacionId}&select=*`);
     const auto = await api(`evento_autos?id=eq.${autoId}&select=*`);
-    if (auto?.[0]) await api(`evento_autos?id=eq.${autoId}`, { method: 'PATCH', body: JSON.stringify({ capacidad_disponible: auto[0].capacidad_disponible + 1 }) });
+    const esConductora = asig?.[0]?.familia_id === auto?.[0]?.familia_id;
+
+    await api(`evento_asignaciones?id=eq.${asignacionId}`, { method: 'DELETE' });
+
+    if (auto?.[0]) {
+      const patch = { capacidad_disponible: auto[0].capacidad_disponible + 1 };
+      if (esConductora) patch.hija_incluida = false;
+      await api(`evento_autos?id=eq.${autoId}`, { method: 'PATCH', body: JSON.stringify(patch) });
+    }
     await renderTramo();
   } catch(e) { console.error(e); alert('Error al quitar pasajero.'); }
 }
@@ -615,6 +631,9 @@ function abrirPopupPasajero() {
   document.getElementById('campoAuto').style.display = 'none';
   document.getElementById('inputNombre').value = miFamilia?.nombre || '';
   document.getElementById('inputDireccion').value = miFamilia?.direccion || '';
+  // Mensaje si ya tiene auto en este tramo
+  const msgEl = document.getElementById('mensajeConductora');
+  if (msgEl) msgEl.style.display = 'none';
   document.getElementById('overlayAlta').classList.add('visible');
 }
 
