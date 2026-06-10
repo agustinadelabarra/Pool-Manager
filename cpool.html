@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CPool — Viajes Compartidos</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --naranja: #E8845A; --naranja-light: #FDF0E8; --naranja-dark: #C4623A;
+    --verde: #5A8A6A; --verde-light: #E8F2EC; --verde-dark: #3D6B4F;
+    --crema: #FDF6F0; --texto: #2D2D2D; --texto-soft: #6B6B6B;
+    --borde: #E5D8CE; --blanco: #FFFFFF;
+    --shadow: 0 2px 12px rgba(232,132,90,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(--texto); min-height: 100vh; }
+  .screen { display: none; } .screen.active { display: block; }
+
+  .evento-header { padding: 28px 20px 20px; color: var(--blanco); text-align: center; position: relative; }
+  .evento-header.ida-color { background: var(--naranja); }
+  .evento-header.vuelta-color { background: var(--verde); }
+  .evento-header.inicio-color { background: var(--naranja); }
+  .evento-nombre { font-size: 24px; font-weight: 700; margin-bottom: 6px; line-height: 1.2; }
+  .evento-meta { font-size: 16px; opacity: 0.9; font-weight: 500; }
+  .evento-proposito { font-size: 15px; font-weight: 600; margin-top: 12px; background: rgba(255,255,255,0.18); padding: 10px 16px; border-radius: 10px; display: inline-block; line-height: 1.4; }
+  .btn-refresh { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.2); border: none; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: white; }
+  .btn-refresh:hover { background: rgba(255,255,255,0.35); }
+
+  .tramos { padding: 20px 16px; display: flex; flex-direction: column; gap: 12px; max-width: 480px; margin: 0 auto; }
+  .btn-tramo { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-radius: 14px; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; box-shadow: var(--shadow); transition: transform 0.15s; width: 100%; }
+  .btn-tramo:active { transform: scale(0.97); }
+  .btn-tramo.ida { background: var(--naranja); color: var(--blanco); }
+  .btn-tramo.vuelta { background: var(--verde); color: var(--blanco); }
+  .tramo-left { text-align: left; }
+  .tramo-label { font-size: 20px; font-weight: 700; margin-bottom: 2px; }
+  .tramo-hora { font-size: 14px; opacity: 0.85; font-weight: 500; }
+  .tramo-stats { font-size: 12px; opacity: 0.8; margin-top: 3px; }
+  .tramo-alerta { font-size: 12px; font-weight: 600; background: rgba(255,255,255,0.25); padding: 2px 8px; border-radius: 8px; margin-top: 4px; display: inline-block; }
+  .tramo-arrow { font-size: 20px; opacity: 0.7; }
+
+  .inicio-footer { padding: 8px 16px 32px; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .btn-nuevo-evento { width: 100%; padding: 13px; background: transparent; border: 1.5px solid var(--borde); border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: var(--texto-soft); cursor: pointer; transition: all 0.2s; }
+  .btn-nuevo-evento:hover { border-color: var(--naranja); color: var(--naranja-dark); background: var(--naranja-light); }
+  .contacto-link { font-size: 12px; color: var(--texto-soft); text-decoration: none; }
+  .contacto-link:hover { color: var(--naranja-dark); }
+
+  .tramo-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; max-width: 480px; margin: 0 auto; }
+  .btn-back-circle { width: 36px; height: 36px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; color: white; flex-shrink: 0; }
+  .btn-back-circle.ida { background: var(--naranja); }
+  .btn-back-circle.vuelta { background: var(--verde); }
+  .btn-back-circle:hover { opacity: 0.8; }
+  .tramo-title { font-size: 17px; font-weight: 700; }
+
+  .mi-lugar-bar { margin: 0 16px 16px; max-width: 448px; margin-left: auto; margin-right: auto; }
+  .mi-lugar { border-radius: 12px; padding: 13px 16px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; }
+  .mi-lugar.conductor { background: var(--naranja-light); border: 1.5px solid var(--naranja); color: var(--naranja-dark); }
+  .mi-lugar.asignada { background: var(--verde-light); border: 1.5px solid var(--verde); color: var(--verde-dark); }
+  .mi-lugar.espera { background: #FFF8E8; border: 1.5px solid #E8C45A; color: #7A5A00; }
+
+  .zona { margin: 0 16px 20px; max-width: 448px; margin-left: auto; margin-right: auto; }
+  .zona-autos { background: var(--naranja-light); border-radius: 14px; padding: 14px; border: 1.5px solid #F0C4A8; }
+  .zona-espera { background: var(--verde-light); border-radius: 14px; padding: 14px; border: 1.5px solid #A8C8B4; }
+  .zona-titulo { font-size: 16px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+  .zona-count { font-size: 13px; font-weight: 500; color: var(--texto-soft); }
+
+  .auto-card { background: var(--blanco); border: 1.5px solid var(--borde); border-radius: 12px; padding: 13px 14px; margin-bottom: 8px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); }
+  .auto-card:last-of-type { margin-bottom: 0; }
+  .auto-card.mio { border-color: var(--naranja); }
+  .auto-top { display: flex; align-items: center; justify-content: space-between; cursor: pointer; gap: 8px; }
+  .auto-conductor-info { flex: 1; min-width: 0; }
+  .auto-conductor { font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .auto-zona { font-size: 11px; color: var(--texto-soft); margin-top: 1px; }
+  .yo-tag { font-size: 10px; background: var(--naranja); color: white; padding: 1px 6px; border-radius: 6px; font-weight: 600; }
+  .auto-top-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .lugares-contador { display: flex; align-items: center; gap: 3px; }
+  .lugar-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .lugar-dot.ocupado { background: var(--naranja); }
+  .lugar-dot.libre { background: var(--verde-light); border: 1.5px solid var(--verde); }
+  .lugares-texto { font-size: 12px; color: var(--texto-soft); margin-left: 4px; }
+  .btn-maps { background: none; border: none; cursor: pointer; padding: 2px; display: flex; align-items: center; }
+  .btn-maps img { width: 22px; height: 22px; }
+
+  .auto-pasajeros { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--borde); }
+  .auto-card.expandido .auto-pasajeros { display: block; }
+  .pasajero-row { display: flex; align-items: center; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #F5EDE6; }
+  .pasajero-row:last-child { border-bottom: none; }
+  .pasajero-nombre { font-size: 14px; color: var(--texto); }
+  .btn-quitar { background: none; border: 1.5px solid var(--borde); border-radius: 6px; color: var(--texto-soft); font-size: 14px; width: 28px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .btn-quitar:hover { border-color: var(--naranja); color: var(--naranja-dark); background: var(--naranja-light); }
+
+  .auto-acciones { display: flex; gap: 8px; margin-top: 8px; }
+  .btn-auto-accion { flex: 1; padding: 5px 8px; border-radius: 7px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; border: 1.5px solid var(--borde); background: var(--crema); color: var(--texto-soft); }
+  .btn-auto-accion:hover { background: var(--blanco); }
+  .btn-auto-accion.danger:hover { border-color: #C4423A; color: #C4423A; background: #FDF0F0; }
+
+  .espera-card { background: var(--blanco); border: 1.5px solid var(--borde); border-radius: 12px; padding: 13px 14px; margin-bottom: 8px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); }
+  .espera-card:last-of-type { margin-bottom: 0; }
+  .espera-card.mia { border-color: #E8C45A; }
+  .espera-top { display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+  .espera-nombre { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+  .espera-pos { font-size: 13px; color: var(--texto-soft); }
+  .espera-selector { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--borde); }
+  .espera-card.expandida .espera-selector { display: block; }
+  .espera-selector label { font-size: 12px; font-weight: 600; color: var(--texto-soft); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 6px; }
+  .espera-selector select { width: 100%; padding: 10px 12px; border: 1.5px solid var(--borde); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--texto); background: var(--crema); outline: none; margin-bottom: 8px; }
+  .espera-selector select:focus { border-color: var(--verde); }
+  .btn-asignar { width: 100%; padding: 11px; background: var(--verde); color: white; border: none; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; }
+  .btn-asignar:hover { background: var(--verde-dark); }
+
+  .btn-agregar { width: 100%; padding: 12px; border: 2px dashed rgba(0,0,0,0.15); border-radius: 10px; background: rgba(255,255,255,0.5); color: var(--texto-soft); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .btn-agregar:hover { background: rgba(255,255,255,0.8); }
+
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; align-items: flex-end; justify-content: center; }
+  .overlay.visible { display: flex; }
+  .popup { background: var(--blanco); border-radius: 20px 20px 0 0; padding: 24px 20px 36px; width: 100%; max-width: 480px; animation: slideUp 0.25s ease; }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .popup-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; text-align: center; }
+  .popup-field { margin-bottom: 12px; }
+  .popup-field label { display: block; font-size: 12px; font-weight: 600; color: var(--texto-soft); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 5px; }
+  .popup-field input, .popup-field select { width: 100%; padding: 12px 13px; border: 1.5px solid var(--borde); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--texto); background: var(--crema); outline: none; }
+  .popup-field input:focus, .popup-field select:focus { border-color: var(--naranja); background: var(--blanco); }
+  .popup-check { display: flex; align-items: center; gap: 10px; padding: 12px 13px; border: 1.5px solid var(--borde); border-radius: 10px; background: var(--crema); cursor: pointer; margin-bottom: 12px; }
+  .popup-check input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--naranja); cursor: pointer; }
+  .popup-check span { font-size: 15px; color: var(--texto); }
+  .popup-btns { display: flex; gap: 10px; }
+  .btn-cancelar { flex: 1; padding: 13px; background: var(--crema); border: 1.5px solid var(--borde); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; color: var(--texto-soft); }
+  .btn-confirmar { flex: 2; padding: 13px; background: var(--naranja); border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; color: white; }
+  .btn-confirmar:hover { background: var(--naranja-dark); }
+
+  .empty-msg { text-align: center; color: #aaa; font-size: 14px; padding: 8px 0 4px; }
+  .loading { text-align: center; padding: 48px 20px; color: var(--texto-soft); font-size: 15px; }
+  .version { text-align: center; font-size: 11px; color: #ccc; padding: 16px; }
+</style>
+</head>
+<body>
+
+<div class="screen active" id="screenCarga">
+  <div class="loading">Cargando CPool...</div>
+</div>
+
+<div class="screen" id="screenInicio">
+  <div class="evento-header inicio-color">
+    <button class="btn-refresh" onclick="cargarStats()">🔄</button>
+    <div class="evento-nombre" id="eventoNombre"></div>
+    <div class="evento-meta" id="eventoMeta"></div>
+    <div class="evento-proposito" id="eventoProposito" style="display:none"></div>
+  </div>
+  <div class="tramos">
+    <button class="btn-tramo ida" id="btnIda" onclick="entrarTramo('ida')" style="display:none">
+      <div class="tramo-left">
+        <div class="tramo-label">🚗 Ida</div>
+        <div class="tramo-hora" id="horaIda">—</div>
+        <div class="tramo-stats" id="statsIda"></div>
+        <div class="tramo-alerta" id="alertaIda" style="display:none"></div>
+      </div>
+      <div class="tramo-arrow">→</div>
+    </button>
+    <button class="btn-tramo vuelta" id="btnVuelta" onclick="entrarTramo('vuelta')" style="display:none">
+      <div class="tramo-left">
+        <div class="tramo-label">🏠 Vuelta</div>
+        <div class="tramo-hora" id="horaVuelta">—</div>
+        <div class="tramo-stats" id="statsVuelta"></div>
+        <div class="tramo-alerta" id="alertaVuelta" style="display:none"></div>
+      </div>
+      <div class="tramo-arrow">→</div>
+    </button>
+  </div>
+  <div class="inicio-footer">
+    <button class="btn-nuevo-evento" disabled style="opacity:0.4;cursor:not-allowed">+ Crear nuevo CPool para este grupo</button>
+    <a href="mailto:cpoolcontacto@gmail.com" class="contacto-link">¿Problemas o sugerencias? Escribinos</a>
+    <div class="version">v0.6</div>
+  </div>
+</div>
+
+<div class="screen" id="screenTramo">
+  <div class="evento-header" id="tramoHeader">
+    <button class="btn-refresh" onclick="renderTramo()">🔄</button>
+    <div class="evento-nombre" id="tramoEventoNombre"></div>
+    <div class="evento-meta" id="tramoEventoMeta"></div>
+  </div>
+  <div class="tramo-header">
+    <button class="btn-back-circle ida" id="btnBack" onclick="volverInicio()">←</button>
+    <div class="tramo-title" id="tramoTitle"></div>
+  </div>
+  <div class="mi-lugar-bar"><div id="miLugar" style="display:none"></div></div>
+  <div class="zona">
+    <div class="zona-autos">
+      <div class="zona-titulo">🚗 Autos <span class="zona-count" id="countAutos">—</span></div>
+      <button class="btn-agregar" onclick="abrirPopupAuto()">+ Ofrezco mi auto</button>
+      <div id="listaAutos"></div>
+    </div>
+  </div>
+  <div class="zona">
+    <div class="zona-espera">
+      <div class="zona-titulo"><span id="iconoEspera">⏳</span> Lista de espera <span class="zona-count" id="countEspera">—</span></div>
+      <button class="btn-agregar" onclick="abrirPopupPasajero()">+ Me anoto como pasajero</button>
+      <div id="listaEspera"></div>
+    </div>
+  </div>
+  <div class="version">v0.6</div>
+</div>
+
+<!-- POPUP ALTA -->
+<div class="overlay" id="overlayAlta">
+  <div class="popup">
+    <div class="popup-title" id="popupTitulo">Alta</div>
+    <div class="popup-field">
+      <label>Nombre de hijo/hija</label>
+      <input type="text" id="inputNombre" placeholder="Ej: Cata Rodríguez C.">
+    </div>
+    <div class="popup-field">
+      <label>Dirección <span style="font-weight:400;text-transform:none;letter-spacing:0">(para la vuelta)</span></label>
+      <input type="text" id="inputDireccion" placeholder="Ej: Callao 1245, CABA">
+    </div>
+    <div id="mensajeConductora" style="display:none;background:#FFF8E8;border:1.5px solid #E8C45A;border-radius:10px;padding:10px 14px;font-size:13px;color:#7A5A00;margin-bottom:12px">
+      ⚠️ Si sos conductora, agregá a tu hijo/hija desde el botón "Editar" en tu auto.
+    </div>
+    <div id="campoAuto" style="display:none">
+      <div class="popup-field">
+        <label>Zona de referencia</label>
+        <input type="text" id="inputZona" placeholder="Ej: Palermo / Villa Crespo">
+      </div>
+      <div class="popup-field">
+        <label>Lugares disponibles (sin contar tu hijo/hija)</label>
+        <select id="inputCapacidad">
+          <option value="1">1 lugar</option>
+          <option value="2">2 lugares</option>
+          <option value="3">3 lugares</option>
+          <option value="4" selected>4 lugares</option>
+          <option value="5">5 lugares</option>
+          <option value="6">6 lugares</option>
+          <option value="7">7 lugares</option>
+          <option value="8">8 lugares</option>
+        </select>
+      </div>
+      <label class="popup-check">
+        <input type="checkbox" id="hijaViene">
+        <span>Mi hijo/hija también va en el auto</span>
+      </label>
+    </div>
+    <div class="popup-btns">
+      <button class="btn-cancelar" onclick="cerrarPopup()">Cancelar</button>
+      <button class="btn-confirmar" id="btnConfirmar" onclick="confirmarAlta()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- POPUP EDITAR AUTO -->
+<div class="overlay" id="overlayEditarAuto">
+  <div class="popup">
+    <div class="popup-title">Editar auto</div>
+    <div class="popup-field">
+      <label>Dirección</label>
+      <input type="text" id="editarDireccion" placeholder="Ej: Paraguay 1420, Recoleta, Buenos Aires">
+    </div>
+    <div class="popup-field">
+      <label>Zona de referencia</label>
+      <input type="text" id="editarZona" placeholder="Ej: Palermo / Villa Crespo">
+    </div>
+    <div class="popup-field">
+      <label>Lugares disponibles (sin contar tu hijo/hija)</label>
+      <select id="editarCapacidad">
+        <option value="1">1 lugar</option>
+        <option value="2">2 lugares</option>
+        <option value="3">3 lugares</option>
+        <option value="4">4 lugares</option>
+        <option value="5">5 lugares</option>
+        <option value="6">6 lugares</option>
+        <option value="7">7 lugares</option>
+        <option value="8">8 lugares</option>
+      </select>
+    </div>
+    <label class="popup-check">
+      <input type="checkbox" id="editarHijaViene">
+      <span>Mi hijo/hija también va en el auto</span>
+    </label>
+    <div class="popup-btns">
+      <button class="btn-cancelar" onclick="cerrarPopupEditar()">Cancelar</button>
+      <button class="btn-confirmar" onclick="confirmarEditarAuto()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://zvvcodeqfscqvunogppg.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2dmNvZGVxZnNjcXZ1bm9ncHBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NTgxMTksImV4cCI6MjA5NjEzNDExOX0.CrmSFILnBGoLcpzMW9QeAI_QUqbxwRWB-CTdB4Au11Y';
+const MAPS_ICON = 'https://agustinadelabarra.github.io/Pool-Manager/maps-icon.png';
+
+const FRASES = {
+  equidad: 'Somos un grupo que se propone que todos participen',
+  logistica: 'Nos organizamos para llegar de la forma más eficiente',
+  ambos: 'Nos proponemos que todos participen, organizándonos de la forma más eficiente'
+};
+
+let evento = null, tramoActual = null, modoPopup = null, miFamilia = null, autoEditandoId = null, guardando = false;
+
+function getToken() { return new URLSearchParams(window.location.search).get('token'); }
+function formatHora(h) { return h ? h.substring(0,5) : '—'; }
+function formatFecha(f) {
+  if (!f) return '';
+  const [y,m,d] = f.split('-');
+  const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  return `${parseInt(d)} de ${meses[parseInt(m)-1]}`;
+}
+function show(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+
+async function api(path, opts = {}) {
+  const method = opts.method || 'GET';
+  const isDelete = method === 'DELETE';
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    method,
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      ...(isDelete ? {} : { 'Prefer': 'return=representation' }),
+      ...opts.headers
+    },
+    ...(opts.body ? { body: opts.body } : {})
+  });
+  if (!res.ok) throw new Error(await res.text());
+  const t = await res.text();
+  return t ? JSON.parse(t) : null;
+}
+
+function mapsLinkIda(conductorDir, pasajerosDir, destino) {
+  const dirs = [conductorDir, ...pasajerosDir, destino].filter(Boolean);
+  if (dirs.length < 2) return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(destino)}`;
+  return `https://www.google.com/maps/dir/${dirs.map(d => encodeURIComponent(d)).join('/')}`;
+}
+
+function mapsLinkVuelta(destino, pasajerosDir, conductorDir) {
+  const dirs = [destino, ...pasajerosDir, conductorDir].filter(Boolean);
+  if (dirs.length < 2) return null;
+  return `https://www.google.com/maps/dir/${dirs.map(d => encodeURIComponent(d)).join('/')}`;
+}
+
+async function init() {
+  const token = getToken();
+  if (!token) { document.getElementById('screenCarga').innerHTML = '<div class="loading">Link inválido.</div>'; return; }
+  const stored = sessionStorage.getItem('miFamilia_' + token);
+  if (stored) miFamilia = JSON.parse(stored);
+  try {
+    const data = await api(`evento_eventos?link_token=eq.${token}&select=*`);
+    if (!data?.length) { document.getElementById('screenCarga').innerHTML = '<div class="loading">CPool no encontrado.</div>'; return; }
+    evento = data[0];
+    renderInicio();
+    await cargarStats();
+    show('screenInicio');
+  } catch(e) { console.error(e); document.getElementById('screenCarga').innerHTML = `<div class="loading">Error: ${e.message}</div>`; }
+}
+
+function renderInicio() {
+  document.getElementById('eventoNombre').textContent = evento.nombre;
+  document.getElementById('eventoMeta').textContent = `${formatFecha(evento.fecha)} · ${evento.destino}`;
+  if (evento.proposito && evento.proposito !== 'ninguno') {
+    const el = document.getElementById('eventoProposito');
+    el.textContent = FRASES[evento.proposito];
+    el.style.display = 'inline-block';
+  }
+  if (evento.hora_ida) { document.getElementById('horaIda').textContent = formatHora(evento.hora_ida); document.getElementById('btnIda').style.display = 'flex'; }
+  if (evento.hora_vuelta) { document.getElementById('horaVuelta').textContent = formatHora(evento.hora_vuelta); document.getElementById('btnVuelta').style.display = 'flex'; }
+}
+
+function crearNuevoEvento() {
+  const base = window.location.pathname.replace('cpool.html', 'cpools.html');
+  window.location.href = `${window.location.origin}${base}?desde=${getToken()}`;
+}
+
+async function cargarStats() {
+  try {
+    const autos = await api(`evento_autos?evento_id=eq.${evento.id}&select=*`) || [];
+    const familias = await api(`evento_familias?evento_id=eq.${evento.id}&select=*`) || [];
+    const autoIds = autos.map(a => `"${a.id}"`).join(',');
+    let asignaciones = [];
+    if (autoIds.length) asignaciones = await api(`evento_asignaciones?auto_id=in.(${autoIds})&select=*`) || [];
+    for (const tramo of ['ida','vuelta']) {
+      const at = autos.filter(a => a.tramo === tramo);
+      const conductoresIds = new Set(at.map(a => a.familia_id));
+      const confirmadosIds = new Set(asignaciones.filter(a => a.estado === 'confirmado' && at.find(au => au.id === a.auto_id)).map(a => a.familia_id));
+      const enEspera = familias.filter(f => !conductoresIds.has(f.id) && !confirmadosIds.has(f.id)).length;
+      const totalLugares = at.reduce((s,a) => s + a.capacidad_total, 0);
+      const libres = at.reduce((s,a) => s + a.capacidad_disponible, 0);
+      const sufx = tramo === 'ida' ? 'Ida' : 'Vuelta';
+      const statsEl = document.getElementById(`stats${sufx}`);
+      const alertaEl = document.getElementById(`alerta${sufx}`);
+      if (statsEl) statsEl.textContent = `${at.length} autos · ${libres}/${totalLugares} lugares libres`;
+      if (alertaEl) {
+        const faltantes = enEspera - libres;
+        if (faltantes > 0) { alertaEl.textContent = `⚠️ Faltan lugares para ${faltantes} familia${faltantes !== 1 ? 's' : ''}`; alertaEl.style.display = 'inline-block'; }
+        else alertaEl.style.display = 'none';
+      }
+    }
+  } catch(e) { console.log('stats error', e); }
+}
+
+async function entrarTramo(tramo) {
+  tramoActual = tramo;
+  const esIda = tramo === 'ida';
+  document.getElementById('tramoHeader').className = `evento-header ${esIda ? 'ida-color' : 'vuelta-color'}`;
+  document.getElementById('tramoEventoNombre').textContent = evento.nombre;
+  document.getElementById('tramoEventoMeta').textContent = `${formatFecha(evento.fecha)} · ${evento.destino} · ${esIda ? 'Ida' : 'Vuelta'} ${formatHora(esIda ? evento.hora_ida : evento.hora_vuelta)}`;
+  document.getElementById('btnBack').className = `btn-back-circle ${tramo}`;
+  document.getElementById('tramoTitle').textContent = esIda ? '🚗 Ida' : '🏠 Vuelta';
+  document.getElementById('iconoEspera').textContent = esIda ? '🚗' : '🏠';
+  show('screenTramo');
+  await renderTramo();
+}
+
+function volverInicio() { show('screenInicio'); cargarStats(); }
+
+async function renderTramo() {
+  document.getElementById('listaAutos').innerHTML = '<div class="empty-msg">Cargando...</div>';
+  document.getElementById('listaEspera').innerHTML = '';
+  try {
+    const autos = await api(`evento_autos?evento_id=eq.${evento.id}&tramo=eq.${tramoActual}&select=*`) || [];
+    const familias = await api(`evento_familias?evento_id=eq.${evento.id}&select=*`) || [];
+    const autoIds = autos.map(a => `"${a.id}"`).join(',');
+    let asignaciones = [];
+    if (autoIds.length) asignaciones = await api(`evento_asignaciones?auto_id=in.(${autoIds})&select=*`) || [];
+    renderMiLugar(autos, asignaciones, familias);
+    renderAutos(autos, asignaciones, familias);
+    renderEspera(autos, asignaciones, familias);
+  } catch(e) { console.error(e); document.getElementById('listaAutos').innerHTML = `<div style="color:red;font-size:13px">Error: ${e.message}</div>`; }
+}
+
+function renderMiLugar(autos, asignaciones, familias) {
+  const el = document.getElementById('miLugar');
+  if (!miFamilia) { el.style.display = 'none'; return; }
+  const miAuto = autos.find(a => a.familia_id === miFamilia.id);
+  if (miAuto) { el.style.display = 'flex'; el.className = 'mi-lugar conductor'; el.innerHTML = `🚗 Sos conductora — ${miAuto.capacidad_disponible} lugares libres`; return; }
+  const confirmada = asignaciones.find(a => a.familia_id === miFamilia.id && a.estado === 'confirmado');
+  if (confirmada) {
+    const autoAsig = autos.find(a => a.id === confirmada.auto_id);
+    const conductor = familias.find(f => f.id === autoAsig?.familia_id);
+    el.style.display = 'flex'; el.className = 'mi-lugar asignada';
+    el.innerHTML = `✅ Vas en el auto de ${conductor?.nombre || '—'}`; return;
+  }
+  const enLista = familias.find(f => f.id === miFamilia.id);
+  if (enLista) { el.style.display = 'flex'; el.className = 'mi-lugar espera'; el.innerHTML = `⏳ Estás en lista de espera`; return; }
+  el.style.display = 'none';
+}
+
+function renderAutos(autos, asignaciones, familias) {
+  document.getElementById('countAutos').textContent = `${autos.length} auto${autos.length !== 1 ? 's' : ''}`;
+  const lista = document.getElementById('listaAutos');
+  if (!autos.length) { lista.innerHTML = '<div class="empty-msg">Aún no hay autos anotados</div>'; return; }
+  const esIda = tramoActual === 'ida';
+
+  lista.innerHTML = autos.map(auto => {
+    const conductor = familias.find(f => f.id === auto.familia_id);
+    const pasajeros = asignaciones.filter(a => a.auto_id === auto.id && a.estado === 'confirmado');
+    const ocupados = auto.capacidad_total - auto.capacidad_disponible;
+    const esMio = miFamilia && auto.familia_id === miFamilia.id;
+    const dots = Array.from({length: Math.min(auto.capacidad_total, 8)}, (_,i) =>
+      `<div class="lugar-dot ${i < ocupados ? 'ocupado' : 'libre'}"></div>`
+    ).join('');
+
+    const conductorDir = conductor?.direccion;
+    // Excluir al conductor de los pasajeros para Maps
+    const pasajerosDir = pasajeros
+      .filter(p => p.familia_id !== auto.familia_id)
+      .map(p => familias.find(f => f.id === p.familia_id)?.direccion)
+      .filter(Boolean);
+    const mapsLink = esIda
+      ? mapsLinkIda(conductorDir, pasajerosDir, evento.destino)
+      : mapsLinkVuelta(evento.destino, pasajerosDir, conductorDir);
+
+    const mapsBtn = mapsLink
+      ? `<a href="${mapsLink}" target="_blank" class="btn-maps" onclick="event.stopPropagation()"><img src="${MAPS_ICON}" alt="Maps"></a>`
+      : '';
+
+    const pasajeroRows = pasajeros.map(p => {
+      const fam = familias.find(f => f.id === p.familia_id);
+      return `<div class="pasajero-row"><div class="pasajero-nombre">👤 ${fam?.nombre || '—'}${fam?.direccion ? ` <span style="font-size:11px;color:var(--texto-soft)">· ${fam.direccion}</span>` : ''}</div><button class="btn-quitar" onclick="quitarPasajero('${p.id}','${auto.id}')" title="Devolver a espera">−</button></div>`;
+    }).join('') || '<div class="empty-msg" style="padding:4px 0">Sin pasajeros aún</div>';
+
+    return `<div class="auto-card ${esMio ? 'mio' : ''}" id="auto-${auto.id}">
+      <div class="auto-top" onclick="toggleAuto('${auto.id}')">
+        <div class="auto-conductor-info">
+          <div class="auto-conductor">🚗 ${conductor?.nombre || '—'}${esMio ? ' <span class="yo-tag">vos</span>' : ''}</div>
+          ${auto.zona ? `<div class="auto-zona">📍 ${auto.zona}</div>` : ''}
+        </div>
+        <div class="auto-top-right">
+          <div class="lugares-contador">${dots}<span class="lugares-texto">${auto.capacidad_disponible} libres</span></div>
+          ${mapsBtn}
+        </div>
+      </div>
+      <div class="auto-pasajeros">
+        ${pasajeroRows}
+        <div class="auto-acciones">
+          <button class="btn-auto-accion" onclick="abrirEditarAuto('${auto.id}', ${auto.capacidad_total}, '${(auto.zona||'').replace(/'/g,"\\'")}', '${(conductor?.direccion||'').replace(/'/g,"\\'")}', ${auto.hija_incluida || false})">✏️ Editar</button>
+          <button class="btn-auto-accion danger" onclick="darDeBajaAuto('${auto.id}')">🗑 Dar de baja</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderEspera(autos, asignaciones, familias) {
+  const conductoresIds = new Set(autos.map(a => a.familia_id));
+  const confirmadosIds = new Set(asignaciones.filter(a => a.estado === 'confirmado').map(a => a.familia_id));
+  const enEspera = familias.filter(f => !conductoresIds.has(f.id) && !confirmadosIds.has(f.id));
+  document.getElementById('countEspera').textContent = `${enEspera.length} familia${enEspera.length !== 1 ? 's' : ''}`;
+  const lista = document.getElementById('listaEspera');
+  if (!enEspera.length) { lista.innerHTML = '<div class="empty-msg">Nadie en espera 🎉</div>'; return; }
+  const autosConLugar = autos.filter(a => a.capacidad_disponible > 0);
+  const opcionesAutos = autosConLugar.map(a => {
+    const c = familias.find(f => f.id === a.familia_id);
+    const zona = a.zona ? ` — ${a.zona}` : '';
+    return `<option value="${a.id}">${c?.nombre || '—'}${zona} (${a.capacidad_disponible} libres)</option>`;
+  }).join('');
+  lista.innerHTML = enEspera.map((f, i) => {
+    const esMia = miFamilia && f.id === miFamilia.id;
+    const selector = opcionesAutos
+      ? `<div class="espera-selector"><label>Elegí un auto</label><select id="selectAuto-${f.id}"><option value="">— Seleccioná —</option>${opcionesAutos}</select><button class="btn-asignar" onclick="asignarDesdeEspera('${f.id}')">Confirmar lugar</button></div>`
+      : `<div class="espera-selector"><div class="empty-msg">Sin autos con lugar disponible</div></div>`;
+    return `<div class="espera-card ${esMia ? 'mia' : ''}" id="espera-${f.id}">
+      <div class="espera-top" onclick="toggleEspera('${f.id}')">
+        <div class="espera-nombre">👤 ${f.nombre}${esMia ? ' <span style="font-size:10px;background:#E8C45A;color:#5A3A00;padding:1px 6px;border-radius:5px;font-weight:600">vos</span>' : ''}</div>
+        <div style="display:flex;align-items:center;gap:6px"><span class="espera-pos">#${i+1}</span><span style="color:var(--texto-soft);font-size:11px">▾</span></div>
+      </div>${selector}
+    </div>`;
+  }).join('');
+}
+
+function toggleAuto(id) { document.getElementById(`auto-${id}`)?.classList.toggle('expandido'); }
+function toggleEspera(id) { document.getElementById(`espera-${id}`)?.classList.toggle('expandida'); }
+
+async function asignarDesdeEspera(familiaId) {
+  const autoId = document.getElementById(`selectAuto-${familiaId}`)?.value;
+  if (!autoId) { alert('Elegí un auto primero.'); return; }
+  try {
+    await api(`evento_asignaciones`, { method: 'POST', body: JSON.stringify({ auto_id: autoId, familia_id: familiaId, cantidad_pasajeros: 1, estado: 'confirmado' }) });
+    const auto = await api(`evento_autos?id=eq.${autoId}&select=*`);
+    if (auto?.[0]) await api(`evento_autos?id=eq.${autoId}`, { method: 'PATCH', body: JSON.stringify({ capacidad_disponible: auto[0].capacidad_disponible - 1 }) });
+    await renderTramo();
+  } catch(e) { console.error(e); alert('Error al asignar.'); }
+}
+
+async function quitarPasajero(asignacionId, autoId) {
+  try {
+    // Antes de borrar, ver si es la hija del conductor
+    const asig = await api(`evento_asignaciones?id=eq.${asignacionId}&select=*`);
+    const auto = await api(`evento_autos?id=eq.${autoId}&select=*`);
+    const esConductora = asig?.[0]?.familia_id === auto?.[0]?.familia_id;
+
+    await api(`evento_asignaciones?id=eq.${asignacionId}`, { method: 'DELETE' });
+
+    if (auto?.[0]) {
+      const patch = { capacidad_disponible: auto[0].capacidad_disponible + 1 };
+      if (esConductora) patch.hija_incluida = false;
+      await api(`evento_autos?id=eq.${autoId}`, { method: 'PATCH', body: JSON.stringify(patch) });
+    }
+    await renderTramo();
+  } catch(e) { console.error(e); alert('Error al quitar pasajero.'); }
+}
+
+function abrirEditarAuto(autoId, capacidadActual, zonaActual, direccionActual, hijaIncluida) {
+  autoEditandoId = autoId;
+  document.getElementById('editarCapacidad').value = capacidadActual;
+  document.getElementById('editarZona').value = zonaActual || '';
+  document.getElementById('editarDireccion').value = direccionActual || '';
+  document.getElementById('editarHijaViene').checked = hijaIncluida || false;
+  document.getElementById('overlayEditarAuto').classList.add('visible');
+}
+function cerrarPopupEditar() { document.getElementById('overlayEditarAuto').classList.remove('visible'); autoEditandoId = null; }
+
+async function confirmarEditarAuto() {
+  if (!autoEditandoId) return;
+  const nuevaCapacidad = parseInt(document.getElementById('editarCapacidad').value);
+  const hijaViene = document.getElementById('editarHijaViene').checked;
+  const zona = document.getElementById('editarZona').value.trim();
+  const direccion = document.getElementById('editarDireccion').value.trim();
+  try {
+    const auto = await api(`evento_autos?id=eq.${autoEditandoId}&select=*`);
+    if (!auto?.[0]) return;
+
+    const hijaAntes = auto[0].hija_incluida || false;
+
+    // Manejar asignación de hija
+    if (hijaViene && !hijaAntes) {
+      // Agregar hija como asignación
+      await api(`evento_asignaciones`, { method: 'POST', body: JSON.stringify({ auto_id: autoEditandoId, familia_id: auto[0].familia_id, cantidad_pasajeros: 1, estado: 'confirmado' }) });
+    } else if (!hijaViene && hijaAntes) {
+      // Quitar asignación de hija (la del conductor en su propio auto)
+      const asigs = await api(`evento_asignaciones?auto_id=eq.${autoEditandoId}&familia_id=eq.${auto[0].familia_id}&select=*`) || [];
+      if (asigs.length) await api(`evento_asignaciones?id=eq.${asigs[0].id}`, { method: 'DELETE' });
+    }
+
+    // Recalcular capacidad disponible
+    const asigsTotales = await api(`evento_asignaciones?auto_id=eq.${autoEditandoId}&estado=eq.confirmado&select=*`) || [];
+    const nuevosLibres = Math.max(0, nuevaCapacidad - asigsTotales.length);
+
+    await api(`evento_autos?id=eq.${autoEditandoId}`, { method: 'PATCH', body: JSON.stringify({ capacidad_total: nuevaCapacidad, capacidad_disponible: nuevosLibres, zona: zona || null, hija_incluida: hijaViene }) });
+
+    // Actualizar dirección de la familia conductora
+    if (direccion) {
+      await api(`evento_familias?id=eq.${auto[0].familia_id}`, { method: 'PATCH', body: JSON.stringify({ direccion }) });
+    }
+
+    cerrarPopupEditar();
+    await renderTramo();
+  } catch(e) { console.error(e); alert('Error al editar.'); }
+}
+
+async function darDeBajaAuto(autoId) {
+  if (!confirm('¿Dar de baja este auto? Los pasajeros volverán a lista de espera.')) return;
+  try {
+    await api(`evento_asignaciones?auto_id=eq.${autoId}`, { method: 'DELETE' });
+    await api(`evento_autos?id=eq.${autoId}`, { method: 'DELETE' });
+    await renderTramo();
+  } catch(e) { console.error(e); alert('Error al dar de baja el auto.'); }
+}
+
+function abrirPopupAuto() {
+  modoPopup = 'auto';
+  document.getElementById('popupTitulo').textContent = 'Ofrezco mi auto';
+  document.getElementById('campoAuto').style.display = 'block';
+  document.getElementById('inputNombre').value = miFamilia?.nombre || '';
+  document.getElementById('inputDireccion').value = miFamilia?.direccion || '';
+  document.getElementById('inputZona').value = '';
+  document.getElementById('hijaViene').checked = false;
+  document.getElementById('overlayAlta').classList.add('visible');
+}
+
+function abrirPopupPasajero() {
+  modoPopup = 'pasajero';
+  document.getElementById('popupTitulo').textContent = 'Me anoto como pasajero';
+  document.getElementById('campoAuto').style.display = 'none';
+  document.getElementById('inputNombre').value = miFamilia?.nombre || '';
+  document.getElementById('inputDireccion').value = miFamilia?.direccion || '';
+  // Mensaje si ya tiene auto en este tramo
+  const msgEl = document.getElementById('mensajeConductora');
+  if (msgEl) msgEl.style.display = 'none';
+  document.getElementById('overlayAlta').classList.add('visible');
+}
+
+function cerrarPopup() { document.getElementById('overlayAlta').classList.remove('visible'); modoPopup = null; }
+
+async function getOrCreateFamilia(nombre, direccion) {
+  const existing = await api(`evento_familias?evento_id=eq.${evento.id}&nombre=eq.${encodeURIComponent(nombre)}&select=*`);
+  if (existing?.length) {
+    if (direccion && existing[0].direccion !== direccion) {
+      await api(`evento_familias?id=eq.${existing[0].id}`, { method: 'PATCH', body: JSON.stringify({ direccion }) });
+      existing[0].direccion = direccion;
+    }
+    return existing[0];
+  }
+  const nueva = await api(`evento_familias`, { method: 'POST', body: JSON.stringify({ evento_id: evento.id, nombre, es_admin: false, direccion: direccion || null }) });
+  return nueva[0];
+}
+
+async function confirmarAlta() {
+  if (guardando) return;
+  guardando = true;
+  const btn = document.getElementById('btnConfirmar');
+  btn.disabled = true;
+  const nombre = document.getElementById('inputNombre').value.trim();
+  const direccion = document.getElementById('inputDireccion').value.trim();
+  if (!nombre) { alert('Ingresá el nombre.'); guardando = false; btn.disabled = false; return; }
+  try {
+    if (modoPopup === 'auto') {
+      const capacidadBase = parseInt(document.getElementById('inputCapacidad').value);
+      const hijaViene = document.getElementById('hijaViene').checked;
+      const zona = document.getElementById('inputZona').value.trim();
+      const capacidadDisponible = hijaViene ? capacidadBase - 1 : capacidadBase;
+      const familia = await getOrCreateFamilia(nombre, direccion);
+      const existeAuto = await api(`evento_autos?evento_id=eq.${evento.id}&familia_id=eq.${familia.id}&tramo=eq.${tramoActual}&select=id`);
+      if (existeAuto?.length) { alert('Ya tenés un auto registrado en este tramo.'); cerrarPopup(); return; }
+
+      const nuevoAuto = await api(`evento_autos`, { method: 'POST', body: JSON.stringify({ evento_id: evento.id, familia_id: familia.id, tramo: tramoActual, capacidad_total: capacidadBase, capacidad_disponible: capacidadDisponible, zona: zona || null, hija_incluida: hijaViene }) });
+
+      // Si hija viene, crear asignación
+      if (hijaViene && nuevoAuto?.[0]) {
+        await api(`evento_asignaciones`, { method: 'POST', body: JSON.stringify({ auto_id: nuevoAuto[0].id, familia_id: familia.id, cantidad_pasajeros: 1, estado: 'confirmado' }) });
+      }
+
+      miFamilia = { ...familia, direccion };
+      sessionStorage.setItem('miFamilia_' + getToken(), JSON.stringify(miFamilia));
+    } else if (modoPopup === 'pasajero') {
+      const familia = await getOrCreateFamilia(nombre, direccion);
+      const autosTramo = await api(`evento_autos?evento_id=eq.${evento.id}&tramo=eq.${tramoActual}&select=id`) || [];
+      const autoIds = autosTramo.map(a => `"${a.id}"`).join(',');
+      if (autoIds.length) {
+        const yaAsignada = await api(`evento_asignaciones?auto_id=in.(${autoIds})&familia_id=eq.${familia.id}&select=id`);
+        if (yaAsignada?.length) { alert('Esta familia ya está registrada en este tramo.'); cerrarPopup(); return; }
+      }
+      miFamilia = { ...familia, direccion };
+      sessionStorage.setItem('miFamilia_' + getToken(), JSON.stringify(miFamilia));
+    }
+    cerrarPopup();
+    await renderTramo();
+  } catch(e) { console.error(e); alert(`Error: ${e.message}`); }
+  finally { guardando = false; btn.disabled = false; }
+}
+
+init();
+</script>
+</body>
+</html>
