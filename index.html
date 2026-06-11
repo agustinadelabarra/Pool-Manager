@@ -2,766 +2,311 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Pool</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VertexSur</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --verde: #1B4332;
-    --verde-mid: #2D6A4F;
-    --verde-claro: #40916C;
-    --verde-light: #52B788;
-    --amarillo: #E9C46A;
-    --rojo: #E76F51;
-    --fondo: #F4F1EC;
-    --blanco: #FFFFFF;
-    --texto: #1A1A1A;
-    --gris: #888;
-    --gris-claro: #E8E4DC;
-    --sombra: 0 1px 8px rgba(0,0,0,0.07);
+    --bg1: #0C0E1A;
+    --bg2: #1A1E3C;
+    --verde: #6B8C6B;
+    --verde-light: #A8C5A8;
+    --claro: #F0F4F0;
+    --muted: #8A96B0;
   }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; scrollbar-width: none; }
+  html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
   body {
     font-family: 'DM Sans', sans-serif;
-    background: var(--fondo);
-    color: var(--texto);
-    min-height: 100vh;
-    max-width: 480px;
-    margin: 0 auto;
-    font-size: 14px;
-  }
-
-  .header {
-    background: var(--verde);
-    padding: 10px 14px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    background: var(--bg1);
+    color: var(--claro);
+    height: 100vh;
     display: flex;
-    align-items: center;
-    gap: 8px;
+    flex-direction: column;
   }
 
-  .pool-nombre {
-    font-size: 17px;
-    font-weight: 700;
-    color: var(--blanco);
-    flex: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .selector-familia {
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 8px;
-    padding: 5px 8px;
-    color: var(--blanco);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    appearance: none;
-    -webkit-appearance: none;
-    max-width: 145px;
-  }
-
-  .selector-familia option { color: var(--texto); background: var(--blanco); }
-
-  .btn-mapa {
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 8px;
-    width: 38px;
-    height: 38px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 19px;
+  nav {
+    padding: 20px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
     flex-shrink: 0;
-    text-decoration: none;
   }
-
-  .nav-mes {
-    background: var(--verde-mid);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 14px;
+  .logo { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 700; color: var(--claro); letter-spacing: -0.02em; }
+  .logo span { color: var(--verde-light); }
+  .btn-contacto {
+    padding: 9px 20px; background: var(--verde); color: var(--claro);
+    border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; transition: background 0.2s;
   }
+  .btn-contacto:hover { background: var(--verde-light); color: var(--bg1); }
 
-  .mes-label {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--blanco);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-
-  .btn-mes {
-    background: rgba(255,255,255,0.15);
-    border: none;
-    border-radius: 6px;
-    width: 28px;
-    height: 28px;
-    color: var(--blanco);
-    font-size: 16px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .leyenda {
-    display: flex;
-    gap: 12px;
-    padding: 6px 14px;
-    background: var(--blanco);
-    border-bottom: 1px solid var(--gris-claro);
-  }
-
-  .ley-item {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 10px;
-    color: var(--gris);
-    font-weight: 500;
-  }
-
-  .dot { width: 6px; height: 6px; border-radius: 50%; }
-  .dot-ok { background: var(--verde-light); }
-  .dot-warn { background: var(--amarillo); }
-  .dot-cancel { background: var(--rojo); }
-
-  .fechas-list {
-    padding: 8px 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .fecha-card {
-    background: var(--blanco);
-    border-radius: 10px;
-    padding: 9px 11px;
-    box-shadow: var(--sombra);
-    border-left: 3px solid var(--verde-light);
-  }
-
-  .fecha-card.warning { border-left-color: var(--amarillo); }
-  .fecha-card.cancelada { border-left-color: var(--rojo); opacity: 0.6; }
-
-  .fecha-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 6px;
-  }
-
-  .fecha-dia {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--texto);
-  }
-
-  .fecha-badge {
-    font-size: 10px;
-    font-weight: 600;
-    padding: 2px 7px;
-    border-radius: 20px;
-  }
-
-  .badge-ok { background: #E3F4EC; color: var(--verde-mid); }
-  .badge-warn { background: #FDF3D8; color: #9A6D0A; }
-  .badge-cancel { background: #FDECEA; color: var(--rojo); }
-
-  .fecha-motivo {
-    font-size: 10px;
-    color: var(--gris);
-    margin-bottom: 6px;
-    margin-top: -3px;
-  }
-
-  .grilla {
+  .hero {
+    flex: 1;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
+    grid-template-rows: 12fr 30fr 18fr 30fr 10fr;
+    padding: 0 40px;
+    overflow: hidden;
   }
 
-  .asig-box {
-    background: var(--fondo);
-    border-radius: 7px;
-    padding: 6px 8px;
+  .badge-wrap { display: flex; align-items: center; }
+  .badge-container { width: 100%; display: flex; align-items: center; gap: 0; }
+
+  .badge-texto {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; white-space: nowrap;
+    display: flex; align-items: center; gap: 0;
+  }
+  .badge-letra {
+    display: inline-block;
+    color: var(--verde-light);
+    opacity: 0.2;
+    transition: opacity 0.05s linear;
+  }
+  .badge-sep {
+    display: inline-block;
+    color: var(--verde-light);
+    opacity: 0.25;
+    margin: 0 7px;
+    font-size: 15px;
   }
 
-  .asig-label {
-    font-size: 9px;
-    font-weight: 600;
-    color: var(--gris);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 2px;
+  .badge-track {
+    flex: 1; height: 3px;
+    background: rgba(168,197,168,0.12);
+    position: relative; overflow: visible;
+    margin-left: 12px;
+    border-radius: 2px;
+    align-self: center;
   }
 
-  .asig-nombre {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--texto);
+  /* Spark alineada al final de la línea, desplazada levemente a la izquierda */
+  .badge-spark {
+    width: 60px; height: 60px;
+    flex-shrink: 0;
+    margin-left: -20px;
+    opacity: 0; transform: scale(0);
+    transition: opacity 0.4s ease, transform 0.4s ease;
   }
+  .badge-spark.visible { opacity: 1; transform: scale(1); }
 
-  .asig-vacio {
-    font-size: 11px;
-    color: var(--gris);
-    font-style: italic;
+  .titulo-wrap { display: flex; align-items: center; }
+  h1 { font-family: 'Outfit', sans-serif; font-size: 54px; font-weight: 700; line-height: 1.08; letter-spacing: -0.03em; max-width: 700px; color: var(--claro); }
+  h1 span { color: var(--verde-light); }
+
+  .subtitulo-wrap { display: flex; align-items: flex-start; padding-top: 8px; }
+  .subtitulo { font-size: 17px; color: var(--muted); max-width: 520px; line-height: 1.55; font-weight: 400; }
+
+  .cards-wrap { display: flex; align-items: center; }
+  .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; width: 100%; }
+  .card {
+    background: var(--bg2);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 12px 16px;
+    display: flex; flex-direction: column; gap: 8px;
+    cursor: pointer; transition: border-color 0.2s, transform 0.2s;
+    position: relative; overflow: hidden;
   }
+  .card:hover { border-color: rgba(168,197,168,0.3); transform: translateY(-2px); }
+  .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; border-radius: 14px 14px 0 0; }
+  .card-1::before { background: linear-gradient(to right, #4F5D8A, #A8C5A8); }
+  .card-2::before { background: linear-gradient(to right, #6B8C6B, #A8C5A8); }
+  .card-3::before { background: linear-gradient(to right, #2D3561, #6B8C6B); }
+  .card-numero { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; color: var(--verde-light); opacity: 0.5; }
+  .card-nombre { font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 700; color: var(--claro); letter-spacing: -0.02em; }
+  .card-nombre span { color: var(--verde-light); }
+  .card-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .card-arrow { font-size: 16px; color: var(--verde-light); opacity: 0; transition: opacity 0.2s; align-self: flex-end; margin-top: auto; }
+  .card:hover .card-arrow { opacity: 1; }
 
-  .botones-disp {
-    margin-top: 6px;
+  .footer-wrap { display: flex; align-items: center; border-top: 1px solid rgba(255,255,255,0.06); }
+  .footer-copy { font-size: 11px; color: var(--muted); }
+
+  @media (max-width: 600px) {
+    nav { padding: 16px 20px; }
+    .hero { padding: 0 20px; grid-template-rows: 10fr 25fr 18fr 40fr 7fr; }
+    h1 { font-size: 34px; }
+    .subtitulo { font-size: 15px; }
+    .cards-grid { grid-template-columns: 1fr; gap: 10px; }
   }
-
-  .toggle-btn {
-    border: 1.5px solid var(--gris-claro);
-    background: var(--blanco);
-    border-radius: 7px;
-    padding: 6px 0;
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s;
-    color: var(--gris);
-    text-align: center;
-    width: 100%;
-  }
-
-  .toggle-btn.activo-ida {
-    background: var(--verde);
-    border-color: var(--verde);
-    color: var(--blanco);
-  }
-
-  .toggle-btn.activo-vuelta {
-    background: var(--verde-claro);
-    border-color: var(--verde-claro);
-    color: var(--blanco);
-  }
-
-  .toggle-btn.activo-voy {
-    background: var(--verde);
-    border-color: var(--verde);
-    color: var(--blanco);
-  }
-
-  .toggle-btn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-  }
-
-  /* NOTA */
-  .nota-container {
-    margin-top: 6px;
-    padding-top: 6px;
-    border-top: 1px solid var(--gris-claro);
-  }
-
-  .nota-input {
-    width: 100%;
-    border: 1px solid var(--gris-claro);
-    border-radius: 7px;
-    padding: 5px 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    color: var(--texto);
-    background: var(--fondo);
-    resize: none;
-    outline: none;
-  }
-
-  .nota-input:focus {
-    border-color: var(--verde-claro);
-  }
-
-  .sin-familia {
-    font-size: 10px;
-    color: var(--amarillo);
-    font-weight: 500;
-    margin-top: 6px;
-    padding-top: 6px;
-    border-top: 1px solid var(--gris-claro);
-  }
-
-  .version {
-    text-align: center;
-    padding: 12px;
-    font-size: 10px;
-    color: var(--gris);
-  }
-
-  .loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 50px 20px;
-    color: var(--gris);
-    gap: 10px;
-  }
-
-  .spinner {
-    width: 26px;
-    height: 26px;
-    border: 2px solid var(--gris-claro);
-    border-top-color: var(--verde);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .toast {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: var(--texto);
-    color: var(--blanco);
-    padding: 8px 18px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 500;
-    transition: transform 0.25s ease;
-    z-index: 1000;
-    white-space: nowrap;
-  }
-
-  .toast.visible { transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="pool-nombre" id="poolNombre">Pool</div>
-  <select class="selector-familia" id="selectFamilia" onchange="onFamiliaChange()">
-    <option value="">¿Quién sos?</option>
-  </select>
-  <a class="btn-mapa" href="#" onclick="abrirMapa(event)">🚗</a>
-</div>
+<nav>
+  <div class="logo">Vertex<span>Sur</span></div>
+  <a href="mailto:hola@vertexsur.com" class="btn-contacto">Contactanos</a>
+</nav>
 
-<div class="nav-mes">
-  <button class="btn-mes" onclick="cambiarMes(-1)">‹</button>
-  <div class="mes-label" id="mesLabel">—</div>
-  <button class="btn-mes" onclick="cambiarMes(1)">›</button>
-</div>
+<div class="hero">
 
-<div class="leyenda">
-  <div class="ley-item"><div class="dot dot-ok"></div> Normal</div>
-  <div class="ley-item"><div class="dot dot-warn"></div> Tránsito complicado</div>
-  <div class="ley-item"><div class="dot dot-cancel"></div> Cancelada</div>
-</div>
+  <div class="badge-wrap">
+    <div class="badge-container">
+      <div class="badge-texto" id="badgeTexto"></div>
+      <div class="badge-track" id="badgeTrack"></div>
+      <div class="badge-spark" id="badgeSpark">
+        <svg width="60" height="60" viewBox="0 0 60 60">
+          <g transform="translate(30,30)">
+            <path d="M-2.3,0 L0,-52 L2.3,0 Z" fill="#A8C5A8" opacity="0.98" transform="rotate(0)"/>
+            <path d="M-2.3,0 L0,-52 L2.3,0 Z" fill="#A8C5A8" opacity="0.98" transform="rotate(180)"/>
+            <path d="M-1.75,0 L0,-40 L1.75,0 Z" fill="#A8C5A8" opacity="0.92" transform="rotate(90)"/>
+            <path d="M-1.75,0 L0,-40 L1.75,0 Z" fill="#A8C5A8" opacity="0.92" transform="rotate(270)"/>
+            <path d="M-1.5,0 L0,-34 L1.5,0 Z" fill="#A8C5A8" opacity="0.78" transform="rotate(45)"/>
+            <path d="M-1.5,0 L0,-34 L1.5,0 Z" fill="#A8C5A8" opacity="0.78" transform="rotate(135)"/>
+            <path d="M-1.15,0 L0,-26 L1.15,0 Z" fill="#A8C5A8" opacity="0.63" transform="rotate(225)"/>
+            <path d="M-1.15,0 L0,-26 L1.15,0 Z" fill="#A8C5A8" opacity="0.63" transform="rotate(315)"/>
+            <path d="M-0.8,0 L0,-17 L0.8,0 Z" fill="#A8C5A8" opacity="0.48" transform="rotate(22.5)"/>
+            <path d="M-0.8,0 L0,-17 L0.8,0 Z" fill="#A8C5A8" opacity="0.48" transform="rotate(67.5)"/>
+            <path d="M-0.8,0 L0,-17 L0.8,0 Z" fill="#A8C5A8" opacity="0.48" transform="rotate(112.5)"/>
+            <path d="M-0.8,0 L0,-17 L0.8,0 Z" fill="#A8C5A8" opacity="0.48" transform="rotate(157.5)"/>
+            <path d="M-0.7,0 L0,-13 L0.7,0 Z" fill="#A8C5A8" opacity="0.32" transform="rotate(202.5)"/>
+            <path d="M-0.7,0 L0,-13 L0.7,0 Z" fill="#A8C5A8" opacity="0.32" transform="rotate(247.5)"/>
+            <path d="M-0.7,0 L0,-13 L0.7,0 Z" fill="#A8C5A8" opacity="0.32" transform="rotate(292.5)"/>
+            <path d="M-0.7,0 L0,-13 L0.7,0 Z" fill="#A8C5A8" opacity="0.32" transform="rotate(337.5)"/>
+            <circle r="3.2" fill="#A8C5A8"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
 
-<div class="fechas-list" id="fechasList">
-  <div class="loading"><div class="spinner"></div><span>Cargando...</span></div>
-</div>
+  <div class="titulo-wrap">
+    <h1>Transformación real, <span>hands-on.</span></h1>
+  </div>
 
-<div class="version">v2.4</div>
-<div class="toast" id="toast"></div>
+  <div class="subtitulo-wrap">
+    <p class="subtitulo">
+      Discovery, innovación, AI, gestión del cambio y adopción — del insight a los resultados.
+    </p>
+  </div>
+
+  <div class="cards-wrap">
+    <div class="cards-grid">
+      <div class="card card-1">
+        <div class="card-numero">01</div>
+        <div class="card-nombre">Transformación</div>
+        <div class="card-desc">Diagnóstico, planificación e implementación hands-on.</div>
+        <div class="card-arrow">→</div>
+      </div>
+      <div class="card card-2">
+        <div class="card-numero">02</div>
+        <div class="card-nombre">AI <span>Roadmap</span></div>
+        <div class="card-desc">Un plan concreto para adoptar AI — desde los primeros casos hasta las iniciativas estratégicas.</div>
+        <div class="card-arrow">→</div>
+      </div>
+      <div class="card card-3">
+        <div class="card-numero">03</div>
+        <div class="card-nombre">Vertex<span>Lab</span></div>
+        <div class="card-desc">Un espacio para experimentar, prototipar y pensar sin límites.</div>
+        <div class="card-arrow">→</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-wrap">
+    <div class="footer-copy">© 2026 VertexSur</div>
+  </div>
+
+</div>
 
 <script>
-const POOLS = {
-  "pool-7ma-metro-b": "https://script.google.com/macros/s/AKfycbw4dQT82lC1-qTZwqsqtO-vK4gGoTtPo_kPLDx1vGLH7FYuN4nIw1lDpduWy8EyFduh/exec",
-  "pool-8va-miercoles": "https://script.google.com/macros/s/AKfycbyrkwFEkzwTOPwsE4ogOEsHckcD9FwZdDjKxoVOr_igIDrkYhSpYT9aIzxevarCbT82/exec",
-  "pool-sta-barbara-fadu": "https://script.google.com/macros/s/AKfycbxwc-e6Dvbio3IsXrsfO-yo5f_pN3yIpJ3yxjsaB9idyc-lTFYdWGNbntFWcnlWSWmivg/exec",
-  "pool-demo": "https://script.google.com/macros/s/AKfycbwO1Vy_xNys5U5ExvE3gVxTEFiVIX59e_ReIzoKtqZJ2WskeTe-t9EwlbFaf7Oj4UZQ/exec"
-};
-const params = new URLSearchParams(window.location.search);
-const poolKey = params.get("pool") || "";
-if (!poolKey || !POOLS[poolKey]) {
-  document.body.innerHTML = `
-    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;font-family:'DM Sans',sans-serif;background:#F4F1EC;padding:24px;text-align:center;">
-      <div style="font-size:48px;margin-bottom:16px;">🚗</div>
-      <div style="font-size:20px;font-weight:700;color:#1B4332;margin-bottom:8px;">Pool Manager</div>
-      <div style="font-size:14px;color:#888;max-width:280px;line-height:1.5;">Usá el link de tu pool para acceder. Pedíselo a la coordinadora del grupo.</div>
-    </div>`;
-  throw new Error("Pool no especificado");
-}
-const SCRIPT_URL = POOLS[poolKey];
-const VERSION = "2.4";
+  const palabras = ['Innovación', 'AI', 'Transformación', 'Personas', 'Comunidades'];
+  const badgeTexto = document.getElementById('badgeTexto');
+  const trackEl   = document.getElementById('badgeTrack');
+  const sparkEl   = document.getElementById('badgeSpark');
 
-const MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+  // Gradiente de opacidades — 20 letras a cada lado, caída suave
+  const opacidades = [1, 0.97, 0.93, 0.88, 0.82, 0.75, 0.67, 0.58, 0.50, 0.42, 0.34, 0.27, 0.21, 0.16, 0.12, 0.08, 0.06, 0.04, 0.02, 0.01, 0.005];
 
-const FERIADOS = {
-  "2026-01-01":"Año Nuevo","2026-02-16":"Carnaval","2026-02-17":"Carnaval",
-  "2026-03-23":"Día no laborable","2026-03-24":"Día de la Memoria",
-  "2026-04-02":"Día de Malvinas","2026-04-03":"Viernes Santo",
-  "2026-05-01":"Día del Trabajo","2026-05-25":"Revolución de Mayo",
-  "2026-06-15":"Día de Güemes","2026-06-20":"Día de Belgrano",
-  "2026-07-09":"Día de la Independencia","2026-07-10":"Día no laborable",
-  "2026-08-17":"Día de San Martín","2026-10-12":"Día de la Raza",
-  "2026-11-23":"Soberanía Nacional","2026-12-07":"Día no laborable",
-  "2026-12-08":"Inmaculada Concepción","2026-12-25":"Navidad"
-};
+  const MS_TOTAL  = 4500;
+  const MS_SPARK  = 1200;
+  const MS_PAUSA  = 500;
 
-let familias = [];
-let disponibilidad = [];
-let fechasSheet = [];
-let config = {};
-let tipoViaje = "ida-vuelta";
-let familiaSeleccionada = localStorage.getItem("familia_" + poolKey) || "";
-let mesActual = new Date().getMonth();
-let anioActual = new Date().getFullYear();
-let diasEntrenamiento = [3];
-let notasTimeout = {};
-
-function formatFecha(date) {
-  const y = date.getFullYear();
-  const m = String(date.getMonth()+1).padStart(2,'0');
-  const d = String(date.getDate()).padStart(2,'0');
-  return `${y}-${m}-${d}`;
-}
-
-function normalizarFecha(f) {
-  if (!f) return "";
-  return String(f).substring(0,10);
-}
-
-function getDiasEntrenamiento(mes, anio) {
-  const dias = [];
-  const d = new Date(anio, mes, 1);
-  while (d.getMonth() === mes) {
-    if (diasEntrenamiento.includes(d.getDay())) dias.push(new Date(d));
-    d.setDate(d.getDate()+1);
-  }
-  return dias;
-}
-
-function parseDias(val) {
-  const map = {
-    "lunes":1,"martes":2,"miércoles":3,"miercoles":3,
-    "jueves":4,"viernes":5,"sábado":6,"sabado":6,"domingo":0
-  };
-  return String(val).toLowerCase().split(",").map(s => map[s.trim()]).filter(n => n !== undefined);
-}
-
-function getEstadoFecha(fechaStr) {
-  const enSheet = fechasSheet.find(f => normalizarFecha(f.Fecha) === fechaStr);
-  if (enSheet) return { estado: enSheet.Estado || "Activa", motivo: enSheet.Motivo || "", nota: enSheet.Nota || "" };
-  if (FERIADOS[fechaStr]) return { estado: "Cancelada", motivo: FERIADOS[fechaStr], nota: "" };
-  return { estado: "Activa", motivo: "", nota: "" };
-}
-
-function getAsignados(fechaStr) {
-  const disp = disponibilidad.filter(d => normalizarFecha(d.Fecha) === fechaStr);
-  const ida = disp.filter(d => d.Ida === true || d.Ida === "TRUE" || d.Ida === "true").map(d => d.Familia);
-  const vuelta = disp.filter(d => d.Vuelta === true || d.Vuelta === "TRUE" || d.Vuelta === "true").map(d => d.Familia);
-  const voy = disp.filter(d => d.Ida === true || d.Ida === "TRUE" || d.Ida === "true").map(d => d.Familia);
-  return { ida, vuelta, voy };
-}
-
-function getMiDisp(fechaStr) {
-  if (!familiaSeleccionada) return { ida: false, vuelta: false };
-  const d = disponibilidad.find(d => normalizarFecha(d.Fecha) === fechaStr && d.Familia === familiaSeleccionada);
-  if (!d) return { ida: false, vuelta: false };
-  return {
-    ida: d.Ida === true || d.Ida === "TRUE" || d.Ida === "true",
-    vuelta: d.Vuelta === true || d.Vuelta === "TRUE" || d.Vuelta === "true"
-  };
-}
-
-function renderFechas() {
-  const lista = document.getElementById("fechasList");
-  const dias = getDiasEntrenamiento(mesActual, anioActual);
-
-  if (dias.length === 0) {
-    lista.innerHTML = '<div style="text-align:center;padding:30px;color:var(--gris)">No hay días este mes</div>';
-    return;
-  }
-
-  const esIdaVuelta = tipoViaje === "ida-vuelta";
-  const esRoundTrip = tipoViaje === "round-trip";
-  const soloIda = tipoViaje === "ida";
-  const soloVuelta = tipoViaje === "vuelta";
-
-  lista.innerHTML = dias.map(fecha => {
-    const fechaStr = formatFecha(fecha);
-    const { estado, motivo, nota } = getEstadoFecha(fechaStr);
-    const { ida, vuelta, voy } = getAsignados(fechaStr);
-    const miDisp = getMiDisp(fechaStr);
-
-    const diaNum = fecha.getDate();
-    const mesNom = MESES[fecha.getMonth()].substring(0,3).toUpperCase();
-
-    const cardClass = estado === "Cancelada" ? "cancelada" : estado === "Warning" ? "warning" : "";
-    const badgeClass = estado === "Cancelada" ? "badge-cancel" : estado === "Warning" ? "badge-warn" : "badge-ok";
-    const badgeText = estado === "Cancelada" ? "❌ Cancelada" : estado === "Warning" ? "⚠️ Tránsito" : "✅ Normal";
-    const cancelada = estado === "Cancelada";
-
-    // Bloqueos
-    const idaOcupada = ida.length > 0 && !miDisp.ida;
-    const vueltaOcupada = vuelta.length > 0 && !miDisp.vuelta;
-    const voyOcupado = voy.length > 0 && !miDisp.ida;
-
-    // Asignaciones según tipo de viaje
-    let asignacionesHTML = "";
-    if (esIdaVuelta) {
-      asignacionesHTML = `
-        <div class="grilla">
-          <div class="asig-box">
-            <div class="asig-label">🚗 Ida</div>
-            ${ida.length > 0 ? `<div class="asig-nombre">${ida.join(", ")}</div>` : `<div class="asig-vacio">Sin asignar</div>`}
-          </div>
-          <div class="asig-box">
-            <div class="asig-label">🏠 Vuelta</div>
-            ${vuelta.length > 0 ? `<div class="asig-nombre">${vuelta.join(", ")}</div>` : `<div class="asig-vacio">Sin asignar</div>`}
-          </div>
-        </div>`;
-    } else if (esRoundTrip) {
-      asignacionesHTML = `
-        <div class="asig-box" style="margin-bottom:0">
-          <div class="asig-label">🚗 Lleva y trae</div>
-          ${voy.length > 0 ? `<div class="asig-nombre">${voy.join(", ")}</div>` : `<div class="asig-vacio">Sin asignar</div>`}
-        </div>`;
-    } else if (soloIda) {
-      asignacionesHTML = `
-        <div class="asig-box">
-          <div class="asig-label">🚗 Ida</div>
-          ${ida.length > 0 ? `<div class="asig-nombre">${ida.join(", ")}</div>` : `<div class="asig-vacio">Sin asignar</div>`}
-        </div>`;
-    } else if (soloVuelta) {
-      asignacionesHTML = `
-        <div class="asig-box">
-          <div class="asig-label">🏠 Vuelta</div>
-          ${vuelta.length > 0 ? `<div class="asig-nombre">${vuelta.join(", ")}</div>` : `<div class="asig-vacio">Sin asignar</div>`}
-        </div>`;
+  // Construir spans
+  const todosSpans = [];
+  palabras.forEach((palabra, pi) => {
+    if (pi > 0) {
+      const sep = document.createElement('span');
+      sep.className = 'badge-sep';
+      sep.textContent = '·';
+      badgeTexto.appendChild(sep);
     }
-
-    // Botones según tipo de viaje
-    let botonesHTML = "";
-    if (familiaSeleccionada && !cancelada) {
-      if (esIdaVuelta) {
-        botonesHTML = `
-          <div class="botones-disp grilla">
-            <button class="toggle-btn ${miDisp.ida ? 'activo-ida' : ''}"
-              onclick="toggleDisp(event,'${fechaStr}','ida')"
-              ${idaOcupada ? 'disabled' : ''}>Ida</button>
-            <button class="toggle-btn ${miDisp.vuelta ? 'activo-vuelta' : ''}"
-              onclick="toggleDisp(event,'${fechaStr}','vuelta')"
-              ${vueltaOcupada ? 'disabled' : ''}>Vuelta</button>
-          </div>`;
-      } else if (esRoundTrip) {
-        botonesHTML = `
-          <div class="botones-disp">
-            <button class="toggle-btn ${miDisp.ida ? 'activo-voy' : ''}" style="width:100%"
-              onclick="toggleDisp(event,'${fechaStr}','ida')"
-              ${voyOcupado ? 'disabled' : ''}>Voy 🚗</button>
-          </div>`;
-      } else if (soloIda) {
-        botonesHTML = `
-          <div class="botones-disp">
-            <button class="toggle-btn ${miDisp.ida ? 'activo-ida' : ''}" style="width:100%"
-              onclick="toggleDisp(event,'${fechaStr}','ida')"
-              ${idaOcupada ? 'disabled' : ''}>Ida</button>
-          </div>`;
-      } else if (soloVuelta) {
-        botonesHTML = `
-          <div class="botones-disp">
-            <button class="toggle-btn ${miDisp.vuelta ? 'activo-vuelta' : ''}" style="width:100%"
-              onclick="toggleDisp(event,'${fechaStr}','vuelta')"
-              ${vueltaOcupada ? 'disabled' : ''}>Vuelta</button>
-          </div>`;
-      }
-    }
-
-    const notaValor = nota || "";
-
-    return `
-    <div class="fecha-card ${cardClass}">
-      <div class="fecha-header">
-        <div class="fecha-dia">${diaNum} ${mesNom}</div>
-        <div class="fecha-badge ${badgeClass}">${badgeText}</div>
-      </div>
-      ${motivo ? `<div class="fecha-motivo">${motivo}</div>` : ""}
-      ${asignacionesHTML}
-      ${botonesHTML}
-      ${!familiaSeleccionada && !cancelada ? `<div class="sin-familia">Seleccioná tu familia arriba para cargar disponibilidad</div>` : ""}
-      ${!cancelada ? `
-      <div class="nota-container">
-        <input type="text" class="nota-input" placeholder="Nota del grupo" 
-          value="${notaValor.replace(/"/g, '&quot;')}"
-          onchange="guardarNota('${fechaStr}', this.value)"
-          oninput="notaChanged('${fechaStr}', this.value)">
-      </div>` : ""}
-    </div>`;
-  }).join("");
-
-  // Scroll a fecha actual solo en mes en curso
-  const hoy = formatFecha(new Date());
-  if (mesActual === new Date().getMonth() && anioActual === new Date().getFullYear()) {
-    setTimeout(() => {
-      const cards = document.querySelectorAll('.fecha-card');
-      let targetIndex = -1;
-      for (let i = 0; i < dias.length; i++) {
-        if (formatFecha(dias[i]) >= hoy) { targetIndex = i; break; }
-      }
-      if (targetIndex < 0 && cards.length > 0) targetIndex = cards.length - 1;
-      if (targetIndex >= 0 && cards[targetIndex]) {
-        cards[targetIndex].scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 500);
-  }
-}
-
-function notaChanged(fechaStr, valor) {
-  clearTimeout(notasTimeout[fechaStr]);
-  notasTimeout[fechaStr] = setTimeout(() => guardarNota(fechaStr, valor), 1500);
-}
-
-async function guardarNota(fechaStr, valor) {
-  clearTimeout(notasTimeout[fechaStr]);
-  try {
-    const url = `${SCRIPT_URL}?action=nota&fecha=${fechaStr}&nota=${encodeURIComponent(valor)}`;
-    await fetch(url, { mode: "no-cors" });
-    showToast("✓ Nota guardada");
-  } catch(e) {
-    showToast("Error al guardar nota");
-  }
-}
-
-async function toggleDisp(event, fechaStr, tipo) {
-  event.stopPropagation();
-  if (!familiaSeleccionada) { showToast("Primero elegí tu familia ↑"); return; }
-
-  let entry = disponibilidad.find(d => normalizarFecha(d.Fecha) === fechaStr && d.Familia === familiaSeleccionada);
-  if (!entry) {
-    entry = { Fecha: fechaStr, Familia: familiaSeleccionada, Ida: false, Vuelta: false };
-    disponibilidad.push(entry);
-  }
-
-  if (tipo === "ida") entry.Ida = !entry.Ida;
-  else entry.Vuelta = !entry.Vuelta;
-
-  renderFechas();
-  showToast("Guardando...");
-
-  try {
-    const url = `${SCRIPT_URL}?action=guardar&fecha=${fechaStr}&familia=${encodeURIComponent(familiaSeleccionada)}&ida=${entry.Ida}&vuelta=${entry.Vuelta}`;
-    await fetch(url, { mode: "no-cors" });
-    showToast("✓ Guardado");
-  } catch(e) {
-    showToast("Error al guardar");
-  }
-}
-
-function abrirMapa(e) {
-  e.preventDefault();
-  const activas = familias.filter(f => f.Activa === true || f.Activa === "TRUE" || f.Activa === "true");
-  const waypoints = activas.map(f => {
-    if (f.Lat && f.Lng && f.Lat !== "" && f.Lng !== "") {
-      return `${f.Lat},${f.Lng}`;
-    }
-    return encodeURIComponent((f["Dirección"] || f["Direccion"] || "") + ", CABA, Argentina");
-  }).join("/");
-  // Formato mobile-friendly para Google Maps
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  let url;
-  if (isMobile) {
-    const waypointList = activas.map(f => {
-      if (f.Lat && f.Lng && f.Lat !== "" && f.Lng !== "") {
-        return `${f.Lat},${f.Lng}`;
-      }
-      return encodeURIComponent((f["Dirección"] || f["Direccion"] || "") + ", CABA, Argentina");
+    [...palabra].forEach(letra => {
+      const sp = document.createElement('span');
+      sp.className = 'badge-letra';
+      sp.textContent = letra;
+      badgeTexto.appendChild(sp);
+      todosSpans.push(sp);
     });
-    url = `https://maps.google.com/maps/dir/?api=1&waypoints=${waypointList.join("|")}&travelmode=driving`;
-  } else {
-    url = `https://www.google.com/maps/dir/${waypoints}`;
+  });
+
+  const N = todosSpans.length;
+  const travelMs = MS_TOTAL - MS_SPARK - MS_PAUSA;
+  // Proporciones iguales — mismo tempo visual en letras y línea
+  const letrasMs = travelMs * 0.60;
+  const lineaMs  = travelMs * 0.40;
+
+  function setOpacidades(centerIdx) {
+    todosSpans.forEach((sp, i) => {
+      const dist = Math.abs(i - centerIdx);
+      const op = dist < opacidades.length ? opacidades[dist] : 0.02;
+      sp.style.opacity = op;
+    });
   }
-  window.open(url, "_blank");
-}
 
-function showToast(msg) {
-  const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.classList.add("visible");
-  setTimeout(() => t.classList.remove("visible"), 2000);
-}
+  function ciclo() {
+    const startTime = performance.now();
+    const trackW = trackEl.offsetWidth;
+    const HAZ_W = 80;
 
-function cambiarMes(dir) {
-  mesActual += dir;
-  if (mesActual > 11) { mesActual = 0; anioActual++; }
-  if (mesActual < 0) { mesActual = 11; anioActual--; }
-  actualizarMesLabel();
-  renderFechas();
-}
+    const luz = document.createElement('div');
+    luz.style.cssText = `
+      position:absolute; top:50%; left:0px;
+      transform: translateY(-50%);
+      width:${HAZ_W}px; height:8px;
+      background: linear-gradient(to right, transparent, rgba(168,197,168,0.9), transparent);
+      border-radius:4px; pointer-events:none; opacity:0;
+    `;
+    trackEl.appendChild(luz);
 
-function actualizarMesLabel() {
-  document.getElementById("mesLabel").textContent = `${MESES[mesActual].toUpperCase()} ${anioActual}`;
-}
+    // El haz termina cuando su centro llega al final del track
+    const lineaEnd = trackW - HAZ_W / 2;
 
-function onFamiliaChange() {
-  familiaSeleccionada = document.getElementById("selectFamilia").value;
-  localStorage.setItem("familia_" + poolKey, familiaSeleccionada);
-  renderFechas();
-}
+    function animate(now) {
+      const elapsed  = now - startTime;
+      const progress = Math.min(elapsed / travelMs, 1);
 
-async function cargarDatos() {
-  try {
-    const [resFamilias, resDisp, resFechas, resConfig] = await Promise.all([
-      fetch(`${SCRIPT_URL}?action=familias`),
-      fetch(`${SCRIPT_URL}?action=disponibilidad`),
-      fetch(`${SCRIPT_URL}?action=fechas`),
-      fetch(`${SCRIPT_URL}?action=config`)
-    ]);
+      if (elapsed <= letrasMs) {
+        const lp = elapsed / letrasMs;
+        const centerIdx = Math.round(lp * (N - 1));
+        setOpacidades(centerIdx);
+        luz.style.opacity = '0';
+      } else {
+        todosSpans.forEach(sp => sp.style.opacity = '0.2');
+        const lp = (elapsed - letrasMs) / lineaMs;
+        luz.style.opacity = '1';
+        // lineal — mismo tempo que letras
+        luz.style.left = (lp * lineaEnd) + 'px';
+      }
 
-    familias = await resFamilias.json();
-    disponibilidad = await resDisp.json();
-    fechasSheet = await resFechas.json();
-    const configArr = await resConfig.json();
-
-    configArr.forEach(row => { config[row.Clave] = row.Valor; });
-
-    if (config.Nombre) {
-      document.getElementById("poolNombre").textContent = config.Nombre;
-      document.title = config.Nombre;
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        trackEl.removeChild(luz);
+        todosSpans.forEach(sp => sp.style.opacity = '0.2');
+        sparkEl.classList.add('visible');
+        setTimeout(() => {
+          sparkEl.classList.remove('visible');
+          setTimeout(ciclo, MS_PAUSA);
+        }, MS_SPARK);
+      }
     }
-    if (config.Dias) diasEntrenamiento = parseDias(config.Dias);
-    if (config.TipoViaje) tipoViaje = config.TipoViaje.toLowerCase();
 
-    const sel = document.getElementById("selectFamilia");
-    familias.filter(f => f.Activa === true || f.Activa === "TRUE" || f.Activa === "true").forEach(f => {
-      const opt = document.createElement("option");
-      opt.value = f.Nombre;
-      opt.textContent = f.Nombre;
-      if (f.Nombre === familiaSeleccionada) opt.selected = true;
-      sel.appendChild(opt);
-    });
-
-  } catch(e) {
-    console.error("Error:", e);
-    familias = [
-      {Nombre:"Juana Sosa", "Dirección":"Teodoro García 2074 1B", Activa:true},
-      {Nombre:"Oli Icazatti", "Dirección":"Luis María Campos 1640 6B", Activa:true},
-      {Nombre:"Maggie Ferro", "Dirección":"La Pampa 1782 4to", Activa:true},
-      {Nombre:"Josefina Amorortu", "Dirección":"Arribeños 1610 7mo", Activa:true}
-    ];
-    const sel = document.getElementById("selectFamilia");
-    familias.forEach(f => {
-      const opt = document.createElement("option");
-      opt.value = f.Nombre;
-      opt.textContent = f.Nombre;
-      if (f.Nombre === familiaSeleccionada) opt.selected = true;
-      sel.appendChild(opt);
-    });
-    showToast("Sin conexión — modo offline");
+    requestAnimationFrame(animate);
   }
 
-  actualizarMesLabel();
-  renderFechas();
-}
-
-cargarDatos();
+  window.addEventListener('load', () => setTimeout(ciclo, 600));
 </script>
+
 </body>
 </html>
