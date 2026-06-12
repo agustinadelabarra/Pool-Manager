@@ -147,7 +147,7 @@
 
     <button class="btn-crear" onclick="crearPool()">Crear TuPool →</button>
     <div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')">Privacidad</div>
-    <div class="version">v0.7</div>
+    <div class="version">v0.8</div>
   </div>
 </div>
 
@@ -160,7 +160,7 @@
   </div>
   <button class="btn-copiar" id="btnCopiar" onclick="copiarLink()">📋 Copiar link para compartir</button>
   <div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')">Privacidad</div>
-  <div class="version">v0.7</div>
+  <div class="version">v0.8</div>
 </div>
 
 <div class="modal-overlay" id="modalPrivacidad">
@@ -290,7 +290,7 @@ async function crearPool() {
 }
 
 function mostrarExito(nombre, destino, dias, tipoViaje, token, poolId) {
-  linkGenerado = `${window.location.origin}${window.location.pathname.replace('tupools.html','indexbranch.html')}?pool=${poolId}`;
+  linkGenerado = `${window.location.origin}/indexbranch.html?pool=${poolId}`;
   document.getElementById('preview-nombre').textContent = nombre;
   const diasStr = dias.join(' · ');
   const tipoStr = { 'ida-vuelta': 'Ida y vuelta', 'round-trip': 'Round trip', 'ida': 'Solo ida', 'vuelta': 'Solo vuelta' }[tipoViaje];
