@@ -78,6 +78,17 @@
 
   .form-screen.hidden { display: none; }
   .version { text-align: center; font-size: 11px; color: #ccc; padding: 16px; }
+
+  .privacidad-link { text-align: center; font-size: 11px; color: #AAB8B2; padding: 4px 16px 0; cursor: pointer; text-decoration: underline; transition: color 0.2s; }
+  .privacidad-link:hover { color: var(--azul); }
+
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.visible { display: flex; }
+  .modal-box { background: var(--blanco); border-radius: 16px; padding: 24px; max-width: 420px; max-height: 80vh; overflow-y: auto; }
+  .modal-box h3 { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: var(--texto); }
+  .modal-box p { font-size: 13px; color: var(--texto-soft); line-height: 1.6; margin-bottom: 10px; }
+  .modal-box a { color: var(--azul); }
+  .modal-close { width: 100%; padding: 12px; background: var(--azul-light); color: var(--azul-dark); border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 8px; }
 </style>
 </head>
 <body>
@@ -100,7 +111,7 @@
         <label>Origen / Destino</label>
         <div class="dir-row">
           <input type="text" id="destino" placeholder="Ej: Círculo Policial, Núñez">
-          <button class="btn-maps" onclick="buscarDestino()">📍 Maps</button>
+          <button class="btn-maps" onclick="buscarDestino()"><img src="maps-icon.png" width="18" height="18" style="vertical-align:middle"> Maps</button>
         </div>
         <div class="coords-tag" id="destino-coords"></div>
       </div>
@@ -135,7 +146,8 @@
     </div>
 
     <button class="btn-crear" onclick="crearPool()">Crear TuPool →</button>
-    <div class="version">v0.4</div>
+    <div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')">Privacidad</div>
+    <div class="version">v0.7</div>
   </div>
 </div>
 
@@ -147,7 +159,18 @@
     <div class="panfleto-meta" id="preview-meta"></div>
   </div>
   <button class="btn-copiar" id="btnCopiar" onclick="copiarLink()">📋 Copiar link para compartir</button>
-  <div class="version">v0.3</div>
+  <div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')">Privacidad</div>
+  <div class="version">v0.7</div>
+</div>
+
+<div class="modal-overlay" id="modalPrivacidad">
+  <div class="modal-box">
+    <h3>Aviso de Privacidad</h3>
+    <p>Los datos que completás (nombre, dirección) se utilizan únicamente para coordinar este TuPool — armar rutas y mostrar la información a las familias que participan del mismo grupo.</p>
+    <p>No se comparten con terceros, no se usan con fines comerciales, y no se almacenan más allá de lo necesario para el funcionamiento del pool.</p>
+    <p>Si querés que tus datos sean eliminados, escribinos a <a href="mailto:agustinadelabarra@gmail.com">agustinadelabarra@gmail.com</a>.</p>
+    <button class="modal-close" onclick="document.getElementById('modalPrivacidad').classList.remove('visible')">Cerrar</button>
+  </div>
 </div>
 
 <script>
@@ -187,7 +210,7 @@ function renderFamilias() {
         <div class="dir-row">
           <input type="text" placeholder="Dirección" value="${f.direccion}" id="dir-${f.id}"
             oninput="familias.find(x=>x.id===${f.id}).direccion=this.value">
-          <button class="btn-maps" onclick="buscarDireccionFamilia(${f.id})">📍 Maps</button>
+          <button class="btn-maps" onclick="buscarDireccionFamilia(${f.id})"><img src="maps-icon.png" width="18" height="18" style="vertical-align:middle"> Maps</button>
         </div>
         <div class="coords-tag ${f.lat ? 'visible' : ''}" id="coords-${f.id}">
           ${f.lat ? `📍 ${f.lat.toFixed(4)}, ${f.lng.toFixed(4)}` : ''}
@@ -235,7 +258,7 @@ async function crearPool() {
   if (familias.some(f => !f.nombre.trim())) { alert('Todas las familias deben tener nombre.'); return; }
 
   const token = generarToken();
-  const poolKey = 'pool-' + nombre.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const poolId = 'pool-' + token;
 
   // Geocoding del destino
   const destinoCoords = await geocodificar(destino);
@@ -244,30 +267,30 @@ async function crearPool() {
     const resPool = await fetch(`${SUPABASE_URL}/rest/v1/pools`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Prefer': 'return=representation' },
-      body: JSON.stringify({ id: poolKey, key: poolKey, nombre, destino, dias: dias.join(','), tipo_viaje: tipoViaje, link_token: token })
+      body: JSON.stringify({ id: poolId, key: poolId, nombre, destino, dias: dias.join(','), tipo_viaje: tipoViaje, link_token: token })
     });
     if (!resPool.ok) throw new Error(await resPool.text());
     const poolData = await resPool.json();
-    const poolId = poolData[0].id;
+    const poolIdReturned = poolData[0].id;
 
     for (const f of familias) {
       const famCoords = f.direccion ? await geocodificar(f.direccion) : { lat: null, lng: null };
       await fetch(`${SUPABASE_URL}/rest/v1/participantes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` },
-        body: JSON.stringify({ pool_id: poolId, nombre: f.nombre.trim(), direccion: f.direccion.trim() || null, lat: famCoords.lat, lng: famCoords.lng, activa: true })
+        body: JSON.stringify({ pool_id: poolIdReturned, nombre: f.nombre.trim(), direccion: f.direccion.trim() || null, lat: famCoords.lat, lng: famCoords.lng, activa: true })
       });
     }
 
-    mostrarExito(nombre, destino, dias, tipoViaje, token, poolKey);
+    mostrarExito(nombre, destino, dias, tipoViaje, token, poolId);
   } catch(e) {
     console.error(e);
     alert('Error al crear el pool. Revisá la consola.');
   }
 }
 
-function mostrarExito(nombre, destino, dias, tipoViaje, token, poolKey) {
-  linkGenerado = `${window.location.origin}${window.location.pathname.replace('nuevo-pool.html','indexbranch.html')}?pool=${poolKey}`;
+function mostrarExito(nombre, destino, dias, tipoViaje, token, poolId) {
+  linkGenerado = `${window.location.origin}${window.location.pathname.replace('tupools.html','indexbranch.html')}?pool=${poolId}`;
   document.getElementById('preview-nombre').textContent = nombre;
   const diasStr = dias.join(' · ');
   const tipoStr = { 'ida-vuelta': 'Ida y vuelta', 'round-trip': 'Round trip', 'ida': 'Solo ida', 'vuelta': 'Solo vuelta' }[tipoViaje];
