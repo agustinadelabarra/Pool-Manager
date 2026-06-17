@@ -87,6 +87,13 @@
   .modal-box p { font-size: 13px; color: var(--texto-soft); line-height: 1.6; margin-bottom: 10px; }
   .modal-box a { color: var(--naranja); }
   .modal-close { width: 100%; padding: 12px; background: var(--naranja-light); color: var(--naranja-dark); border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 8px; }
+
+  .btn-maps { padding: 10px 12px; background: var(--naranja-light); border: 1.5px solid var(--naranja); border-radius: 10px; color: var(--naranja-dark); font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+  .btn-maps:hover { background: var(--naranja); color: white; }
+  .coords-tag { font-size: 11px; color: var(--texto-soft); margin-top: 4px; display: none; }
+  .coords-tag.visible { display: block; }
+  .destino-row { display: flex; gap: 8px; align-items: center; }
+  .destino-row input { flex: 1; }
 </style>
 </head>
 <body>
@@ -105,7 +112,8 @@
       </div>
       <div class="field">
         <label>Destino</label>
-        <input type="text" id="destino" placeholder="Ej: Club San Isidro, Blanco Encalada 3456">
+        <div class="destino-row"><input type="text" id="destino" placeholder="Ej: Club San Isidro, Blanco Encalada 3456"><button class="btn-maps" onclick="buscarDestino()"><img src="maps-icon.png" width="18" height="18" style="vertical-align:middle"> Maps</button></div>
+        <div class="coords-tag" id="destino-coords"></div>
       </div>
       <div class="field">
         <label>Fecha</label>
@@ -341,11 +349,25 @@ async function crearEvento() {
   if (!tieneIda && !tieneVuelta) { alert('Activá al menos un tramo.'); return; }
 
   const token = generarToken();
+
+  // Geocoding del destino
+  let destinoLat = null, destinoLng = null;
+  if (destino) {
+    const coords = await geocodificar(destino);
+    destinoLat = coords.lat;
+    destinoLng = coords.lng;
+    if (destinoLat) {
+      const el = document.getElementById('destino-coords');
+      el.textContent = `📍 ${destinoLat.toFixed(4)}, ${destinoLng.toFixed(4)}`;
+      el.classList.add('visible');
+    }
+  }
+
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/evento_eventos`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Prefer': 'return=representation' },
-      body: JSON.stringify({ nombre, destino, fecha, hora_ida: hora_ida || null, hora_vuelta: hora_vuelta || null, proposito, link_token: token })
+      body: JSON.stringify({ nombre, destino, fecha, hora_ida: hora_ida || null, hora_vuelta: hora_vuelta || null, proposito, link_token: token, lat: destinoLat, lng: destinoLng })
     });
     if (!res.ok) throw new Error(await res.text());
     mostrarExito(nombre, destino, fecha, hora_ida, hora_vuelta, proposito, token);
@@ -368,6 +390,23 @@ function mostrarExito(nombre, destino, fecha, hora_ida, hora_vuelta, proposito, 
   document.getElementById('formScreen').classList.add('hidden');
   document.getElementById('linkScreen').classList.add('visible');
 }
+
+  async function geocodificar(direccion) {
+    try {
+      const query = encodeURIComponent(direccion + ', Buenos Aires, Argentina');
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`);
+      const data = await res.json();
+      if (data.length > 0) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+    } catch(e) {}
+    return { lat: null, lng: null };
+  }
+
+  function buscarDestino() {
+    const direccion = document.getElementById('destino').value.trim();
+    if (!direccion) { alert('Ingresá el destino primero.'); return; }
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(direccion + ', Buenos Aires, Argentina')}`;
+    window.open(url, '_blank');
+  }
 
 function copiarLink() {
   navigator.clipboard.writeText(linkGenerado).then(() => {
