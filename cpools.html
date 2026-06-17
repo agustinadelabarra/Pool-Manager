@@ -76,6 +76,17 @@
 
   .form-screen.hidden { display: none; }
   .version { text-align: center; font-size: 11px; color: #ccc; padding: 16px; }
+
+  .privacidad-link { text-align: center; font-size: 11px; color: #AAB8B2; padding: 4px 16px 0; cursor: pointer; text-decoration: underline; transition: color 0.2s; }
+  .privacidad-link:hover { color: var(--naranja); }
+
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.visible { display: flex; }
+  .modal-box { background: var(--blanco); border-radius: 16px; padding: 24px; max-width: 420px; max-height: 80vh; overflow-y: auto; }
+  .modal-box h3 { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: var(--texto); }
+  .modal-box p { font-size: 13px; color: var(--texto-soft); line-height: 1.6; margin-bottom: 10px; }
+  .modal-box a { color: var(--naranja); }
+  .modal-close { width: 100%; padding: 12px; background: var(--naranja-light); color: var(--naranja-dark); border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 8px; }
 </style>
 </head>
 <body>
@@ -104,7 +115,7 @@
 
     <div class="card">
       <div class="field" style="margin-bottom:0">
-        <label style="margin-bottom:10px">Tramos</label>
+        <label style="margin-bottom:10px">Elegí tu tramo</label>
         <div class="tramos-grid">
           <label class="tramo-check">
             <input type="checkbox" id="tieneIda" checked>
@@ -225,7 +236,7 @@
     </div>
 
     <div class="card">
-      <span class="seccion-label">Propósito</span>
+      <span class="seccion-label">Elegí tu propósito</span>
       <div class="proposito-options">
         <label class="proposito-option">
           <input type="radio" name="proposito" value="equidad" checked>
@@ -267,7 +278,8 @@
     </div>
 
     <button class="btn-crear" onclick="crearEvento()">Crear CPool →</button>
-    <div class="version">v0.5</div>
+    <div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')">Privacidad</div>
+    <div class="version">v0.6</div>
   </div>
 </div>
 
@@ -281,7 +293,18 @@
   </div>
 
   <button class="btn-copiar" id="btnCopiar" onclick="copiarLink()">📋 Copiar link para compartir</button>
-  <div class="version">v0.5</div>
+  <div style="display:flex;gap:16px;justify-content:center"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')">Instrucciones</div></div>
+  <div class="version">v0.7</div>
+</div>
+
+<div class="modal-overlay" id="modalPrivacidad">
+  <div class="modal-box">
+    <h3>Aviso de Privacidad</h3>
+    <p>Los datos que completás (nombre, dirección) se utilizan únicamente para coordinar este CPool — armar rutas y mostrar la información a las familias que participan del mismo evento.</p>
+    <p>No se comparten con terceros, no se usan con fines comerciales, y no se almacenan más allá de lo necesario para el funcionamiento del pool.</p>
+    <p>Si querés que tus datos sean eliminados, escribinos a <a href="mailto:cpoolcontacto@gmail.com">cpoolcontacto@gmail.com</a>.</p>
+    <button class="modal-close" onclick="document.getElementById('modalPrivacidad').classList.remove('visible')">Cerrar</button>
+  </div>
 </div>
 
 <script>
@@ -355,5 +378,18 @@ function copiarLink() {
   });
 }
 </script>
+<div class="modal-overlay" id="modalInstrucciones">
+  <div class="modal-box">
+    <h3>¿Cómo funciona CPool?</h3>
+    <p><b>CPool</b> — Comunidad en movimiento</p>
+    <p style="margin-top:8px;font-style:italic">Porque la salida empieza en el auto y con la ayuda de todos, optimizamos los traslados compartiendo en comunidad.</p>
+    <p style="margin-top:12px"><b>1.</b> El organizador crea el CPool con nombre, fecha, destino y propósito. Se genera un link único para compartir.</p>
+    <p style="margin-top:6px"><b>2.</b> Las familias entran al link, eligen tramo (ida, vuelta o ambos) y se dan de alta con el nombre de su hijo/hija y dirección.</p>
+    <p style="margin-top:6px"><b>3.</b> Conductoras ofrecen su auto con zona y lugares disponibles. Pasajeras se anotan en lista de espera.</p>
+    <p style="margin-top:6px"><b>4.</b> Desde la lista de espera, cada familia elige el auto al que quiere sumarse.</p>
+    <p style="margin-top:6px"><b>5.</b> El organizador acomoda — vista completa para asegurarse de que nadie quede afuera.</p>
+    <button class="modal-close" onclick="document.getElementById('modalInstrucciones').classList.remove('visible')">Cerrar</button>
+  </div>
+</div>
 </body>
 </html>
