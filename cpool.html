@@ -296,7 +296,7 @@
 <script>
 const SUPABASE_URL = 'https://zvvcodeqfscqvunogppg.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2dmNvZGVxZnNjcXZ1bm9ncHBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NTgxMTksImV4cCI6MjA5NjEzNDExOX0.CrmSFILnBGoLcpzMW9QeAI_QUqbxwRWB-CTdB4Au11Y';
-const MAPS_ICON = 'https://agustinadelabarra.github.io/Pool-Manager/maps-icon.png';
+const MAPS_ICON = 'https://vertexsur.com/maps-icon.png';
 
 const FRASES = {
   equidad: 'Nos organizamos para que todos puedan participar',
@@ -734,6 +734,16 @@ async function confirmarAlta() {
 
 init();
 </script>
+<div class="modal-overlay" id="modalPrivacidad">
+  <div class="modal-box">
+    <h3>Aviso de Privacidad</h3>
+    <p>Esta herramienta almacena únicamente el nombre y la dirección que ingresás voluntariamente para coordinar los viajes del grupo.</p>
+    <p>Los datos son compartidos con los otros miembros del pool y no se usan para ningún otro fin.</p>
+    <p>Si querés que tus datos sean eliminados, escribinos a <a href="mailto:cpoolcontacto@gmail.com" style="color:var(--naranja)">cpoolcontacto@gmail.com</a>.</p>
+    <button class="modal-close" onclick="document.getElementById('modalPrivacidad').classList.remove('visible')">Cerrar</button>
+  </div>
+</div>
+
 <div class="modal-overlay" id="modalInstrucciones">
   <div class="modal-box">
     <h3>¿Cómo funciona CPool?</h3>
