@@ -128,7 +128,7 @@
         </div>
       </div>
       <div class="field" style="margin-bottom:0">
-        <label>Tipo de viaje</label>
+        <label>Elegí tu tramo</label>
         <select id="tipoViaje">
           <option value="ida-vuelta">Ida y vuelta</option>
           <option value="round-trip">Round trip</option>
@@ -159,8 +159,8 @@
     <div class="panfleto-meta" id="preview-meta"></div>
   </div>
   <button class="btn-copiar" id="btnCopiar" onclick="copiarLink()">📋 Copiar link para compartir</button>
-  <div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')">Privacidad</div>
-  <div class="version">v0.8</div>
+  <div style="display:flex;gap:16px;justify-content:center"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')">Instrucciones</div></div>
+  <div class="version">v0.9</div>
 </div>
 
 <div class="modal-overlay" id="modalPrivacidad">
@@ -168,7 +168,7 @@
     <h3>Aviso de Privacidad</h3>
     <p>Los datos que completás (nombre, dirección) se utilizan únicamente para coordinar este TuPool — armar rutas y mostrar la información a las familias que participan del mismo grupo.</p>
     <p>No se comparten con terceros, no se usan con fines comerciales, y no se almacenan más allá de lo necesario para el funcionamiento del pool.</p>
-    <p>Si querés que tus datos sean eliminados, escribinos a <a href="mailto:agustinadelabarra@gmail.com">agustinadelabarra@gmail.com</a>.</p>
+    <p>Si querés que tus datos sean eliminados, escribinos a <a href="mailto:cpoolcontacto@gmail.com">cpoolcontacto@gmail.com</a>.</p>
     <button class="modal-close" onclick="document.getElementById('modalPrivacidad').classList.remove('visible')">Cerrar</button>
   </div>
 </div>
@@ -311,5 +311,17 @@ function copiarLink() {
 // Arrancar con una familia vacía
 agregarFamilia();
 </script>
+<div class="modal-overlay" id="modalInstrucciones">
+  <div class="modal-box">
+    <h3>¿Cómo funciona TuPool?</h3>
+    <p><b>TuPool</b> — Nuestro grupo en movimiento</p>
+    <p style="margin-top:8px;font-style:italic">Una herramienta para que tu grupo de siempre coordine sus viajes recurrentes — entrenamientos, clases, actividades semanales.</p>
+    <p style="margin-top:12px"><b>1.</b> Se crea el TuPool con nombre, origen/destino, días y tipo de viaje. Se agregan las familias del grupo.</p>
+    <p style="margin-top:6px"><b>2.</b> Se genera un link único para compartir con todas las familias del grupo.</p>
+    <p style="margin-top:6px"><b>3.</b> Cada familia marca su disponibilidad — qué días puede manejar y qué días necesita que la lleven.</p>
+    <p style="margin-top:6px"><b>4.</b> El pool se organiza solo — semana a semana, sin coordinación manual.</p>
+    <button class="modal-close" onclick="document.getElementById('modalInstrucciones').classList.remove('visible')">Cerrar</button>
+  </div>
+</div>
 </body>
 </html>

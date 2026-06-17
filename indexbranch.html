@@ -7,16 +7,15 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --verde: #1B4332;
-    --verde-mid: #2D6A4F;
-    --verde-claro: #40916C;
-    --verde-light: #52B788;
+    --azul: #2E6DA4; --azul-light: #EBF4FB; --azul-dark: #1E4F7A;
+    --verde: #3D7A5A; --verde-light: #E8F4EE; --verde-dark: #2A5C40;
+    --verde-mid: #3D7A5A; --verde-claro: #3D7A5A;
     --amarillo: #E9C46A;
     --rojo: #E76F51;
-    --fondo: #F4F1EC;
-    --blanco: #FFFFFF;
-    --texto: #1A1A1A;
-    --gris: #888;
+    --fondo: #F2F6F4; --blanco: #FFFFFF;
+    --texto: #2D2D2D; --texto-soft: #6B6B6B;
+    --borde: #D0DDD8; --gris: #6B6B6B;
+    --shadow: 0 2px 12px rgba(46,109,164,0.10);
     --gris-claro: #E8E4DC;
     --sombra: 0 1px 8px rgba(0,0,0,0.07);
   }
@@ -34,7 +33,7 @@
   }
 
   .header {
-    background: var(--verde);
+    background: var(--azul);
     padding: 10px 14px;
     position: sticky;
     top: 0;
@@ -86,7 +85,7 @@
   }
 
   .nav-mes {
-    background: var(--verde-mid);
+    background: var(--azul);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -238,19 +237,19 @@
   }
 
   .toggle-btn.activo-ida {
-    background: var(--verde);
+    background: var(--azul);
     border-color: var(--verde);
     color: var(--blanco);
   }
 
   .toggle-btn.activo-vuelta {
     background: var(--verde-claro);
-    border-color: var(--verde-claro);
+    border-color: var(--azul-light);
     color: var(--blanco);
   }
 
   .toggle-btn.activo-voy {
-    background: var(--verde);
+    background: var(--azul);
     border-color: var(--verde);
     color: var(--blanco);
   }
@@ -280,7 +279,7 @@
   }
 
   .nota-input:focus {
-    border-color: var(--verde-claro);
+    border-color: var(--azul-light);
   }
 
   .sin-familia {
@@ -365,6 +364,7 @@
   <div class="loading"><div class="spinner"></div><span>Cargando...</span></div>
 </div>
 
+<div style="display:flex;gap:16px;justify-content:center;margin-bottom:4px"><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')" style="cursor:pointer;font-size:11px;color:#AAB8B2;text-decoration:underline">Instrucciones</div></div>
 <div class="version">v1.2-db</div>
 <div class="toast" id="toast"></div>
 
@@ -809,6 +809,26 @@ async function cargarDatos() {
 }
 
 cargarDatos();
+</script>
+<div class="modal-overlay" id="modalInstrucciones" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;">
+  <div style="background:white;border-radius:16px;padding:24px;max-width:400px;margin:20px;max-height:80vh;overflow-y:auto;">
+    <h3 style="font-size:16px;margin-bottom:12px">¿Cómo funciona TuPool?</h3>
+    <p style="font-size:13px"><b>TuPool</b> — Nuestro grupo en movimiento</p>
+    <p style="margin-top:8px;font-size:13px;font-style:italic">Una herramienta para que tu grupo de siempre coordine sus viajes recurrentes — entrenamientos, clases, actividades semanales.</p>
+    <p style="margin-top:12px;font-size:13px"><b>1.</b> Se crea el TuPool con nombre, origen/destino, días y tipo de viaje.</p>
+    <p style="margin-top:6px;font-size:13px"><b>2.</b> Se genera un link único para compartir con todas las familias.</p>
+    <p style="margin-top:6px;font-size:13px"><b>3.</b> Cada familia marca su disponibilidad — qué días puede manejar y cuándo necesita que la lleven.</p>
+    <p style="margin-top:6px;font-size:13px"><b>4.</b> El pool se organiza solo — semana a semana, sin coordinación manual.</p>
+    <button onclick="document.getElementById('modalInstrucciones').style.display='none'" style="margin-top:16px;width:100%;padding:12px;background:#5A8A6A;color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer">Cerrar</button>
+  </div>
+</div>
+<script>
+document.getElementById('modalInstrucciones').style.display = 'none';
+document.querySelectorAll('[onclick*="modalInstrucciones"]').forEach(el => {
+  el.addEventListener('click', () => {
+    document.getElementById('modalInstrucciones').style.display = 'flex';
+  });
+});
 </script>
 </body>
 </html>
