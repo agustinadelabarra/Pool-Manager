@@ -376,6 +376,8 @@ async function crearEvento() {
 
 function mostrarExito(nombre, destino, fecha, hora_ida, hora_vuelta, proposito, token) {
   linkGenerado = `${window.location.origin}${window.location.pathname.replace('cpools.html','cpool.html')}?token=${token}`;
+console.log('pathname:', window.location.pathname);
+console.log('linkGenerado:', linkGenerado);
   document.getElementById('preview-nombre').textContent = nombre;
   let meta = formatFecha(fecha);
   if (destino) meta += ` · ${destino}`;
