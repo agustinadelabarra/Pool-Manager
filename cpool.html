@@ -181,7 +181,7 @@
     <button class="btn-nuevo-evento" disabled style="opacity:0.4;cursor:not-allowed">+ Crear nuevo CPool para este grupo</button>
     <a href="mailto:cpoolcontacto@gmail.com" class="contacto-link">¿Problemas o sugerencias? Escribinos</a>
     <div style="display:flex;gap:16px;justify-content:center"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')" style="cursor:pointer;font-size:12px;color:#AAB8B2;text-decoration:underline">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')" style="cursor:pointer;font-size:12px;color:#AAB8B2;text-decoration:underline">Instrucciones</div></div>
-    <div class="version">v0.8</div>
+    <div class="version">v0.9</div>
   </div>
 </div>
 
@@ -211,7 +211,7 @@
     </div>
   </div>
   <div style="display:flex;gap:16px;justify-content:center"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')" style="cursor:pointer;font-size:12px;color:#AAB8B2;text-decoration:underline">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')" style="cursor:pointer;font-size:12px;color:#AAB8B2;text-decoration:underline">Instrucciones</div></div>
-  <div class="version">v0.8</div>
+  <div class="version">v0.9</div>
 </div>
 
 <!-- POPUP ALTA -->
@@ -223,8 +223,12 @@
       <input type="text" id="inputNombre" placeholder="Ej: Cata Rodríguez C.">
     </div>
     <div class="popup-field">
-      <label>Dirección <span style="font-weight:400;text-transform:none;letter-spacing:0">(para la vuelta)</span></label>
-      <input type="text" id="inputDireccion" placeholder="Ej: Callao 1245, CABA">
+      <label>Dirección</label>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="text" id="inputDireccion" placeholder="Ej: Callao 1245, CABA" style="flex:1">
+        <button type="button" class="btn-maps" onclick="buscarDireccionPopup()" title="Buscar en Maps"><img src="maps-icon.png" width="22" height="22"></button>
+      </div>
+      <div class="coords-tag" id="coordsPopup" style="display:none;font-size:11px;color:var(--verde-dark);margin-top:4px;padding:3px 8px;background:var(--verde-light);border-radius:6px;display:inline-block"></div>
     </div>
     <div id="mensajeConductora" style="display:none;background:#FFF8E8;border:1.5px solid #E8C45A;border-radius:10px;padding:10px 14px;font-size:13px;color:#7A5A00;margin-bottom:12px">
       ⚠️ Si sos conductora, agregá a tu hijo/hija desde el botón "Editar" en tu auto.
@@ -232,7 +236,7 @@
     <div id="campoAuto" style="display:none">
       <div class="popup-field">
         <label>Zona de referencia</label>
-        <input type="text" id="inputZona" placeholder="Ej: Palermo / Villa Crespo">
+        <input type="text" id="inputZona" placeholder="Ej: Palermo / Belgrano / Barrio Norte">
       </div>
       <div class="popup-field">
         <label>Lugares disponibles (sin contar tu hijo/hija)</label>
@@ -269,7 +273,7 @@
     </div>
     <div class="popup-field">
       <label>Zona de referencia</label>
-      <input type="text" id="editarZona" placeholder="Ej: Palermo / Villa Crespo">
+      <input type="text" id="editarZona" placeholder="Ej: Palermo / Belgrano / Barrio Norte">
     </div>
     <div class="popup-field">
       <label>Lugares disponibles (sin contar tu hijo/hija)</label>
@@ -308,6 +312,8 @@ const FRASES = {
 
 let evento = null, tramoActual = null, modoPopup = null, miFamilia = null, autoEditandoId = null, guardando = false;
 
+
+
 function getToken() { return new URLSearchParams(window.location.search).get('token'); }
 function formatHora(h) { return h ? h.substring(0,5) : '—'; }
 function formatFecha(f) {
@@ -340,13 +346,13 @@ async function api(path, opts = {}) {
 function mapsLinkIda(conductorDir, pasajerosDir, destino) {
   const dirs = [conductorDir, ...pasajerosDir, destino].filter(Boolean);
   if (dirs.length < 2) return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(destino)}`;
-  return `https://www.google.com/maps/dir/${dirs.map(d => encodeURIComponent(d)).join('/')}`;
+  return `https://www.google.com/maps/dir/${dirs.map(d => encodeURIComponent(d)).join('/')}/?travelmode=driving`;
 }
 
 function mapsLinkVuelta(destino, pasajerosDir, conductorDir) {
   const dirs = [destino, ...pasajerosDir, conductorDir].filter(Boolean);
   if (dirs.length < 2) return null;
-  return `https://www.google.com/maps/dir/${dirs.map(d => encodeURIComponent(d)).join('/')}`;
+  return `https://www.google.com/maps/dir/${dirs.map(d => encodeURIComponent(d)).join('/')}/?travelmode=driving`;
 }
 
 async function init() {
@@ -675,18 +681,29 @@ function abrirPopupPasajero() {
   document.getElementById('overlayAlta').classList.add('visible');
 }
 
-function cerrarPopup() { document.getElementById('overlayAlta').classList.remove('visible'); modoPopup = null; }
+function cerrarPopup() { 
+  document.getElementById('overlayAlta').classList.remove('visible'); 
+  document.getElementById('hijaViene').checked = false;
+  const tag = document.getElementById('coordsPopup');
+  tag.style.display = 'none';
+  tag.textContent = '';
+  popupLat = null; popupLng = null;
+  modoPopup = null; 
+}
 
-async function getOrCreateFamilia(nombre, direccion) {
+async function getOrCreateFamilia(nombre, direccion, lat, lng) {
   const existing = await api(`evento_familias?evento_id=eq.${evento.id}&nombre=eq.${encodeURIComponent(nombre)}&select=*`);
   if (existing?.length) {
-    if (direccion && existing[0].direccion !== direccion) {
-      await api(`evento_familias?id=eq.${existing[0].id}`, { method: 'PATCH', body: JSON.stringify({ direccion }) });
-      existing[0].direccion = direccion;
+    const patch = {};
+    if (direccion && existing[0].direccion !== direccion) patch.direccion = direccion;
+    if (lat) { patch.lat = lat; patch.lng = lng; }
+    if (Object.keys(patch).length) {
+      await api(`evento_familias?id=eq.${existing[0].id}`, { method: 'PATCH', body: JSON.stringify(patch) });
+      Object.assign(existing[0], patch);
     }
     return existing[0];
   }
-  const nueva = await api(`evento_familias`, { method: 'POST', body: JSON.stringify({ evento_id: evento.id, nombre, es_admin: false, direccion: direccion || null }) });
+  const nueva = await api(`evento_familias`, { method: 'POST', body: JSON.stringify({ evento_id: evento.id, nombre, es_admin: false, direccion: direccion || null, lat: lat || null, lng: lng || null }) });
   return nueva[0];
 }
 
@@ -704,7 +721,7 @@ async function confirmarAlta() {
       const hijaViene = document.getElementById('hijaViene').checked;
       const zona = document.getElementById('inputZona').value.trim();
       const capacidadDisponible = hijaViene ? capacidadBase - 1 : capacidadBase;
-      const familia = await getOrCreateFamilia(nombre, direccion);
+      const familia = await getOrCreateFamilia(nombre, direccion, popupLat, popupLng);
       const existeAuto = await api(`evento_autos?evento_id=eq.${evento.id}&familia_id=eq.${familia.id}&tramo=eq.${tramoActual}&select=id`);
       if (existeAuto?.length) { alert('Ya tenés un auto registrado en este tramo.'); cerrarPopup(); return; }
 
@@ -718,7 +735,7 @@ async function confirmarAlta() {
       miFamilia = { ...familia, direccion };
       sessionStorage.setItem('miFamilia_' + getToken(), JSON.stringify(miFamilia));
     } else if (modoPopup === 'pasajero') {
-      const familia = await getOrCreateFamilia(nombre, direccion);
+      const familia = await getOrCreateFamilia(nombre, direccion, popupLat, popupLng);
       const autosTramo = await api(`evento_autos?evento_id=eq.${evento.id}&tramo=eq.${tramoActual}&select=id`) || [];
       const autoIds = autosTramo.map(a => `"${a.id}"`).join(',');
       if (autoIds.length) {
@@ -732,6 +749,36 @@ async function confirmarAlta() {
     await renderTramo();
   } catch(e) { console.error(e); alert(`Error: ${e.message}`); }
   finally { guardando = false; btn.disabled = false; }
+}
+
+let popupLat = null, popupLng = null;
+
+async function geocodificar(direccion) {
+  try {
+    const query = encodeURIComponent(direccion + ', Buenos Aires, Argentina');
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`);
+    const data = await res.json();
+    if (data.length > 0) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+  } catch(e) {}
+  return { lat: null, lng: null };
+}
+
+async function buscarDireccionPopup() {
+  const dir = document.getElementById('inputDireccion').value.trim();
+  if (!dir) { alert('Ingresá una dirección primero.'); return; }
+  const coords = await geocodificar(dir);
+  const tag = document.getElementById('coordsPopup');
+  if (coords.lat) {
+    popupLat = coords.lat;
+    popupLng = coords.lng;
+    tag.textContent = `📍 ${coords.lat.toFixed(4)}, ${coords.lng.toFixed(4)}`;
+    tag.style.display = 'inline-block';
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dir + ', Buenos Aires, Argentina')}`;
+    window.open(url, '_blank');
+  } else {
+    tag.style.display = 'none';
+    alert('No se encontró la dirección. Intentá con más detalle.');
+  }
 }
 
 init();
