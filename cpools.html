@@ -287,7 +287,7 @@
 
     <button class="btn-crear" onclick="crearEvento()">Crear CPool →</button>
     <div style="display:flex;gap:16px;justify-content:center"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')">Instrucciones</div></div>
-    <div class="version">v0.7</div>
+    <div class="version">v0.8</div>
   </div>
 </div>
 
@@ -302,7 +302,7 @@
 
   <button class="btn-copiar" id="btnCopiar" onclick="copiarLink()">📋 Copiar link para compartir</button>
   <div style="display:flex;gap:16px;justify-content:center"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')">Instrucciones</div></div>
-  <div class="version">v0.7</div>
+  <div class="version">v0.8</div>
 </div>
 
 <div class="modal-overlay" id="modalPrivacidad">
@@ -375,9 +375,7 @@ async function crearEvento() {
 }
 
 function mostrarExito(nombre, destino, fecha, hora_ida, hora_vuelta, proposito, token) {
-  linkGenerado = `${window.location.origin}${window.location.pathname.replace('cpools.html','cpool.html')}?token=${token}`;
-console.log('pathname:', window.location.pathname);
-console.log('linkGenerado:', linkGenerado);
+  linkGenerado = `${window.location.origin}/cpool.html?token=${token}`;
   document.getElementById('preview-nombre').textContent = nombre;
   let meta = formatFecha(fecha);
   if (destino) meta += ` · ${destino}`;
