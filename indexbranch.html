@@ -347,6 +347,14 @@
   .privacidad-link { text-align: center; font-size: 11px; color: #AAB8B2; padding: 4px 16px 0; cursor: pointer; text-decoration: underline; }
   .privacidad-link:hover { color: #2E6DA4; }
 </style>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-T9LPLE99YX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-T9LPLE99YX");
+  </script>
 </head>
 <body>
 
@@ -375,7 +383,7 @@
 </div>
 
 <div style="display:flex;gap:16px;justify-content:center;margin-bottom:4px"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')">Instrucciones</div></div>
-<div class="version">v1.2-db</div>
+<div class="version">v1.3-db</div>
 <div class="toast" id="toast"></div>
 
 <script>
