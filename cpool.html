@@ -189,7 +189,7 @@
     <button class="btn-nuevo-evento" disabled style="opacity:0.4;cursor:not-allowed">+ Crear nuevo CPool para este grupo</button>
     <a href="mailto:cpoolcontacto@gmail.com" class="contacto-link">¿Problemas o sugerencias? Escribinos</a>
     <div style="display:flex;gap:16px;justify-content:center"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')" style="cursor:pointer;font-size:12px;color:#AAB8B2;text-decoration:underline">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')" style="cursor:pointer;font-size:12px;color:#AAB8B2;text-decoration:underline">Instrucciones</div></div>
-    <div class="version">v0.14</div>
+    <div class="version">v0.15</div>
   </div>
 </div>
 
@@ -219,7 +219,7 @@
     </div>
   </div>
   <div style="display:flex;gap:16px;justify-content:center"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')" style="cursor:pointer;font-size:12px;color:#AAB8B2;text-decoration:underline">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')" style="cursor:pointer;font-size:12px;color:#AAB8B2;text-decoration:underline">Instrucciones</div></div>
-  <div class="version">v0.14</div>
+  <div class="version">v0.15</div>
 </div>
 
 <!-- POPUP ALTA -->
@@ -530,11 +530,14 @@ function renderAutos(autos, asignaciones, familias) {
       <div class="auto-top" onclick="toggleAuto('${auto.id}')">
         <div class="auto-conductor-info">
           <div class="auto-conductor">🚗 ${conductor?.nombre || '—'}${esMio ? ' <span class="yo-tag">vos</span>' : ''}</div>
-          ${auto.zona ? `<div class="auto-zona" style="display:flex;align-items:center;justify-content:space-between">📍 ${auto.zona}${pasajerasChips}</div>` : pasajerasFams.length ? `<div class="auto-zona" style="display:flex;justify-content:flex-end">${pasajerasChips}</div>` : ''}
+          ${auto.zona ? `<div class="auto-zona">📍 ${auto.zona}</div>` : ''}
         </div>
-        <div class="auto-top-right">
-          <div class="lugares-contador">${dots}<span class="lugares-texto">${auto.capacidad_disponible} libres</span></div>
-          ${mapsBtn}
+        <div class="auto-top-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          <div style="display:flex;align-items:center">
+            <div class="lugares-contador">${dots}<span class="lugares-texto">${auto.capacidad_disponible} libres</span></div>
+            ${mapsBtn}
+          </div>
+          ${pasajerasChips}
         </div>
       </div>
       <div class="auto-pasajeros">
