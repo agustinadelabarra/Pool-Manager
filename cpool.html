@@ -189,7 +189,7 @@
     <button class="btn-nuevo-evento" disabled style="opacity:0.4;cursor:not-allowed">+ Crear nuevo CPool para este grupo</button>
     <a href="mailto:cpoolcontacto@gmail.com" class="contacto-link">¿Problemas o sugerencias? Escribinos</a>
     <div style="display:flex;gap:16px;justify-content:center"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')" style="cursor:pointer;font-size:12px;color:#AAB8B2;text-decoration:underline">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')" style="cursor:pointer;font-size:12px;color:#AAB8B2;text-decoration:underline">Instrucciones</div></div>
-    <div class="version">v0.9</div>
+    <div class="version">v0.10</div>
   </div>
 </div>
 
@@ -219,7 +219,7 @@
     </div>
   </div>
   <div style="display:flex;gap:16px;justify-content:center"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')" style="cursor:pointer;font-size:12px;color:#AAB8B2;text-decoration:underline">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')" style="cursor:pointer;font-size:12px;color:#AAB8B2;text-decoration:underline">Instrucciones</div></div>
-  <div class="version">v0.9</div>
+  <div class="version">v0.10</div>
 </div>
 
 <!-- POPUP ALTA -->
@@ -231,10 +231,17 @@
       <input type="text" id="inputNombre" placeholder="Ej: Cata Rodríguez C.">
     </div>
     <div class="popup-field">
-      <label>Dirección</label>
-      <div style="display:flex;gap:8px;align-items:center">
-        <input type="text" id="inputDireccion" placeholder="Ej: Callao 1245, CABA" style="flex:1">
-        <button type="button" class="btn-maps" onclick="buscarDireccionPopup()" title="Buscar en Maps"><img src="maps-icon.png" width="22" height="22"></button>
+      <div style="display:flex;gap:8px;align-items:flex-end">
+        <div style="flex:1">
+          <label>Dirección</label>
+          <input type="text" id="inputDireccion" placeholder="Ej: Callao 1245, CABA" style="width:100%;box-sizing:border-box;height:42px">
+        </div>
+        <div>
+          <label style="display:block;text-align:center">Validación</label>
+          <button type="button" class="btn-maps" onclick="buscarDireccionPopup()" title="Buscar en Maps" style="display:flex;align-items:center;justify-content:center;gap:6px;height:42px;box-sizing:border-box;padding:0 14px;background:var(--naranja-light);border:1.5px solid var(--naranja);border-radius:10px;color:var(--naranja-dark);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit">
+            <img src="maps-icon.png" width="18" height="18" style="vertical-align:middle">Maps
+          </button>
+        </div>
       </div>
       <div class="coords-tag" id="coordsPopup" style="display:none;font-size:11px;color:var(--verde-dark);margin-top:4px;padding:3px 8px;background:var(--verde-light);border-radius:6px;display:inline-block"></div>
     </div>
@@ -584,11 +591,14 @@ async function asignarDesdeEspera(familiaId) {
     if (dirInput?.value.trim()) {
       await api(`evento_familias?id=eq.${familiaId}`, { method: 'PATCH', body: JSON.stringify({ direccion: dirInput.value.trim() }) });
     }
-    await api(`evento_asignaciones`, { method: 'POST', body: JSON.stringify({ auto_id: autoId, familia_id: familiaId, cantidad_pasajeros: 1, estado: 'confirmado' }) });
-    const auto = await api(`evento_autos?id=eq.${autoId}&select=*`);
-    if (auto?.[0]) await api(`evento_autos?id=eq.${autoId}`, { method: 'PATCH', body: JSON.stringify({ capacidad_disponible: auto[0].capacidad_disponible - 1 }) });
+    await api(`rpc/asignar_pasajero_a_auto`, { method: 'POST', body: JSON.stringify({ p_auto_id: autoId, p_familia_id: familiaId }) });
     await renderTramo();
-  } catch(e) { console.error(e); alert('Error al asignar.'); }
+  } catch(e) {
+    console.error(e);
+    let msg = 'Error al asignar.';
+    try { const parsed = JSON.parse(e.message); if (parsed.message) msg = parsed.message; } catch(_) {}
+    alert(msg);
+  }
 }
 
 async function quitarPasajero(asignacionId, autoId) {
