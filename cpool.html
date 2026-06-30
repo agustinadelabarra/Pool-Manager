@@ -189,7 +189,7 @@
     <button class="btn-nuevo-evento" disabled style="opacity:0.4;cursor:not-allowed">+ Crear nuevo CPool para este grupo</button>
     <a href="mailto:cpoolcontacto@gmail.com" class="contacto-link">¿Problemas o sugerencias? Escribinos</a>
     <div style="display:flex;gap:16px;justify-content:center"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')" style="cursor:pointer;font-size:12px;color:#AAB8B2;text-decoration:underline">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')" style="cursor:pointer;font-size:12px;color:#AAB8B2;text-decoration:underline">Instrucciones</div></div>
-    <div class="version">v0.10</div>
+    <div class="version">v0.11</div>
   </div>
 </div>
 
@@ -219,7 +219,7 @@
     </div>
   </div>
   <div style="display:flex;gap:16px;justify-content:center"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')" style="cursor:pointer;font-size:12px;color:#AAB8B2;text-decoration:underline">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')" style="cursor:pointer;font-size:12px;color:#AAB8B2;text-decoration:underline">Instrucciones</div></div>
-  <div class="version">v0.10</div>
+  <div class="version">v0.11</div>
 </div>
 
 <!-- POPUP ALTA -->
@@ -564,7 +564,7 @@ function renderEspera(autos, asignaciones, familias) {
     return `<div class="espera-card ${esMia ? 'mia' : ''}" id="espera-${f.id}">
       <div class="espera-top" onclick="toggleEspera('${f.id}')">
         <div class="espera-nombre">👤 ${f.nombre}${esMia ? ' <span style="font-size:10px;background:#E8C45A;color:#5A3A00;padding:1px 6px;border-radius:5px;font-weight:600">vos</span>' : ''}</div>
-        <div style="display:flex;align-items:center;gap:6px"><span class="espera-pos">#${i+1}</span><span style="color:var(--texto-soft);font-size:11px">▾</span></div>
+        <div style="display:flex;align-items:center;gap:10px"><span class="espera-pos">#${i+1}</span><button onclick="event.stopPropagation();bajaTotalFamilia('${f.id}','${f.nombre.replace(/'/g, "\\'")}')" title="Dar de baja del evento" style="background:none;border:none;cursor:pointer;padding:2px;display:flex;align-items:center;color:#C4623A;font-size:16px">🗑️</button><span style="color:var(--texto-soft);font-size:11px">▾</span></div>
       </div>${selector}
     </div>`;
   }).join('');
@@ -580,6 +580,14 @@ async function guardarDireccion(familiaId) {
     await api(`evento_familias?id=eq.${familiaId}`, { method: 'PATCH', body: JSON.stringify({ direccion }) });
     await renderTramo();
   } catch(e) { console.error(e); alert('Error al guardar dirección.'); }
+}
+
+async function bajaTotalFamilia(familiaId, nombre) {
+  if (!confirm(`¿Dar de baja a ${nombre} del evento? Esta acción no se puede deshacer.`)) return;
+  try {
+    await api(`evento_familias?id=eq.${familiaId}`, { method: 'DELETE' });
+    await renderTramo();
+  } catch(e) { console.error(e); alert('Error al dar de baja.'); }
 }
 
 async function asignarDesdeEspera(familiaId) {
