@@ -1,0 +1,28 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#FDF6F0"/>
+
+  <!-- Rayos desde hub — escalados x6 aprox -->
+  <line x1="252" y1="307" x2="115" y2="211" stroke="#E8845A" stroke-width="5" opacity="0.35"/>
+  <line x1="252" y1="307" x2="125" y2="379" stroke="#E8845A" stroke-width="6" opacity="0.38"/>
+  <line x1="252" y1="307" x2="211" y2="115" stroke="#E8845A" stroke-width="4" opacity="0.28"/>
+  <line x1="252" y1="307" x2="264" y2="492" stroke="#E8845A" stroke-width="5" opacity="0.32"/>
+  <line x1="252" y1="307" x2="413" y2="228" stroke="#E8845A" stroke-width="4" opacity="0.25"/>
+  <line x1="252" y1="307" x2="427" y2="355" stroke="#E8845A" stroke-width="5" opacity="0.3"/>
+  <line x1="252" y1="307" x2="348" y2="187" stroke="#E8845A" stroke-width="3" opacity="0.2"/>
+
+  <!-- Nodo hub -->
+  <circle cx="252" cy="307" r="43" fill="#C4623A" opacity="0.82"/>
+
+  <!-- Nodos satélite -->
+  <circle cx="115" cy="211" r="29" fill="#E8845A" opacity="0.65"/>
+  <circle cx="211" cy="115" r="17" fill="#E8845A" opacity="0.45"/>
+  <circle cx="125" cy="379" r="22" fill="#E8845A" opacity="0.55"/>
+  <circle cx="264" cy="492" r="26" fill="#E8845A" opacity="0.6"/>
+  <circle cx="413" cy="228" r="19" fill="#E8845A" opacity="0.5"/>
+  <circle cx="427" cy="355" r="31" fill="#E8845A" opacity="0.45"/>
+  <circle cx="348" cy="187" r="12" fill="#E8845A" opacity="0.32"/>
+
+  <!-- Texto -->
+  <text x="520" y="307" dominant-baseline="central" font-family="DM Sans, sans-serif" font-size="110" font-weight="700" fill="#C4623A">CPool</text>
+  <text x="524" y="437" font-family="DM Sans, sans-serif" font-size="36" fill="#8A8A85">Comunidad en movimiento</text>
+</svg>
