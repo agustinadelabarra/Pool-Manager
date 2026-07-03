@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<!-- VertexSur index.html — v1.4 (OG image agregada: og-vertexsur.png 600x600) -->
+<!-- VertexSur index.html — v1.5 (botón flotante diagnóstico + versión visible en footer) -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VertexSur</title>
@@ -57,9 +57,16 @@
   .hero {
     flex: 1;
     display: grid;
-    grid-template-rows: 12fr 30fr 18fr 30fr 10fr;
+    grid-template-rows: 60fr 30fr 10fr;
     padding: 0 40px;
     overflow: hidden;
+    position: relative;
+  }
+
+  .hero-top-block {
+    display: grid;
+    grid-template-rows: 12fr 30fr 18fr;
+    position: relative;
   }
 
   .badge-wrap { display: flex; align-items: center; }
@@ -103,7 +110,7 @@
   }
   .badge-spark.visible { opacity: 1; transform: scale(1); }
 
-  .titulo-wrap { display: flex; align-items: center; }
+  .titulo-wrap { display: flex; align-items: center; position: relative; }
   h1 { font-family: 'Outfit', sans-serif; font-size: 54px; font-weight: 700; line-height: 1.08; letter-spacing: -0.03em; max-width: 700px; color: var(--claro); }
   h1 span { color: var(--verde-light); }
 
@@ -137,41 +144,38 @@
 
   @media (max-width: 600px) {
     nav { padding: 16px 20px; }
-    .hero { padding: 0 20px; grid-template-rows: 10fr 25fr 18fr 40fr 7fr; }
+    .hero { padding: 0 20px; grid-template-rows: 53fr 40fr 7fr; }
+    .hero-top-block { grid-template-rows: 10fr 25fr 18fr; }
     h1 { font-size: 34px; }
     .subtitulo { font-size: 15px; }
     .cards-grid { grid-template-columns: 1fr; gap: 10px; }
   }
 
-  /* Botón flotante — diagnóstico */
-  .quiz-fab {
-    position: fixed; bottom: 28px; right: 28px; z-index: 50;
-    display: flex; align-items: center;
-    height: 52px; padding: 0 16px 0 0;
-    background: var(--bg2); border: 1px solid rgba(168,197,168,0.3);
-    border-radius: 26px;
+  /* Botón diagnóstico — espacio derecho del hero */
+  .quiz-hero-btn {
+    position: absolute; right: 130px; top: 58%; transform: translateY(-50%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+    width: 150px; height: 150px;
+    background: var(--verde); border: 2px solid var(--claro);
+    border-radius: 50%;
     text-decoration: none; color: var(--claro);
-    overflow: hidden;
-    width: 52px;
-    transition: width 0.35s ease, opacity 0.4s ease, transform 0.4s ease;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.35);
-    opacity: 0; transform: translateY(12px);
+    text-align: center;
+    box-shadow: 0 4px 24px rgba(168,197,168,0.35), 0 2px 10px rgba(0,0,0,0.3);
+    opacity: 0;
+    transition: opacity 0.6s ease;
   }
-  .quiz-fab.visible { opacity: 1; transform: translateY(0); }
-  .quiz-fab:hover { width: 210px; }
-  .quiz-fab-icon {
-    flex-shrink: 0; width: 52px; height: 52px;
-    display: flex; align-items: center; justify-content: center;
+  .quiz-hero-btn.visible { opacity: 1; }
+  .quiz-hero-btn.pulse { animation: heroBtnPulse 2.2s ease-in-out infinite; }
+  .quiz-hero-btn-text {
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; line-height: 1.3;
+    padding: 0 14px;
   }
-  .quiz-fab-text {
-    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
-    white-space: nowrap; opacity: 0; transition: opacity 0.25s ease 0.1s;
+  @keyframes heroBtnPulse {
+    0%, 100% { transform: translateY(-50%) scale(1); box-shadow: 0 4px 24px rgba(168,197,168,0.35), 0 2px 10px rgba(0,0,0,0.3); }
+    50% { transform: translateY(-50%) scale(1.07); box-shadow: 0 4px 34px rgba(168,197,168,0.7), 0 2px 14px rgba(0,0,0,0.35); }
   }
-  .quiz-fab:hover .quiz-fab-text { opacity: 1; }
-  .quiz-fab.pulse .quiz-fab-icon svg { animation: fabPulse 2.4s ease-in-out infinite; }
-  @keyframes fabPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.12); }
+  @media (max-width: 900px) {
+    .quiz-hero-btn { display: none; }
   }
 </style>
   <!-- Google Analytics -->
@@ -198,6 +202,7 @@
 
 <div class="hero">
 
+  <div class="hero-top-block">
   <div class="badge-wrap">
     <div class="badge-container">
       <div class="badge-texto" id="badgeTexto"></div>
@@ -238,6 +243,15 @@
     </p>
   </div>
 
+  <a href="diagnostico.html" class="quiz-hero-btn" id="quizHeroBtn">
+    <svg width="26" height="26" viewBox="0 0 60 60" fill="none">
+      <polygon points="30,52 6,18 54,6" stroke="#0C0E1A" stroke-width="4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="30" cy="52" r="5" fill="#0C0E1A"/>
+    </svg>
+    <span class="quiz-hero-btn-text">Pathway de transformación</span>
+  </a>
+  </div>
+
   <div class="cards-wrap">
     <div class="cards-grid">
       <div class="card card-1">
@@ -262,7 +276,7 @@
   </div>
 
   <div class="footer-wrap">
-    <div class="footer-copy">© 2026 VertexSur</div>
+    <div class="footer-copy">© 2026 VertexSur · v1.5</div>
   </div>
 
 </div>
@@ -366,22 +380,12 @@
   window.addEventListener('load', () => setTimeout(ciclo, 600));
 </script>
 
-<a href="diagnostico.html" class="quiz-fab" id="quizFab">
-  <span class="quiz-fab-icon">
-    <svg width="20" height="20" viewBox="0 0 60 60" fill="none">
-      <polygon points="30,52 6,18 54,6" stroke="#A8C5A8" stroke-width="4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
-      <circle cx="30" cy="52" r="5" fill="#A8C5A8"/>
-    </svg>
-  </span>
-  <span class="quiz-fab-text">¿Dónde estás hoy?</span>
-</a>
-
 <script>
   setTimeout(() => {
-    const fab = document.getElementById('quizFab');
-    fab.classList.add('visible');
-    setTimeout(() => fab.classList.add('pulse'), 400);
-  }, 2500);
+    const btn = document.getElementById('quizHeroBtn');
+    btn.classList.add('visible');
+    setTimeout(() => btn.classList.add('pulse'), 500);
+  }, 1200);
 </script>
 
 </body>

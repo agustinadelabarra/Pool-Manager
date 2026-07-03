@@ -27,57 +27,69 @@
   /* Indicador de pasos */
   .steps-indicator {
     display: flex; align-items: center; justify-content: center;
-    gap: 10px; padding: 18px 20px 0;
+    gap: 14px; padding: 20px 20px 0;
     flex-shrink: 0;
   }
   .step-dot {
-    width: 28px; height: 28px; border-radius: 50%;
+    width: 38px; height: 38px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 700;
-    background: rgba(255,255,255,0.08); color: var(--muted-dark);
-    border: 1px solid rgba(255,255,255,0.15);
+    font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 700;
+    background: rgba(255,255,255,0.06); color: rgba(240,244,240,0.5);
+    border: 2px solid rgba(255,255,255,0.22);
     transition: all 0.3s ease;
   }
-  .step-dot.active { background: var(--verde-light); color: var(--indigo); border-color: var(--verde-light); }
-  .step-dot.done { background: rgba(168,197,168,0.3); color: var(--verde-light); border-color: rgba(168,197,168,0.4); }
-  .step-line { width: 36px; height: 1px; background: rgba(255,255,255,0.15); }
+  .step-dot.active { background: var(--verde); color: var(--claro); border-color: var(--verde-light); box-shadow: 0 0 0 4px rgba(168,197,168,0.2); }
+  .step-dot.done { background: var(--verde-light); color: var(--indigo); border-color: var(--verde-light); }
+  .step-line { width: 48px; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.25); }
   .step-line.done { background: var(--verde-light); }
 
   /* Carrusel */
   .carousel { flex: 1; position: relative; overflow: hidden; }
   .slide {
     position: absolute; inset: 0;
-    display: none; flex-direction: column; align-items: center; justify-content: center;
-    padding: 20px;
+    display: none; flex-direction: column; align-items: stretch; justify-content: flex-start;
+    padding: 0;
     opacity: 0; transition: opacity 0.3s ease;
   }
   .slide.active { display: flex; opacity: 1; }
+
+  /* Banner superior — misma altura e identidad en los 3 pasos */
+  .step-header {
+    width: 100%; flex-shrink: 0; height: 92px;
+    background: var(--indigo); color: var(--claro);
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    padding: 14px 24px 0; text-align: center;
+  }
+  .step-label {
+    font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--verde-light);
+    margin-bottom: 5px;
+  }
 
   /* Flechas de navegación */
   .nav-arrow {
     position: absolute; top: 50%; transform: translateY(-50%);
     width: 40px; height: 40px; border-radius: 50%;
-    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
-    color: var(--claro); font-size: 16px; cursor: pointer;
+    background: #FFFFFF; border: none;
+    color: var(--indigo); font-size: 16px; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    transition: background 0.2s, opacity 0.2s;
+    transition: background 0.2s, opacity 0.2s, transform 0.2s;
+    box-shadow: 0 3px 12px rgba(12,14,26,0.25);
     z-index: 10;
   }
-  .nav-arrow:hover { background: rgba(168,197,168,0.25); }
-  .nav-arrow:disabled { opacity: 0.25; cursor: not-allowed; }
+  .nav-arrow:hover:not(:disabled) { background: var(--verde-light); transform: translateY(-50%) scale(1.06); }
+  .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
   .nav-prev { left: 16px; }
   .nav-next { right: 16px; }
 
   /* PASO 1 */
-  #slide1 { padding: 0; }
-  .hero-dark { width: 100%; text-align: center; padding: 14px 20px 10px; flex-shrink: 0; }
-  h1.step-title { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 4px; }
-  .step-subtitulo { color: #B8C0D4; font-size: 13px; max-width: 420px; margin: 0 auto; }
+  h1.step-title { font-family: 'Outfit', sans-serif; font-size: 19px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 3px; }
+  .step-subtitulo { color: #B8C0D4; font-size: 12px; max-width: 400px; margin: 0 auto; }
 
-  .light-section { width: 100%; flex: 1; background: var(--bg-claro); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 14px 20px; overflow: hidden; }
+  .light-section { width: 100%; flex: 1; background: var(--bg-claro); color: var(--indigo); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 14px 20px; overflow: hidden; }
 
-  .chart-frame { background: var(--bg-chart); border: 1px solid rgba(107,140,107,0.25); border-radius: 16px; padding: 30px 34px 26px; box-shadow: 0 4px 20px rgba(12,14,26,0.06); }
-  .quadrant-wrap { position: relative; width: 250px; aspect-ratio: 1/1; }
+  .chart-frame { background: var(--bg-chart); border: 1px solid rgba(107,140,107,0.25); border-radius: 16px; padding: 26px 30px 22px; box-shadow: 0 4px 20px rgba(12,14,26,0.06); }
+  .quadrant-wrap { position: relative; width: 300px; aspect-ratio: 1/1; }
   .quadrant { width: 100%; height: 100%; background: #FBFCFA; border: 1px solid rgba(12,14,26,0.1); border-radius: 14px; position: relative; cursor: crosshair; overflow: hidden; }
   .quad-bg { position: absolute; width: 50%; height: 50%; opacity: 0.35; }
   .q-tl { top: 0; left: 0; background: #D8DCEF; }
@@ -88,15 +100,15 @@
   .axis-v { left: 50%; top: 0; width: 1px; height: 100%; }
   .axis-h { top: 50%; left: 0; height: 1px; width: 100%; }
 
-  .axis-watermark { position: absolute; font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--verde); text-transform: uppercase; letter-spacing: 0.04em; opacity: 0.32; pointer-events: none; z-index: 1; font-size: 13px; white-space: nowrap; }
-  .wm-digital { top: 50%; left: 16%; transform: translate(-50%, -50%); }
-  .wm-ambicion { top: 16%; left: 50%; transform: translate(-50%, -50%) rotate(-90deg); }
+  .axis-watermark { position: absolute; font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--verde); text-transform: uppercase; letter-spacing: 0.03em; opacity: 0.32; pointer-events: none; z-index: 1; font-size: 12px; white-space: nowrap; }
+  .wm-digital { top: 50%; left: 32%; transform: translate(-50%, -50%); }
+  .wm-ambicion { top: 32%; left: 50%; transform: translate(-50%, -50%) rotate(-90deg); }
 
   .axis-sign { position: absolute; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 20px; color: var(--verde); opacity: 0.7; z-index: 2; }
-  .sign-h-minus { left: 6px; top: 50%; transform: translateY(-50%); }
-  .sign-h-plus { right: 6px; top: 50%; transform: translateY(-50%); }
-  .sign-v-minus { bottom: 6px; left: 50%; transform: translateX(-50%); }
-  .sign-v-plus { top: 6px; left: 50%; transform: translateX(-50%); }
+  .sign-h-minus { left: 12px; top: 50%; transform: translateY(-50%); }
+  .sign-h-plus { right: 12px; top: 50%; transform: translateY(-50%); }
+  .sign-v-minus { bottom: 12px; left: 50%; transform: translateX(-50%); }
+  .sign-v-plus { top: 12px; left: 50%; transform: translateX(-50%); }
 
   .axis-label { position: absolute; text-align: center; line-height: 1.3; }
   .axis-pole { font-size: 10px; color: var(--indigo); opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
@@ -108,26 +120,28 @@
   .marker { position: absolute; width: 14px; height: 14px; background: var(--verde); border: 3px solid #FFF; border-radius: 50%; transform: translate(-50%, -50%) scale(0); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); pointer-events: none; box-shadow: 0 0 0 5px rgba(107,140,107,0.18), 0 2px 6px rgba(12,14,26,0.15); }
   .marker.visible { transform: translate(-50%, -50%) scale(1); }
 
-  .insight-box { margin-top: 16px; max-width: 380px; background: var(--bg-chart); border: 1px solid rgba(107,140,107,0.3); border-radius: 12px; padding: 12px 18px; box-shadow: 0 4px 16px rgba(12,14,26,0.05); opacity: 0; transform: translateY(8px); transition: opacity 0.4s ease, transform 0.4s ease; text-align: center; }
+  .insight-card { margin-top: 16px; max-width: 400px; background: #F0F5F0; border: 2px solid var(--verde); border-radius: 12px; padding: 14px 20px; box-shadow: 0 4px 16px rgba(107,140,107,0.15); text-align: center; }
+  .insight-tag { font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 700; color: var(--verde); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+  .insight-box { margin-top: 16px; width: 362px; max-width: 100%; background: #F0F5F0; border: 2px solid var(--verde); border-radius: 12px; padding: 14px 20px; box-shadow: 0 4px 16px rgba(107,140,107,0.15); opacity: 0; transform: translateY(8px); transition: opacity 0.4s ease, transform 0.4s ease; text-align: center; box-sizing: border-box; }
   .insight-box.visible { opacity: 1; transform: translateY(0); }
-  .insight-text { font-size: 12.5px; line-height: 1.4; color: var(--indigo); }
+  .insight-text { font-size: 13px; line-height: 1.45; color: var(--indigo); }
 
-  /* PASO 2 */
-  #slide2 { background: var(--bg-claro); color: var(--indigo); }
-  .cards-title { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 6px; }
-  .cards-sub { font-size: 13px; color: var(--muted-dark); text-align: center; max-width: 440px; margin-bottom: 24px; }
-  .cards-grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; max-width: 480px; width: 100%; }
-  .cardq { background: #FFFFFF; border: 1.5px solid rgba(12,14,26,0.1); border-radius: 12px; padding: 14px 16px; cursor: pointer; transition: border-color 0.2s, background 0.2s; }
-  .cardq:hover { border-color: rgba(107,140,107,0.4); }
-  .cardq.selected { border-color: var(--verde); background: #F0F5F0; }
-  .cardq-title { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 14px; margin-bottom: 4px; }
-  .cardq-desc { font-size: 11.5px; color: var(--muted-dark); line-height: 1.4; }
-  .cardq.wide { grid-column: 1 / -1; }
+  /* PASO 2 — SmartArt círculos + barras */
+  .smartart-wrap { position: relative; width: 100%; max-width: 480px; height: 382px; margin: 0 auto; }
+  .smartart-line { position: absolute; top: 0; left: 0; z-index: 1; }
+  .circle-sa { position: absolute; width: 70px; height: 70px; border-radius: 50%; background: #FFFFFF; border: 2.5px solid var(--verde); left: 10px; z-index: 3; display: flex; align-items: center; justify-content: center; }
+  .bar-sa { position: absolute; left: 45px; right: 0; height: 70px; background: var(--verde); border-radius: 6px; z-index: 2; display: flex; flex-direction: column; justify-content: center; padding: 0 16px 0 46px; cursor: pointer; transition: background 0.2s; }
+  .bar-sa:hover, .bar-sa.selected { background: var(--indigo); }
+  .bar-sa-title { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 13px; color: #FFFFFF; }
+  .bar-sa-desc { font-size: 10.5px; color: rgba(255,255,255,0.75); line-height: 1.3; margin-top: 2px; max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; }
+  .bar-sa:hover .bar-sa-desc, .bar-sa.selected .bar-sa-desc { max-height: 30px; opacity: 1; }
+  .row-sa-1 { top: 0px; } .row-sa-2 { top: 78px; } .row-sa-3 { top: 156px; } .row-sa-4 { top: 234px; } .row-sa-5 { top: 312px; }
 
   /* PASO 3 */
-  #slide3 { background: var(--bg-claro); color: var(--indigo); }
-  .insight-final { max-width: 460px; background: #FFFFFF; border: 1px solid rgba(107,140,107,0.3); border-radius: 14px; padding: 20px 24px; margin-bottom: 20px; text-align: center; box-shadow: 0 4px 20px rgba(12,14,26,0.05); }
-  .insight-final-text { font-size: 14px; line-height: 1.55; }
+  .insight-final { max-width: 400px; background: #F0F5F0; border: 2px solid var(--verde); border-radius: 14px; padding: 18px 22px; margin-bottom: 18px; text-align: left; box-shadow: 0 4px 16px rgba(107,140,107,0.15); }
+  .insight-final-row { font-size: 13px; line-height: 1.5; color: var(--indigo); margin-bottom: 10px; }
+  .insight-final-row:last-child { margin-bottom: 0; }
+  .insight-final-label { font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--verde); display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
   .form3 { display: flex; flex-direction: column; gap: 10px; max-width: 380px; width: 100%; }
   .form3 input, .form3 textarea { font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 10px 12px; border: 1px solid rgba(12,14,26,0.15); border-radius: 8px; background: #FFFFFF; color: var(--indigo); }
   .form3 textarea { resize: none; height: 50px; }
@@ -169,15 +183,16 @@
 
   <!-- SLIDE 1 -->
   <div class="slide active" id="slide1">
-    <div class="hero-dark">
+    <div class="step-header">
+      <div class="step-label">Paso 1 de 3</div>
       <h1 class="step-title">¿Dónde estás hoy?</h1>
-      <p class="step-subtitulo">Hacé clic en el punto del plano que mejor describe a tu empresa hoy.</p>
+      <p class="step-subtitulo">Ubicá a tu empresa en el plano de abajo.</p>
     </div>
     <div class="light-section">
       <div class="chart-frame">
         <div class="quadrant-wrap">
-          <div class="axis-label label-top"><div class="axis-pole">Repensar estructuralmente</div></div>
-          <div class="axis-label label-bottom"><div class="axis-pole">Optimizar lo que ya existe</div></div>
+          <div class="axis-label label-top"><div class="axis-pole">Ambición de transformar</div></div>
+          <div class="axis-label label-bottom"><div class="axis-pole">Ambición de optimizar</div></div>
           <div class="axis-label label-left"><div class="axis-pole">Poco sistematizado</div></div>
           <div class="axis-label label-right"><div class="axis-pole">Sistemas integrados</div></div>
           <div class="quadrant" id="quadrant">
@@ -198,6 +213,7 @@
         </div>
       </div>
       <div class="insight-box" id="insightBox">
+        <div class="insight-tag">Tu punto de partida</div>
         <div class="insight-text" id="insightTextP1"></div>
       </div>
     </div>
@@ -205,45 +221,68 @@
 
   <!-- SLIDE 2 -->
   <div class="slide" id="slide2">
-    <div class="cards-title">¿Hacia dónde te gustaría moverte?</div>
-    <div class="cards-sub">Recorré las opciones e identificá qué está pasando hoy en tu organización — no hace falta tener el problema identificado.</div>
-    <div class="cards-grid2" id="cardsGrid">
-      <div class="cardq" data-cat="C1">
-        <div class="cardq-title">Rediseñar procesos</div>
-        <div class="cardq-desc">Cómo hacemos las cosas hoy podría ser más simple, más rápido, o más consistente.</div>
-      </div>
-      <div class="cardq" data-cat="C2">
-        <div class="cardq-title">Innovar / crear algo nuevo</div>
-        <div class="cardq-desc">Un producto, servicio, o forma de atender que todavía no existe.</div>
-      </div>
-      <div class="cardq" data-cat="C3">
-        <div class="cardq-title">Decidir con mejores datos</div>
-        <div class="cardq-desc">Tomamos decisiones con menos información de la que deberíamos.</div>
-      </div>
-      <div class="cardq" data-cat="C4">
-        <div class="cardq-title">Gestionar un cambio organizacional</div>
-        <div class="cardq-desc">El desafío es que las personas adopten algo nuevo, no la tecnología en sí.</div>
-      </div>
-      <div class="cardq wide" data-cat="C5">
-        <div class="cardq-title">Todavía no lo sé</div>
-        <div class="cardq-desc">Tengo ambición de cambio pero no tengo claro por dónde empezar.</div>
+    <div class="step-header">
+      <div class="step-label">Paso 2 de 3</div>
+      <h1 class="step-title">¿Hacia dónde te gustaría moverte?</h1>
+      <p class="step-subtitulo">Elegí la opción que más se acerca a tu organización hoy.</p>
+    </div>
+    <div class="light-section">
+      <div class="smartart-wrap" id="cardsGrid">
+        <svg class="smartart-line" width="100%" height="382" viewBox="0 0 480 382">
+          <path d="M45,10 L45,35" stroke="#6B8C6B" stroke-width="2.5" fill="none"/>
+          <path d="M45,35 C63,59 27,89 45,113 C27,137 63,167 45,191 C63,215 27,245 45,269 C27,293 63,323 45,347" stroke="#6B8C6B" stroke-width="2.5" fill="none"/>
+          <path d="M45,347 L45,372" stroke="#6B8C6B" stroke-width="2.5" fill="none"/>
+        </svg>
+        <div class="circle-sa row-sa-1"><svg width="30" height="30" viewBox="0 0 46 46"><rect x="6" y="24" width="8" height="16" fill="#6B8C6B"/><rect x="19" y="14" width="8" height="26" fill="#6B8C6B"/><rect x="32" y="6" width="8" height="34" fill="#A8C5A8"/></svg></div>
+        <div class="bar-sa row-sa-1" data-cat="C3" onclick="selectCard(this)">
+          <div class="bar-sa-title">Decidir con datos</div>
+          <div class="bar-sa-desc">Usar mejor lo que ya tenés</div>
+        </div>
+        <div class="circle-sa row-sa-2"><svg width="30" height="30" viewBox="0 0 46 46"><circle cx="9" cy="23" r="5" fill="#6B8C6B"/><circle cx="23" cy="23" r="5" fill="#A8C5A8"/><circle cx="37" cy="23" r="5" fill="#6B8C6B"/><line x1="14" y1="23" x2="18" y2="23" stroke="#6B8C6B" stroke-width="2"/><line x1="28" y1="23" x2="32" y2="23" stroke="#6B8C6B" stroke-width="2"/></svg></div>
+        <div class="bar-sa row-sa-2" data-cat="C1" onclick="selectCard(this)">
+          <div class="bar-sa-title">Rediseñar procesos</div>
+          <div class="bar-sa-desc">Simplificar cómo trabajás</div>
+        </div>
+        <div class="circle-sa row-sa-3"><svg width="30" height="30" viewBox="0 0 46 46"><polygon points="23,4 40,23 23,42 6,23" fill="#A8C5A8"/><circle cx="23" cy="23" r="5" fill="#FFFFFF"/></svg></div>
+        <div class="bar-sa row-sa-3" data-cat="C2" onclick="selectCard(this)">
+          <div class="bar-sa-title">Innovar/crear algo nuevo</div>
+          <div class="bar-sa-desc">Algo que no existe todavía</div>
+        </div>
+        <div class="circle-sa row-sa-4"><svg width="30" height="30" viewBox="0 0 46 46"><circle cx="17" cy="23" r="14" fill="none" stroke="#6B8C6B" stroke-width="2.5"/><circle cx="29" cy="23" r="14" fill="none" stroke="#A8C5A8" stroke-width="2.5"/></svg></div>
+        <div class="bar-sa row-sa-4" data-cat="C4" onclick="selectCard(this)">
+          <div class="bar-sa-title">Cambio organizacional</div>
+          <div class="bar-sa-desc">Que las personas lo adopten</div>
+        </div>
+        <div class="circle-sa row-sa-5"><svg width="30" height="30" viewBox="0 0 46 46"><circle cx="23" cy="23" r="16" fill="none" stroke="#6B8C6B" stroke-width="2.5" stroke-dasharray="4 4"/></svg></div>
+        <div class="bar-sa row-sa-5" data-cat="C5" onclick="selectCard(this)">
+          <div class="bar-sa-title">Todavía no lo sé</div>
+          <div class="bar-sa-desc">Sin foco definido todavía</div>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- SLIDE 3 -->
   <div class="slide" id="slide3">
-    <div class="insight-final">
-      <div class="insight-final-text" id="insightFinalText"></div>
+    <div class="step-header">
+      <div class="step-label">Paso 3 de 3</div>
+      <h1 class="step-title">Tu Pathway de transformación</h1>
     </div>
-    <form class="form3" id="form3">
-      <input type="text" placeholder="Nombre y apellido" required>
-      <input type="text" placeholder="Empresa" required>
-      <input type="email" placeholder="Mail" required>
-      <textarea placeholder="Comentario (opcional)"></textarea>
-      <button type="submit">Sigamos la conversación</button>
-    </form>
-    <div class="form3-done" id="form3Done" style="display:none;">¡Gracias! Te vamos a contactar pronto.</div>
+    <div class="light-section">
+      <div class="insight-final">
+        <div class="insight-final-row"><span class="insight-final-label">Tu madurez digital:</span> <span id="insightFinalDigital"></span></div>
+        <div class="insight-final-row"><span class="insight-final-label">Tu objetivo:</span> <span id="insightFinalObjetivo"></span></div>
+        <div class="insight-final-row"><span class="insight-final-label">Nuestra propuesta:</span> <span id="insightFinalPropuesta"></span></div>
+      </div>
+      <form class="form3" id="form3">
+        <input type="text" placeholder="Nombre y apellido" required>
+        <input type="text" placeholder="Empresa" required>
+        <input type="email" placeholder="Mail" required>
+        <textarea placeholder="Comentario (opcional)"></textarea>
+        <button type="submit">Sigamos la conversación</button>
+      </form>
+      <div class="form3-done" id="form3Done" style="display:none;">¡Gracias! Te vamos a contactar pronto.</div>
+    </div>
   </div>
 </div>
 
@@ -260,17 +299,19 @@
 
   const bloqueA = {
     bl_ba: "Con procesos todavía poco sistematizados, el foco natural está en optimizar lo que ya tenés antes de sumar complejidad.",
-    bl_aa: "Con procesos todavía poco sistematizados, buscan repensar cómo trabajan estructuralmente.",
+    bl_aa: "Con procesos todavía poco sistematizados, buscan transformar cómo trabajan estructuralmente.",
     al_ba: "Con sistemas ya integrados, el foco natural está en optimizar lo que ya tenés antes de sumar complejidad.",
-    al_aa: "Con sistemas ya integrados, buscan repensar cómo trabajan estructuralmente."
-  };
-  const microInsight = {
-    tl: "Baja digitalización + Alta ambición",
-    tr: "Alta digitalización + Alta ambición",
-    bl: "Baja digitalización + Baja ambición",
-    br: "Alta digitalización + Baja ambición"
+    al_aa: "Con sistemas ya integrados, buscan transformar cómo trabajan estructuralmente."
   };
   const quadToBloqueA = { tl: 'bl_aa', tr: 'al_aa', bl: 'bl_ba', br: 'al_ba' };
+
+  const categoriaNombre = {
+    C1: "rediseñar procesos",
+    C2: "innovar y crear algo nuevo",
+    C3: "decidir con mejores datos",
+    C4: "gestionar un cambio organizacional",
+    C5: "explorar sin un foco definido todavía"
+  };
 
   const bloqueB = {
     C1: "un buen punto de partida para encarar el rediseño de procesos. ¿Te interesaría explorarlo?",
@@ -337,32 +378,30 @@
     else key = 'br';
 
     state.cuadrante = key;
-    insightTextP1.textContent = microInsight[key];
+    insightTextP1.textContent = bloqueA[quadToBloqueA[key]];
     setTimeout(() => insightBox.classList.add('visible'), 150);
     btnNext.disabled = false;
     trackEvent('quiz_paso1_click', { cuadrante: key });
   });
 
-  // ---- PASO 2: cards ----
-  document.querySelectorAll('.cardq').forEach(card => {
-    card.addEventListener('click', () => {
-      document.querySelectorAll('.cardq').forEach(c => c.classList.remove('selected'));
-      card.classList.add('selected');
-      state.categoria = card.dataset.cat;
-      btnNext.disabled = false;
-      trackEvent('quiz_paso2_seleccion', { categoria: state.categoria });
-    });
-  });
+  // ---- PASO 2: SmartArt ----
+  function selectCard(el) {
+    document.querySelectorAll('.bar-sa').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    state.categoria = el.dataset.cat;
+    btnNext.disabled = false;
+    trackEvent('quiz_paso2_seleccion', { categoria: state.categoria });
+  }
 
   // ---- PASO 3: insight final + form ----
-  const insightFinalText = document.getElementById('insightFinalText');
   document.getElementById('slide3').addEventListener('transitionstart', renderFinalInsight);
 
   function renderFinalInsight() {
     if (!state.cuadrante || !state.categoria) return;
-    const a = bloqueA[quadToBloqueA[state.cuadrante]];
+    document.getElementById('insightFinalDigital').textContent = bloqueA[quadToBloqueA[state.cuadrante]];
+    document.getElementById('insightFinalObjetivo').textContent = categoriaNombre[state.categoria] + '.';
     const b = bloqueB[state.categoria];
-    insightFinalText.textContent = a + ' ' + b.charAt(0).toUpperCase() + b.slice(1);
+    document.getElementById('insightFinalPropuesta').textContent = b.charAt(0).toUpperCase() + b.slice(1);
   }
 
   // Render también al llegar al paso 3 vía flecha
