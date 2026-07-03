@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VertexSur — Diagnóstico</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --indigo: #0C0E1A;
+    --verde: #6B8C6B;
+    --verde-light: #A8C5A8;
+    --claro: #F0F4F0;
+    --bg-claro: #F7F8F5;
+    --bg-chart: #FFFFFF;
+    --muted-dark: #6B7280;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--indigo);
+    color: var(--claro);
+    display: flex; flex-direction: column;
+  }
+
+  /* Indicador de pasos */
+  .steps-indicator {
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; padding: 18px 20px 0;
+    flex-shrink: 0;
+  }
+  .step-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 700;
+    background: rgba(255,255,255,0.08); color: var(--muted-dark);
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: all 0.3s ease;
+  }
+  .step-dot.active { background: var(--verde-light); color: var(--indigo); border-color: var(--verde-light); }
+  .step-dot.done { background: rgba(168,197,168,0.3); color: var(--verde-light); border-color: rgba(168,197,168,0.4); }
+  .step-line { width: 36px; height: 1px; background: rgba(255,255,255,0.15); }
+  .step-line.done { background: var(--verde-light); }
+
+  /* Carrusel */
+  .carousel { flex: 1; position: relative; overflow: hidden; }
+  .slide {
+    position: absolute; inset: 0;
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    padding: 20px;
+    opacity: 0; transition: opacity 0.3s ease;
+  }
+  .slide.active { display: flex; opacity: 1; }
+
+  /* Flechas de navegación */
+  .nav-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    color: var(--claro); font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, opacity 0.2s;
+    z-index: 10;
+  }
+  .nav-arrow:hover { background: rgba(168,197,168,0.25); }
+  .nav-arrow:disabled { opacity: 0.25; cursor: not-allowed; }
+  .nav-prev { left: 16px; }
+  .nav-next { right: 16px; }
+
+  /* PASO 1 */
+  #slide1 { padding: 0; }
+  .hero-dark { width: 100%; text-align: center; padding: 14px 20px 10px; flex-shrink: 0; }
+  h1.step-title { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 4px; }
+  .step-subtitulo { color: #B8C0D4; font-size: 13px; max-width: 420px; margin: 0 auto; }
+
+  .light-section { width: 100%; flex: 1; background: var(--bg-claro); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 14px 20px; overflow: hidden; }
+
+  .chart-frame { background: var(--bg-chart); border: 1px solid rgba(107,140,107,0.25); border-radius: 16px; padding: 30px 34px 26px; box-shadow: 0 4px 20px rgba(12,14,26,0.06); }
+  .quadrant-wrap { position: relative; width: 250px; aspect-ratio: 1/1; }
+  .quadrant { width: 100%; height: 100%; background: #FBFCFA; border: 1px solid rgba(12,14,26,0.1); border-radius: 14px; position: relative; cursor: crosshair; overflow: hidden; }
+  .quad-bg { position: absolute; width: 50%; height: 50%; opacity: 0.35; }
+  .q-tl { top: 0; left: 0; background: #D8DCEF; }
+  .q-tr { top: 0; right: 0; background: #DCEBDC; }
+  .q-bl { bottom: 0; left: 0; background: #E3E7F5; }
+  .q-br { bottom: 0; right: 0; background: #D3E3D3; }
+  .axis-line { position: absolute; background: rgba(12,14,26,0.14); }
+  .axis-v { left: 50%; top: 0; width: 1px; height: 100%; }
+  .axis-h { top: 50%; left: 0; height: 1px; width: 100%; }
+
+  .axis-watermark { position: absolute; font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--verde); text-transform: uppercase; letter-spacing: 0.04em; opacity: 0.32; pointer-events: none; z-index: 1; font-size: 13px; white-space: nowrap; }
+  .wm-digital { top: 50%; left: 16%; transform: translate(-50%, -50%); }
+  .wm-ambicion { top: 16%; left: 50%; transform: translate(-50%, -50%) rotate(-90deg); }
+
+  .axis-sign { position: absolute; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 20px; color: var(--verde); opacity: 0.7; z-index: 2; }
+  .sign-h-minus { left: 6px; top: 50%; transform: translateY(-50%); }
+  .sign-h-plus { right: 6px; top: 50%; transform: translateY(-50%); }
+  .sign-v-minus { bottom: 6px; left: 50%; transform: translateX(-50%); }
+  .sign-v-plus { top: 6px; left: 50%; transform: translateX(-50%); }
+
+  .axis-label { position: absolute; text-align: center; line-height: 1.3; }
+  .axis-pole { font-size: 10px; color: var(--indigo); opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+  .label-top { top: -22px; left: 50%; transform: translateX(-50%); width: 200px; }
+  .label-bottom { bottom: -22px; left: 50%; transform: translateX(-50%); width: 200px; }
+  .label-left { left: -22px; top: 50%; transform: translateY(-50%) rotate(180deg); writing-mode: vertical-rl; width: 90px; text-align: center; }
+  .label-right { right: -22px; top: 50%; transform: translateY(-50%); writing-mode: vertical-rl; width: 90px; text-align: center; }
+
+  .marker { position: absolute; width: 14px; height: 14px; background: var(--verde); border: 3px solid #FFF; border-radius: 50%; transform: translate(-50%, -50%) scale(0); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); pointer-events: none; box-shadow: 0 0 0 5px rgba(107,140,107,0.18), 0 2px 6px rgba(12,14,26,0.15); }
+  .marker.visible { transform: translate(-50%, -50%) scale(1); }
+
+  .insight-box { margin-top: 16px; max-width: 380px; background: var(--bg-chart); border: 1px solid rgba(107,140,107,0.3); border-radius: 12px; padding: 12px 18px; box-shadow: 0 4px 16px rgba(12,14,26,0.05); opacity: 0; transform: translateY(8px); transition: opacity 0.4s ease, transform 0.4s ease; text-align: center; }
+  .insight-box.visible { opacity: 1; transform: translateY(0); }
+  .insight-text { font-size: 12.5px; line-height: 1.4; color: var(--indigo); }
+
+  /* PASO 2 */
+  #slide2 { background: var(--bg-claro); color: var(--indigo); }
+  .cards-title { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 6px; }
+  .cards-sub { font-size: 13px; color: var(--muted-dark); text-align: center; max-width: 440px; margin-bottom: 24px; }
+  .cards-grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; max-width: 480px; width: 100%; }
+  .cardq { background: #FFFFFF; border: 1.5px solid rgba(12,14,26,0.1); border-radius: 12px; padding: 14px 16px; cursor: pointer; transition: border-color 0.2s, background 0.2s; }
+  .cardq:hover { border-color: rgba(107,140,107,0.4); }
+  .cardq.selected { border-color: var(--verde); background: #F0F5F0; }
+  .cardq-title { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+  .cardq-desc { font-size: 11.5px; color: var(--muted-dark); line-height: 1.4; }
+  .cardq.wide { grid-column: 1 / -1; }
+
+  /* PASO 3 */
+  #slide3 { background: var(--bg-claro); color: var(--indigo); }
+  .insight-final { max-width: 460px; background: #FFFFFF; border: 1px solid rgba(107,140,107,0.3); border-radius: 14px; padding: 20px 24px; margin-bottom: 20px; text-align: center; box-shadow: 0 4px 20px rgba(12,14,26,0.05); }
+  .insight-final-text { font-size: 14px; line-height: 1.55; }
+  .form3 { display: flex; flex-direction: column; gap: 10px; max-width: 380px; width: 100%; }
+  .form3 input, .form3 textarea { font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 10px 12px; border: 1px solid rgba(12,14,26,0.15); border-radius: 8px; background: #FFFFFF; color: var(--indigo); }
+  .form3 textarea { resize: none; height: 50px; }
+  .form3 button { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 13px; padding: 10px; background: var(--verde); color: #FFF; border: none; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
+  .form3 button:hover { background: var(--verde-light); }
+  .form3-done { text-align: center; font-size: 14px; color: var(--verde); font-weight: 600; }
+
+  /* Cookie notice */
+  .cookie-notice { flex-shrink: 0; background: rgba(0,0,0,0.35); color: #C8CDDA; font-size: 10.5px; text-align: center; padding: 6px 14px; }
+
+  .mini-nav { position: absolute; top: 14px; left: 20px; z-index: 20; }
+  .mini-nav a { display: flex; align-items: center; gap: 7px; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 700; color: var(--claro); text-decoration: none; letter-spacing: -0.02em; }
+  .mini-nav a span { color: var(--verde-light); }
+</style>
+</head>
+<body>
+
+<div class="mini-nav">
+  <a href="index.html">
+    <svg width="18" height="18" viewBox="0 0 60 60" fill="none">
+      <polygon points="30,52 6,18 54,6" stroke="#A8C5A8" stroke-width="4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="30" cy="52" r="5" fill="#A8C5A8"/>
+    </svg>
+    Vertex<span>Sur</span>
+  </a>
+</div>
+
+<div class="steps-indicator">
+  <div class="step-dot active" id="dot1">1</div>
+  <div class="step-line" id="line1"></div>
+  <div class="step-dot" id="dot2">2</div>
+  <div class="step-line" id="line2"></div>
+  <div class="step-dot" id="dot3">3</div>
+</div>
+
+<div class="carousel">
+  <button class="nav-arrow nav-prev" id="btnPrev" disabled>←</button>
+  <button class="nav-arrow nav-next" id="btnNext" disabled>→</button>
+
+  <!-- SLIDE 1 -->
+  <div class="slide active" id="slide1">
+    <div class="hero-dark">
+      <h1 class="step-title">¿Dónde estás hoy?</h1>
+      <p class="step-subtitulo">Hacé clic en el punto del plano que mejor describe a tu empresa hoy.</p>
+    </div>
+    <div class="light-section">
+      <div class="chart-frame">
+        <div class="quadrant-wrap">
+          <div class="axis-label label-top"><div class="axis-pole">Repensar estructuralmente</div></div>
+          <div class="axis-label label-bottom"><div class="axis-pole">Optimizar lo que ya existe</div></div>
+          <div class="axis-label label-left"><div class="axis-pole">Poco sistematizado</div></div>
+          <div class="axis-label label-right"><div class="axis-pole">Sistemas integrados</div></div>
+          <div class="quadrant" id="quadrant">
+            <div class="quad-bg q-tl"></div>
+            <div class="quad-bg q-tr"></div>
+            <div class="quad-bg q-bl"></div>
+            <div class="quad-bg q-br"></div>
+            <div class="axis-line axis-v"></div>
+            <div class="axis-line axis-h"></div>
+            <div class="axis-watermark wm-digital">Digitalización</div>
+            <div class="axis-watermark wm-ambicion">Ambición</div>
+            <div class="axis-sign sign-h-minus">–</div>
+            <div class="axis-sign sign-h-plus">+</div>
+            <div class="axis-sign sign-v-minus">–</div>
+            <div class="axis-sign sign-v-plus">+</div>
+            <div class="marker" id="marker"></div>
+          </div>
+        </div>
+      </div>
+      <div class="insight-box" id="insightBox">
+        <div class="insight-text" id="insightTextP1"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2 -->
+  <div class="slide" id="slide2">
+    <div class="cards-title">¿Hacia dónde te gustaría moverte?</div>
+    <div class="cards-sub">Recorré las opciones e identificá qué está pasando hoy en tu organización — no hace falta tener el problema identificado.</div>
+    <div class="cards-grid2" id="cardsGrid">
+      <div class="cardq" data-cat="C1">
+        <div class="cardq-title">Rediseñar procesos</div>
+        <div class="cardq-desc">Cómo hacemos las cosas hoy podría ser más simple, más rápido, o más consistente.</div>
+      </div>
+      <div class="cardq" data-cat="C2">
+        <div class="cardq-title">Innovar / crear algo nuevo</div>
+        <div class="cardq-desc">Un producto, servicio, o forma de atender que todavía no existe.</div>
+      </div>
+      <div class="cardq" data-cat="C3">
+        <div class="cardq-title">Decidir con mejores datos</div>
+        <div class="cardq-desc">Tomamos decisiones con menos información de la que deberíamos.</div>
+      </div>
+      <div class="cardq" data-cat="C4">
+        <div class="cardq-title">Gestionar un cambio organizacional</div>
+        <div class="cardq-desc">El desafío es que las personas adopten algo nuevo, no la tecnología en sí.</div>
+      </div>
+      <div class="cardq wide" data-cat="C5">
+        <div class="cardq-title">Todavía no lo sé</div>
+        <div class="cardq-desc">Tengo ambición de cambio pero no tengo claro por dónde empezar.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3 -->
+  <div class="slide" id="slide3">
+    <div class="insight-final">
+      <div class="insight-final-text" id="insightFinalText"></div>
+    </div>
+    <form class="form3" id="form3">
+      <input type="text" placeholder="Nombre y apellido" required>
+      <input type="text" placeholder="Empresa" required>
+      <input type="email" placeholder="Mail" required>
+      <textarea placeholder="Comentario (opcional)"></textarea>
+      <button type="submit">Sigamos la conversación</button>
+    </form>
+    <div class="form3-done" id="form3Done" style="display:none;">¡Gracias! Te vamos a contactar pronto.</div>
+  </div>
+</div>
+
+<div class="cookie-notice">Este sitio usa cookies de análisis (Google Analytics) para entender cómo se usa. Al navegar, aceptás su uso.</div>
+
+<script>
+  // ---- stub de GA4: reemplazar por gtag() real al integrar ----
+  function trackEvent(name, params) {
+    console.log('[GA4 event]', name, params || {});
+    // gtag('event', name, params || {});
+  }
+
+  const state = { cuadrante: null, categoria: null };
+
+  const bloqueA = {
+    bl_ba: "Con procesos todavía poco sistematizados, el foco natural está en optimizar lo que ya tenés antes de sumar complejidad.",
+    bl_aa: "Con procesos todavía poco sistematizados, buscan repensar cómo trabajan estructuralmente.",
+    al_ba: "Con sistemas ya integrados, el foco natural está en optimizar lo que ya tenés antes de sumar complejidad.",
+    al_aa: "Con sistemas ya integrados, buscan repensar cómo trabajan estructuralmente."
+  };
+  const microInsight = {
+    tl: "Baja digitalización + Alta ambición",
+    tr: "Alta digitalización + Alta ambición",
+    bl: "Baja digitalización + Baja ambición",
+    br: "Alta digitalización + Baja ambición"
+  };
+  const quadToBloqueA = { tl: 'bl_aa', tr: 'al_aa', bl: 'bl_ba', br: 'al_ba' };
+
+  const bloqueB = {
+    C1: "un buen punto de partida para encarar el rediseño de procesos. ¿Te interesaría explorarlo?",
+    C2: "terreno fértil para entender mejor la experiencia de tus clientes y prototipar algo nuevo a partir de ahí.",
+    C3: "el siguiente paso es convertir los datos que ya generás en pronósticos y luego decisiones.",
+    C4: "el paso siguiente es diseñar en conjunto el plan de change management.",
+    C5: "buen punto de partida para explorarlo juntos, sin apurar una respuesta."
+  };
+
+  // ---- Navegación carrusel ----
+  const slides = [1,2,3];
+  let current = 1;
+  const dots = { 1: document.getElementById('dot1'), 2: document.getElementById('dot2'), 3: document.getElementById('dot3') };
+  const lines = { 1: document.getElementById('line1'), 2: document.getElementById('line2') };
+  const btnPrev = document.getElementById('btnPrev');
+  const btnNext = document.getElementById('btnNext');
+
+  function canAdvance(step) {
+    if (step === 1) return !!state.cuadrante;
+    if (step === 2) return !!state.categoria;
+    return false;
+  }
+
+  function goTo(step) {
+    document.getElementById('slide' + current).classList.remove('active');
+    current = step;
+    document.getElementById('slide' + current).classList.add('active');
+
+    slides.forEach(s => {
+      dots[s].classList.remove('active', 'done');
+      if (s < current) dots[s].classList.add('done');
+      else if (s === current) dots[s].classList.add('active');
+    });
+    [1,2].forEach(l => lines[l].classList.toggle('done', current > l));
+
+    btnPrev.disabled = current === 1;
+    btnNext.disabled = !canAdvance(current);
+
+    trackEvent('quiz_paso_view', { paso: current });
+  }
+
+  btnPrev.addEventListener('click', () => { if (current > 1) goTo(current - 1); });
+  btnNext.addEventListener('click', () => { if (canAdvance(current) && current < 3) goTo(current + 1); });
+
+  // ---- PASO 1: cuadrante ----
+  const quadrant = document.getElementById('quadrant');
+  const marker = document.getElementById('marker');
+  const insightBox = document.getElementById('insightBox');
+  const insightTextP1 = document.getElementById('insightTextP1');
+
+  quadrant.addEventListener('click', (e) => {
+    const rect = quadrant.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    marker.style.left = x + 'px';
+    marker.style.top = y + 'px';
+    marker.classList.add('visible');
+
+    const half = rect.width / 2;
+    let key;
+    if (x < half && y < half) key = 'tl';
+    else if (x >= half && y < half) key = 'tr';
+    else if (x < half && y >= half) key = 'bl';
+    else key = 'br';
+
+    state.cuadrante = key;
+    insightTextP1.textContent = microInsight[key];
+    setTimeout(() => insightBox.classList.add('visible'), 150);
+    btnNext.disabled = false;
+    trackEvent('quiz_paso1_click', { cuadrante: key });
+  });
+
+  // ---- PASO 2: cards ----
+  document.querySelectorAll('.cardq').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.cardq').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      state.categoria = card.dataset.cat;
+      btnNext.disabled = false;
+      trackEvent('quiz_paso2_seleccion', { categoria: state.categoria });
+    });
+  });
+
+  // ---- PASO 3: insight final + form ----
+  const insightFinalText = document.getElementById('insightFinalText');
+  document.getElementById('slide3').addEventListener('transitionstart', renderFinalInsight);
+
+  function renderFinalInsight() {
+    if (!state.cuadrante || !state.categoria) return;
+    const a = bloqueA[quadToBloqueA[state.cuadrante]];
+    const b = bloqueB[state.categoria];
+    insightFinalText.textContent = a + ' ' + b.charAt(0).toUpperCase() + b.slice(1);
+  }
+
+  // Render también al llegar al paso 3 vía flecha
+  const observer = new MutationObserver(() => {
+    if (document.getElementById('slide3').classList.contains('active')) renderFinalInsight();
+  });
+  observer.observe(document.getElementById('slide3'), { attributes: true, attributeFilter: ['class'] });
+
+  document.getElementById('form3').addEventListener('submit', (e) => {
+    e.preventDefault();
+    trackEvent('quiz_paso3_contacto_enviado', { cuadrante: state.cuadrante, categoria: state.categoria });
+    document.getElementById('form3').style.display = 'none';
+    document.getElementById('form3Done').style.display = 'block';
+  });
+</script>
+
+</body>
+</html>

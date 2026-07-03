@@ -142,6 +142,37 @@
     .subtitulo { font-size: 15px; }
     .cards-grid { grid-template-columns: 1fr; gap: 10px; }
   }
+
+  /* Botón flotante — diagnóstico */
+  .quiz-fab {
+    position: fixed; bottom: 28px; right: 28px; z-index: 50;
+    display: flex; align-items: center;
+    height: 52px; padding: 0 16px 0 0;
+    background: var(--bg2); border: 1px solid rgba(168,197,168,0.3);
+    border-radius: 26px;
+    text-decoration: none; color: var(--claro);
+    overflow: hidden;
+    width: 52px;
+    transition: width 0.35s ease, opacity 0.4s ease, transform 0.4s ease;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+    opacity: 0; transform: translateY(12px);
+  }
+  .quiz-fab.visible { opacity: 1; transform: translateY(0); }
+  .quiz-fab:hover { width: 210px; }
+  .quiz-fab-icon {
+    flex-shrink: 0; width: 52px; height: 52px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .quiz-fab-text {
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+    white-space: nowrap; opacity: 0; transition: opacity 0.25s ease 0.1s;
+  }
+  .quiz-fab:hover .quiz-fab-text { opacity: 1; }
+  .quiz-fab.pulse .quiz-fab-icon svg { animation: fabPulse 2.4s ease-in-out infinite; }
+  @keyframes fabPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+  }
 </style>
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-T9LPLE99YX"></script>
@@ -333,6 +364,24 @@
   }
 
   window.addEventListener('load', () => setTimeout(ciclo, 600));
+</script>
+
+<a href="diagnostico.html" class="quiz-fab" id="quizFab">
+  <span class="quiz-fab-icon">
+    <svg width="20" height="20" viewBox="0 0 60 60" fill="none">
+      <polygon points="30,52 6,18 54,6" stroke="#A8C5A8" stroke-width="4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="30" cy="52" r="5" fill="#A8C5A8"/>
+    </svg>
+  </span>
+  <span class="quiz-fab-text">¿Dónde estás hoy?</span>
+</a>
+
+<script>
+  setTimeout(() => {
+    const fab = document.getElementById('quizFab');
+    fab.classList.add('visible');
+    setTimeout(() => fab.classList.add('pulse'), 400);
+  }, 2500);
 </script>
 
 </body>
