@@ -386,7 +386,7 @@
 </div>
 
 <div style="display:flex;gap:16px;justify-content:center;margin-bottom:4px"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')">Instrucciones</div></div>
-<div class="version">v1.4-db</div>
+<div class="version">v1.5-db</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -747,15 +747,17 @@ function abrirMapa(e) {
   let url;
   if (isMobile) {
     const waypointList = activas.map(f => {
+      if (f.direccion) return encodeURIComponent(f.direccion + ", CABA, Argentina");
       if (f.lat && f.lng) return `${f.lat},${f.lng}`;
-      return encodeURIComponent((f.direccion || "") + ", CABA, Argentina");
-    });
+      return '';
+    }).filter(Boolean);
     url = `https://maps.google.com/maps/dir/?api=1&waypoints=${waypointList.join("|")}&travelmode=driving`;
   } else {
     const waypoints = activas.map(f => {
+      if (f.direccion) return encodeURIComponent(f.direccion + ", CABA, Argentina");
       if (f.lat && f.lng) return `${f.lat},${f.lng}`;
-      return encodeURIComponent((f.direccion || "") + ", CABA, Argentina");
-    }).join("/");
+      return '';
+    }).filter(Boolean).join("/");
     url = `https://www.google.com/maps/dir/${waypoints}`;
   }
   window.open(url, "_blank");
