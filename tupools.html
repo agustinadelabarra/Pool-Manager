@@ -50,12 +50,12 @@
   .familia-fields input { width: 100%; padding: 10px 12px; border: 1.5px solid var(--borde); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--texto); background: var(--blanco); outline: none; transition: border-color 0.2s; }
   .familia-fields input:focus { border-color: var(--azul); }
   .familia-fields input::placeholder { color: #AAB8B2; }
-  .dir-row { display: flex; gap: 8px; align-items: center; }
+  .dir-row { display: flex; gap: 8px; align-items: flex-end; }
   .dir-row input { flex: 1; }
   .btn-maps { padding: 10px 12px; background: var(--verde-light); border: 1.5px solid var(--verde); border-radius: 10px; color: var(--verde-dark); font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s; font-family: 'DM Sans', sans-serif; height: 42px; }
   .btn-maps:hover { background: var(--verde); color: var(--blanco); }
-  .maps-col { display: flex; flex-direction: column; align-items: center; gap: 3px; }
-  .maps-label { font-size: 10px; font-weight: 700; color: var(--verde-dark); text-transform: uppercase; letter-spacing: 0.04em; }
+  .maps-col { display: flex; flex-direction: column; align-items: center; gap: 3px; flex-shrink: 0; }
+  .maps-label { font-size: 10px; font-weight: 700; color: var(--verde-dark); text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
 
   /* Excepciones */
   .excepcion-item { border: 1.5px solid var(--borde); border-radius: 12px; padding: 12px; margin-bottom: 8px; background: var(--fondo); }
@@ -135,8 +135,8 @@
       <div class="field">
         <label>Origen / Destino</label>
         <div class="dir-row">
-          <input type="text" id="destino" placeholder="Ej: Círculo Policial, Núñez">
-          <div class="maps-col"><span class="maps-label">Validar</span><button class="btn-maps" onclick="buscarDestino()"><img src="maps-icon.png" width="18" height="18" style="vertical-align:middle"></button></div>
+          <input type="text" id="destino" placeholder="Ej: Círculo Policial, Núñez" onblur="buscarNominatimDestino()">
+          <div class="maps-col"><span class="maps-label">Ver en mapa</span><button type="button" class="btn-maps" onclick="verEnMapaDestino()"><img src="maps-icon.png" width="18" height="18" style="vertical-align:middle"></button></div>
         </div>
         <div class="coords-tag" id="destino-coords"></div>
       </div>
@@ -180,7 +180,7 @@
     <div class="warning-box" id="warningBox"></div>
     <button class="btn-crear" id="btnAccion" onclick="crearPool()">Crear TuPool →</button>
     <div style="display:flex;gap:16px;justify-content:center"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')">Instrucciones</div></div>
-    <div class="version">v0.16</div>
+    <div class="version">v0.18</div>
   </div>
 </div>
 
@@ -193,7 +193,7 @@
   </div>
   <button class="btn-copiar" id="btnCopiar" onclick="copiarLink()">📋 Copiar link para compartir</button>
   <div style="display:flex;gap:16px;justify-content:center"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')">Instrucciones</div></div>
-  <div class="version">v0.16</div>
+  <div class="version">v0.18</div>
 </div>
 
 <div class="modal-overlay" id="modalPrivacidad">
@@ -438,8 +438,8 @@ function renderFamilias() {
           oninput="familias.find(x=>x.id==='${f.id}').nombre=this.value">
         <div class="dir-row">
           <input type="text" placeholder="Dirección" value="${esc(f.direccion)}" id="dir-${f.id}"
-            oninput="familias.find(x=>x.id==='${f.id}').direccion=this.value">
-          <div class="maps-col"><span class="maps-label">Validar</span><button class="btn-maps" onclick="buscarDireccionFamilia('${f.id}')"><img src="maps-icon.png" width="18" height="18" style="vertical-align:middle"></button></div>
+            oninput="familias.find(x=>x.id==='${f.id}').direccion=this.value" onblur="buscarNominatimFamilia('${f.id}')">
+          <div class="maps-col"><span class="maps-label">Ver en mapa</span><button type="button" class="btn-maps" onclick="verEnMapaFamilia('${f.id}')"><img src="maps-icon.png" width="18" height="18" style="vertical-align:middle"></button></div>
         </div>
         <div class="coords-tag ${f.lat ? 'visible' : ''}" id="coords-${f.id}">
           ${f.lat ? `📍 ${f.lat.toFixed(4)}, ${f.lng.toFixed(4)}` : ''}
@@ -451,29 +451,34 @@ function renderFamilias() {
   });
 }
 
-async function buscarDestino() {
+function verEnMapaDestino() {
   const direccion = document.getElementById('destino').value.trim();
   if (!direccion) { alert('Ingresá el destino primero.'); return; }
   const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(direccion + ', Buenos Aires, Argentina')}`;
   window.open(url, '_blank');
+}
 
-  destinoConfirmado = null;
+async function buscarNominatimDestino() {
+  const direccion = document.getElementById('destino').value.trim();
   const tag = document.getElementById('destino-coords');
+  if (!direccion) { tag.classList.remove('visible'); return; }
+  destinoConfirmado = null;
   tag.classList.add('visible');
   tag.innerHTML = 'Buscando dirección…';
-  const r = await geocodificar(direccion);
-  if (!r.lat) {
+  const candidatos = await geocodificarCandidatos(direccion);
+  if (candidatos.length === 0) {
     tag.innerHTML = '⚠️ No pudimos encontrar esta dirección. Podés guardar igual, sin coordenadas.';
     return;
   }
-  tag.innerHTML = `📍 Encontramos: <b>${esc(r.display)}</b><br>
-    <button type="button" class="btn-confirmar-si" onclick='confirmarDestino(${r.lat},${r.lng})'>Sí, es correcta</button>
-    <button type="button" class="btn-confirmar-no" onclick="document.getElementById('destino-coords').classList.remove('visible')">No, la ajusto</button>`;
+  tag.innerHTML = '<b>Elegí la dirección correcta:</b><br>' +
+    candidatos.map((c, i) => `
+      <label style="display:block;margin:4px 0;font-weight:400;">
+        <input type="radio" name="destino-opcion" onclick='confirmarDestino(${c.lat},${c.lng})'> ${esc(c.display)}
+      </label>`).join('');
 }
 
 function confirmarDestino(lat, lng) {
   destinoConfirmado = { lat, lng };
-  document.getElementById('destino-coords').innerHTML = '✅ Dirección confirmada';
 }
 
 async function geocodificar(direccion) {
@@ -486,31 +491,45 @@ async function geocodificar(direccion) {
   return { lat: null, lng: null, display: null };
 }
 
-async function buscarDireccionFamilia(id) {
+async function geocodificarCandidatos(direccion, limit = 5) {
+  try {
+    const query = encodeURIComponent(direccion + ', Buenos Aires, Argentina');
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=${limit}`);
+    const data = await res.json();
+    return data.map(d => ({ lat: parseFloat(d.lat), lng: parseFloat(d.lon), display: d.display_name }));
+  } catch(e) { console.warn('Geocoding fallido:', e); return []; }
+}
+
+function verEnMapaFamilia(id) {
   const dir = document.getElementById(`dir-${id}`).value.trim();
   if (!dir) { alert('Ingresá la dirección primero.'); return; }
   const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dir + ', Buenos Aires, Argentina')}`;
   window.open(url, '_blank');
+}
 
-  const f = familias.find(x => x.id === id);
-  f.confirmada = false;
+async function buscarNominatimFamilia(id) {
+  const dir = document.getElementById(`dir-${id}`).value.trim();
   const tag = document.getElementById(`confirm-${id}`);
+  const f = familias.find(x => x.id === id);
+  if (!dir) { tag.classList.remove('visible'); return; }
+  f.confirmada = false;
   tag.classList.add('visible');
   tag.innerHTML = 'Buscando dirección…';
-  const r = await geocodificar(dir);
-  if (!r.lat) {
+  const candidatos = await geocodificarCandidatos(dir);
+  if (candidatos.length === 0) {
     tag.innerHTML = '⚠️ No pudimos encontrar esta dirección. Podés guardar igual, sin coordenadas.';
     return;
   }
-  tag.innerHTML = `📍 Encontramos: <b>${esc(r.display)}</b><br>
-    <button type="button" class="btn-confirmar-si" onclick='confirmarFamilia("${id}",${r.lat},${r.lng})'>Sí, es correcta</button>
-    <button type="button" class="btn-confirmar-no" onclick="document.getElementById('confirm-${id}').classList.remove('visible')">No, la ajusto</button>`;
+  tag.innerHTML = '<b>Elegí la dirección correcta:</b><br>' +
+    candidatos.map((c, i) => `
+      <label style="display:block;margin:4px 0;font-weight:400;">
+        <input type="radio" name="familia-opcion-${id}" onclick='confirmarFamilia("${id}",${c.lat},${c.lng})'> ${esc(c.display)}
+      </label>`).join('');
 }
 
 function confirmarFamilia(id, lat, lng) {
   const f = familias.find(x => x.id === id);
   f.lat = lat; f.lng = lng; f.confirmada = true;
-  document.getElementById(`confirm-${id}`).innerHTML = '✅ Dirección confirmada';
 }
 
 async function crearPool() {
