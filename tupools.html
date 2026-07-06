@@ -70,6 +70,9 @@
   .warning-box.visible { display: block; }
   .coords-tag { font-size: 11px; color: var(--verde-dark); background: var(--verde-light); padding: 4px 8px; border-radius: 6px; margin-top: 4px; display: none; }
   .coords-tag.visible { display: block; }
+  .btn-confirmar-si, .btn-confirmar-no { margin-top: 6px; margin-right: 6px; padding: 6px 10px; border-radius: 8px; border: none; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; }
+  .btn-confirmar-si { background: var(--verde); color: white; }
+  .btn-confirmar-no { background: #eee; color: var(--texto-soft); }
 
   .btn-agregar { width: 100%; padding: 12px; background: var(--blanco); border: 1.5px dashed var(--azul); border-radius: 12px; color: var(--azul); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-top: 10px; }
   .btn-agregar:hover { background: var(--azul-light); }
@@ -177,7 +180,7 @@
     <div class="warning-box" id="warningBox"></div>
     <button class="btn-crear" id="btnAccion" onclick="crearPool()">Crear TuPool →</button>
     <div style="display:flex;gap:16px;justify-content:center"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')">Instrucciones</div></div>
-    <div class="version">v0.14</div>
+    <div class="version">v0.15</div>
   </div>
 </div>
 
@@ -190,7 +193,7 @@
   </div>
   <button class="btn-copiar" id="btnCopiar" onclick="copiarLink()">📋 Copiar link para compartir</button>
   <div style="display:flex;gap:16px;justify-content:center"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')">Instrucciones</div></div>
-  <div class="version">v0.14</div>
+  <div class="version">v0.15</div>
 </div>
 
 <div class="modal-overlay" id="modalPrivacidad">
@@ -209,6 +212,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 let familias = [];
 let linkGenerado = '';
+let destinoConfirmado = null; // { lat, lng } solo si el usuario confirmó
 
 // ── MODO EDICIÓN ─────────────────────────────────────────────────
 const params = new URLSearchParams(window.location.search);
@@ -369,17 +373,17 @@ async function guardarEdicion() {
   }
 
   try {
-    const destinoCoords = await geocodificar(destino);
     await sbPatch('pools', `id=eq.${encodeURIComponent(poolIdEdit)}`, {
-      nombre, destino, dias: dias.join(','), tipo_viaje: tipoViaje, lat: destinoCoords.lat, lng: destinoCoords.lng
+      nombre, destino, dias: dias.join(','), tipo_viaje: tipoViaje,
+      ...(destinoConfirmado ? { lat: destinoConfirmado.lat, lng: destinoConfirmado.lng } : {})
     });
 
     for (const f of familias) {
-      const famCoords = f.direccion ? await geocodificar(f.direccion) : { lat: null, lng: null };
+      const coords = f.confirmada ? { lat: f.lat, lng: f.lng } : { lat: f.lat ?? null, lng: f.lng ?? null };
       if (f.esNueva) {
-        await sbPost('participantes', { pool_id: poolIdEdit, nombre: f.nombre.trim(), direccion: f.direccion.trim() || null, lat: famCoords.lat, lng: famCoords.lng, activa: true });
+        await sbPost('participantes', { pool_id: poolIdEdit, nombre: f.nombre.trim(), direccion: f.direccion.trim() || null, lat: coords.lat, lng: coords.lng, activa: true });
       } else {
-        await sbPatch('participantes', `id=eq.${f.id}`, { nombre: f.nombre.trim(), direccion: f.direccion.trim() || null, lat: famCoords.lat, lng: famCoords.lng });
+        await sbPatch('participantes', `id=eq.${f.id}`, { nombre: f.nombre.trim(), direccion: f.direccion.trim() || null, ...(f.confirmada ? { lat: coords.lat, lng: coords.lng } : {}) });
       }
     }
     for (const id of familiasEliminadas) {
@@ -407,7 +411,7 @@ async function guardarEdicion() {
 
 function agregarFamilia() {
   const id = Date.now();
-  familias.push({ id, nombre: '', direccion: '', lat: null, lng: null, esNueva: true });
+  familias.push({ id, nombre: '', direccion: '', lat: null, lng: null, confirmada: false, esNueva: true });
   renderFamilias();
 }
 
@@ -440,17 +444,36 @@ function renderFamilias() {
         <div class="coords-tag ${f.lat ? 'visible' : ''}" id="coords-${f.id}">
           ${f.lat ? `📍 ${f.lat.toFixed(4)}, ${f.lng.toFixed(4)}` : ''}
         </div>
+        <div class="coords-tag" id="confirm-${f.id}"></div>
       </div>
     `;
     lista.appendChild(div);
   });
 }
 
-function buscarDestino() {
+async function buscarDestino() {
   const direccion = document.getElementById('destino').value.trim();
   if (!direccion) { alert('Ingresá el destino primero.'); return; }
   const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(direccion + ', Buenos Aires, Argentina')}`;
   window.open(url, '_blank');
+
+  destinoConfirmado = null;
+  const tag = document.getElementById('destino-coords');
+  tag.classList.add('visible');
+  tag.innerHTML = 'Buscando dirección…';
+  const r = await geocodificar(direccion);
+  if (!r.lat) {
+    tag.innerHTML = '⚠️ No pudimos encontrar esta dirección. Podés guardar igual, sin coordenadas.';
+    return;
+  }
+  tag.innerHTML = `📍 Encontramos: <b>${esc(r.display)}</b><br>
+    <button type="button" class="btn-confirmar-si" onclick='confirmarDestino(${r.lat},${r.lng})'>Sí, es correcta</button>
+    <button type="button" class="btn-confirmar-no" onclick="document.getElementById('destino-coords').classList.remove('visible')">No, la ajusto</button>`;
+}
+
+function confirmarDestino(lat, lng) {
+  destinoConfirmado = { lat, lng };
+  document.getElementById('destino-coords').innerHTML = '✅ Dirección confirmada';
 }
 
 async function geocodificar(direccion) {
@@ -458,16 +481,36 @@ async function geocodificar(direccion) {
     const query = encodeURIComponent(direccion + ', Buenos Aires, Argentina');
     const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`);
     const data = await res.json();
-    if (data.length > 0) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+    if (data.length > 0) return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), display: data[0].display_name };
   } catch(e) { console.warn('Geocoding fallido:', e); }
-  return { lat: null, lng: null };
+  return { lat: null, lng: null, display: null };
 }
 
-function buscarDireccionFamilia(id) {
+async function buscarDireccionFamilia(id) {
   const dir = document.getElementById(`dir-${id}`).value.trim();
   if (!dir) { alert('Ingresá la dirección primero.'); return; }
   const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dir + ', Buenos Aires, Argentina')}`;
   window.open(url, '_blank');
+
+  const f = familias.find(x => x.id === id);
+  f.confirmada = false;
+  const tag = document.getElementById(`confirm-${id}`);
+  tag.classList.add('visible');
+  tag.innerHTML = 'Buscando dirección…';
+  const r = await geocodificar(dir);
+  if (!r.lat) {
+    tag.innerHTML = '⚠️ No pudimos encontrar esta dirección. Podés guardar igual, sin coordenadas.';
+    return;
+  }
+  tag.innerHTML = `📍 Encontramos: <b>${esc(r.display)}</b><br>
+    <button type="button" class="btn-confirmar-si" onclick='confirmarFamilia(${id},${r.lat},${r.lng})'>Sí, es correcta</button>
+    <button type="button" class="btn-confirmar-no" onclick="document.getElementById('confirm-${id}').classList.remove('visible')">No, la ajusto</button>`;
+}
+
+function confirmarFamilia(id, lat, lng) {
+  const f = familias.find(x => x.id === id);
+  f.lat = lat; f.lng = lng; f.confirmada = true;
+  document.getElementById(`confirm-${id}`).innerHTML = '✅ Dirección confirmada';
 }
 
 async function crearPool() {
@@ -485,25 +528,21 @@ async function crearPool() {
   const token = generarToken();
   const poolId = 'pool-' + token;
 
-  // Geocoding del destino
-  const destinoCoords = await geocodificar(destino);
-
   try {
     const resPool = await fetch(`${SUPABASE_URL}/rest/v1/pools`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Prefer': 'return=representation' },
-      body: JSON.stringify({ id: poolId, key: poolId, nombre, destino, dias: dias.join(','), tipo_viaje: tipoViaje, link_token: token, lat: destinoCoords.lat, lng: destinoCoords.lng })
+      body: JSON.stringify({ id: poolId, key: poolId, nombre, destino, dias: dias.join(','), tipo_viaje: tipoViaje, link_token: token, lat: destinoConfirmado ? destinoConfirmado.lat : null, lng: destinoConfirmado ? destinoConfirmado.lng : null })
     });
     if (!resPool.ok) throw new Error(await resPool.text());
     const poolData = await resPool.json();
     const poolIdReturned = poolData[0].id;
 
     for (const f of familias) {
-      const famCoords = f.direccion ? await geocodificar(f.direccion) : { lat: null, lng: null };
       await fetch(`${SUPABASE_URL}/rest/v1/participantes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` },
-        body: JSON.stringify({ pool_id: poolIdReturned, nombre: f.nombre.trim(), direccion: f.direccion.trim() || null, lat: famCoords.lat, lng: famCoords.lng, activa: true })
+        body: JSON.stringify({ pool_id: poolIdReturned, nombre: f.nombre.trim(), direccion: f.direccion.trim() || null, lat: f.confirmada ? f.lat : null, lng: f.confirmada ? f.lng : null, activa: true })
       });
     }
 
