@@ -180,7 +180,7 @@
     <div class="warning-box" id="warningBox"></div>
     <button class="btn-crear" id="btnAccion" onclick="crearPool()">Crear TuPool →</button>
     <div style="display:flex;gap:16px;justify-content:center"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')">Instrucciones</div></div>
-    <div class="version">v0.19-debug</div>
+    <div class="version">v0.19</div>
   </div>
 </div>
 
@@ -193,7 +193,7 @@
   </div>
   <button class="btn-copiar" id="btnCopiar" onclick="copiarLink()">📋 Copiar link para compartir</button>
   <div style="display:flex;gap:16px;justify-content:center"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')">Instrucciones</div></div>
-  <div class="version">v0.19-debug</div>
+  <div class="version">v0.19</div>
 </div>
 
 <div class="modal-overlay" id="modalPrivacidad">
@@ -242,7 +242,7 @@ async function sbGet(table, qs = '') {
 async function sbPatch(table, filter, body) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${filter}`, {
     method: 'PATCH',
-    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
     body: JSON.stringify(body)
   });
   if (!res.ok) {
@@ -250,9 +250,6 @@ async function sbPatch(table, filter, body) {
     console.error(`Detalle Supabase (${table}):`, detalle);
     throw new Error(`Error ${res.status} al actualizar ${table}: ${detalle}`);
   }
-  const data = await res.json();
-  console.log(`PATCH ${table} (filtro: ${filter}) → filas afectadas:`, data.length, data);
-  if (data.length === 0) console.warn(`⚠️ El filtro "${filter}" no matcheó ninguna fila en ${table}. Revisar el id.`);
 }
 
 async function sbPost(table, body) {
