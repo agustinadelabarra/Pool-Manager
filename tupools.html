@@ -177,7 +177,7 @@
     <div class="warning-box" id="warningBox"></div>
     <button class="btn-crear" id="btnAccion" onclick="crearPool()">Crear TuPool →</button>
     <div style="display:flex;gap:16px;justify-content:center"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')">Instrucciones</div></div>
-    <div class="version">v0.11</div>
+    <div class="version">v0.14</div>
   </div>
 </div>
 
@@ -190,7 +190,7 @@
   </div>
   <button class="btn-copiar" id="btnCopiar" onclick="copiarLink()">📋 Copiar link para compartir</button>
   <div style="display:flex;gap:16px;justify-content:center"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')">Instrucciones</div></div>
-  <div class="version">v0.11</div>
+  <div class="version">v0.14</div>
 </div>
 
 <div class="modal-overlay" id="modalPrivacidad">
@@ -223,6 +223,10 @@ let originalDias = [];
 
 function generarToken() { return Math.random().toString(36).substring(2,10) + Math.random().toString(36).substring(2,10); }
 
+function esc(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
 async function sbGet(table, qs = '') {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}${qs}`, {
     headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
@@ -237,7 +241,11 @@ async function sbPatch(table, filter, body) {
     headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
     body: JSON.stringify(body)
   });
-  if (!res.ok) throw new Error(`Error ${res.status} al actualizar ${table}`);
+  if (!res.ok) {
+    const detalle = await res.text();
+    console.error(`Detalle Supabase (${table}):`, detalle);
+    throw new Error(`Error ${res.status} al actualizar ${table}: ${detalle}`);
+  }
 }
 
 async function sbPost(table, body) {
@@ -323,8 +331,8 @@ function renderExcepciones() {
         </select>
         <button class="btn-quitar" onclick="quitarExcepcion(${i})">×</button>
       </div>
-      <input type="text" placeholder="Motivo (ej: feriado)" value="${e.motivo}" oninput="excepciones[${i}].motivo=this.value" style="width:100%;margin-bottom:6px;padding:8px 10px;border:1.5px solid var(--borde);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;background:var(--blanco)">
-      <input type="text" placeholder="Nota adicional" value="${e.nota}" oninput="excepciones[${i}].nota=this.value" style="width:100%;padding:8px 10px;border:1.5px solid var(--borde);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;background:var(--blanco)">
+      <input type="text" placeholder="Motivo (ej: feriado)" value="${esc(e.motivo)}" oninput="excepciones[${i}].motivo=this.value" style="width:100%;margin-bottom:6px;padding:8px 10px;border:1.5px solid var(--borde);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;background:var(--blanco)">
+      <input type="text" placeholder="Nota adicional" value="${esc(e.nota)}" oninput="excepciones[${i}].nota=this.value" style="width:100%;padding:8px 10px;border:1.5px solid var(--borde);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;background:var(--blanco)">
     `;
     lista.appendChild(div);
   });
@@ -422,10 +430,10 @@ function renderFamilias() {
         <button class="btn-quitar" onclick="quitarFamilia(${f.id})">×</button>
       </div>
       <div class="familia-fields">
-        <input type="text" placeholder="Nombre de la familia" value="${f.nombre}"
+        <input type="text" placeholder="Nombre de la familia" value="${esc(f.nombre)}"
           oninput="familias.find(x=>x.id===${f.id}).nombre=this.value">
         <div class="dir-row">
-          <input type="text" placeholder="Dirección" value="${f.direccion}" id="dir-${f.id}"
+          <input type="text" placeholder="Dirección" value="${esc(f.direccion)}" id="dir-${f.id}"
             oninput="familias.find(x=>x.id===${f.id}).direccion=this.value">
           <div class="maps-col"><span class="maps-label">Validar</span><button class="btn-maps" onclick="buscarDireccionFamilia(${f.id})"><img src="maps-icon.png" width="18" height="18" style="vertical-align:middle"></button></div>
         </div>
@@ -484,7 +492,7 @@ async function crearPool() {
     const resPool = await fetch(`${SUPABASE_URL}/rest/v1/pools`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Prefer': 'return=representation' },
-      body: JSON.stringify({ id: poolId, key: poolId, nombre, destino, dias: dias.join(','), tipo_viaje: tipoViaje, link_token: token })
+      body: JSON.stringify({ id: poolId, key: poolId, nombre, destino, dias: dias.join(','), tipo_viaje: tipoViaje, link_token: token, lat: destinoCoords.lat, lng: destinoCoords.lng })
     });
     if (!resPool.ok) throw new Error(await resPool.text());
     const poolData = await resPool.json();
