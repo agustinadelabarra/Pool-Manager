@@ -1,182 +1,351 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<!-- VertexSur index.html — v1.5 (botón flotante diagnóstico + versión visible en footer) -->
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VertexSur</title>
-
-<!-- Open Graph / WhatsApp preview -->
-<meta property="og:title" content="VertexSur">
-<meta property="og:description" content="Transformación real, hands-on.">
-<meta property="og:url" content="https://vertexsur.com">
-<meta property="og:type" content="website">
-<meta property="og:image" content="https://vertexsur.com/og-vertexsur-200.png">
-<meta property="og:image:width" content="200">
-<meta property="og:image:height" content="200">
-<meta property="og:image:type" content="image/png">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cpolygon points='30,52 6,18 54,6' stroke='%231A1E3C' stroke-width='5' fill='none' stroke-linejoin='round' stroke-linecap='round'/%3E%3Ccircle cx='30' cy='52' r='5.5' fill='%231A1E3C'/%3E%3C/svg%3E">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Pool</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg1: #0C0E1A;
-    --bg2: #12162E;
-    --verde: #6B8C6B;
-    --verde-light: #A8C5A8;
-    --claro: #F0F4F0;
-    --muted: #8A96B0;
+    --azul: #2E6DA4; --azul-light: #EBF4FB; --azul-dark: #1E4F7A;
+    --verde: #3D7A5A; --verde-light: #E8F4EE; --verde-dark: #2A5C40;
+    --verde-mid: #3D7A5A; --verde-claro: #3D7A5A;
+    --amarillo: #E9C46A;
+    --rojo: #E76F51;
+    --fondo: #F2F6F4; --blanco: #FFFFFF;
+    --texto: #2D2D2D; --texto-soft: #6B6B6B;
+    --borde: #D0DDD8; --gris: #6B6B6B;
+    --shadow: 0 2px 12px rgba(46,109,164,0.10);
+    --gris-claro: #E8E4DC;
+    --sombra: 0 1px 8px rgba(0,0,0,0.07);
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; overflow: hidden; scrollbar-width: none; }
-  html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
   body {
     font-family: 'DM Sans', sans-serif;
-    background: var(--bg1);
-    color: var(--claro);
-    height: 100vh;
+    background: var(--fondo);
+    color: var(--texto);
+    min-height: 100vh;
+    max-width: 480px;
+    margin: 0 auto;
+    font-size: 14px;
+  }
+
+  .header {
+    background: var(--azul);
+    padding: 10px 14px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pool-nombre {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--blanco);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .selector-familia {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    padding: 5px 8px;
+    color: var(--blanco);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    max-width: 145px;
+  }
+
+  .selector-familia option { color: var(--texto); background: var(--blanco); }
+
+  .btn-mapa {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    text-decoration: none;
+  }
+
+  .nav-mes {
+    background: var(--azul);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+  }
+
+  .mes-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--blanco);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .btn-mes {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    border-radius: 6px;
+    width: 28px;
+    height: 28px;
+    color: var(--blanco);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .leyenda {
+    display: flex;
+    gap: 12px;
+    padding: 6px 14px;
+    background: var(--blanco);
+    border-bottom: 1px solid var(--gris-claro);
+  }
+
+  .ley-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: var(--gris);
+    font-weight: 500;
+  }
+
+  .dot { width: 6px; height: 6px; border-radius: 50%; }
+  .dot-ok { background: var(--verde-light); }
+  .dot-warn { background: var(--amarillo); }
+  .dot-cancel { background: var(--rojo); }
+
+  .fechas-list {
+    padding: 8px 10px;
     display: flex;
     flex-direction: column;
+    gap: 6px;
   }
 
-  nav {
-    padding: 20px 40px;
-    display: flex; align-items: center; justify-content: space-between;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    flex-shrink: 0;
+  .fecha-card {
+    background: var(--blanco);
+    border-radius: 10px;
+    padding: 9px 11px;
+    box-shadow: var(--sombra);
+    border-left: 3px solid var(--verde-light);
   }
-  .logo { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 700; color: var(--claro); letter-spacing: -0.02em; display: flex; align-items: center; gap: 9px; }
-  .logo-icon { flex-shrink: 0; }
-  .btn-contacto {
-    padding: 9px 20px; background: var(--verde); color: var(--claro);
-    border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif;
-    font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; transition: background 0.2s;
-  }
-  .btn-contacto:hover { background: var(--verde-light); color: var(--bg1); }
 
-  .hero {
-    flex: 1;
+  .fecha-card.warning { border-left-color: var(--amarillo); }
+  .fecha-card.cancelada { border-left-color: var(--rojo); opacity: 0.6; }
+
+  .fecha-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .fecha-dia {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--texto);
+  }
+
+  .fecha-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 20px;
+  }
+
+  .badge-ok { background: #E3F4EC; color: var(--verde-mid); }
+  .badge-warn { background: #FDF3D8; color: #9A6D0A; }
+  .badge-cancel { background: #FDECEA; color: var(--rojo); }
+
+  .fecha-motivo {
+    font-size: 10px;
+    color: var(--gris);
+    margin-bottom: 6px;
+    margin-top: -3px;
+  }
+
+  .grilla {
     display: grid;
-    grid-template-rows: 60fr 30fr 10fr;
-    padding: 0 40px;
-    overflow: hidden;
-    position: relative;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
   }
 
-  .hero-top-block {
-    display: grid;
-    grid-template-rows: 12fr 30fr 18fr;
-    position: relative;
+  .asig-box {
+    background: var(--fondo);
+    border-radius: 7px;
+    padding: 6px 8px;
   }
 
-  .badge-wrap { display: flex; align-items: center; }
-  .badge-container { width: 100%; display: flex; align-items: center; gap: 0; }
-
-  .badge-texto {
-    font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
-    text-transform: uppercase; white-space: nowrap;
-    display: flex; align-items: center; gap: 0;
-  }
-  .badge-letra {
-    display: inline-block;
-    color: var(--verde-light);
-    opacity: 0.2;
-    transition: opacity 0.05s linear;
-  }
-  .badge-sep {
-    display: inline-block;
-    color: var(--verde-light);
-    opacity: 0.25;
-    margin: 0 7px;
-    font-size: 15px;
+  .asig-label {
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--gris);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
   }
 
-  .badge-track {
-    flex: 1; height: 3px;
-    background: rgba(168,197,168,0.12);
-    position: relative; overflow: visible;
-    margin-left: 12px;
-    border-radius: 2px;
-    align-self: center;
+  .asig-nombre {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--texto);
   }
 
-  /* Spark alineada al final de la línea, desplazada levemente a la izquierda */
-  .badge-spark {
-    width: 60px; height: 60px;
-    flex-shrink: 0;
-    margin-left: -20px;
-    opacity: 0; transform: scale(0);
-    transition: opacity 0.4s ease, transform 0.4s ease;
-  }
-  .badge-spark.visible { opacity: 1; transform: scale(1); }
-
-  .titulo-wrap { display: flex; align-items: center; position: relative; }
-  h1 { font-family: 'Outfit', sans-serif; font-size: 54px; font-weight: 700; line-height: 1.08; letter-spacing: -0.03em; max-width: 700px; color: var(--claro); }
-  h1 span { color: var(--verde-light); }
-
-  .subtitulo-wrap { display: flex; align-items: flex-start; padding-top: 8px; }
-  .subtitulo { font-size: 17px; color: var(--muted); max-width: 520px; line-height: 1.55; font-weight: 400; }
-
-  .cards-wrap { display: flex; align-items: center; }
-  .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; width: 100%; }
-  .card {
-    background: var(--bg2);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 14px; padding: 12px 16px;
-    display: flex; flex-direction: column; gap: 8px;
-    cursor: pointer; transition: border-color 0.2s, transform 0.2s;
-    position: relative; overflow: hidden;
-  }
-  .card:hover { border-color: rgba(168,197,168,0.3); transform: translateY(-2px); }
-  .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; border-radius: 14px 14px 0 0; }
-  .card-1::before { background: linear-gradient(to right, #4F5D8A, #A8C5A8); }
-  .card-2::before { background: linear-gradient(to right, #6B8C6B, #A8C5A8); }
-  .card-3::before { background: linear-gradient(to right, #2D3561, #6B8C6B); }
-  .card-numero { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; color: var(--verde-light); opacity: 0.5; }
-  .card-nombre { font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 700; color: var(--claro); letter-spacing: -0.02em; }
-  .card-nombre span { color: var(--verde-light); }
-  .card-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
-  .card-arrow { font-size: 16px; color: var(--verde-light); opacity: 0; transition: opacity 0.2s; align-self: flex-end; margin-top: auto; }
-  .card:hover .card-arrow { opacity: 1; }
-
-  .footer-wrap { display: flex; align-items: center; border-top: 1px solid rgba(255,255,255,0.06); }
-  .footer-copy { font-size: 11px; color: var(--muted); }
-
-  @media (max-width: 600px) {
-    html, body { height: auto; min-height: 100%; overflow-y: auto; }
-    nav { padding: 16px 20px; }
-    .hero { padding: 0 20px; grid-template-rows: 53fr 40fr 7fr; }
-    .hero-top-block { grid-template-rows: 10fr 25fr 18fr; }
-    h1 { font-size: 34px; }
-    .subtitulo { font-size: 15px; }
-    .cards-grid { grid-template-columns: 1fr; gap: 10px; }
+  .asig-vacio {
+    font-size: 11px;
+    color: var(--gris);
+    font-style: italic;
   }
 
-  /* Botón diagnóstico — espacio derecho del hero */
-  .quiz-hero-btn {
-    position: absolute; right: 130px; top: 58%; transform: translateY(-50%);
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
-    width: 150px; height: 150px;
-    background: var(--verde); border: 2px solid var(--claro);
-    border-radius: 50%;
-    text-decoration: none; color: var(--claro);
+  .botones-disp {
+    margin-top: 6px;
+  }
+
+  .toggle-btn {
+    border: 1.5px solid var(--gris-claro);
+    background: var(--blanco);
+    border-radius: 7px;
+    padding: 6px 0;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--gris);
     text-align: center;
-    box-shadow: 0 4px 24px rgba(168,197,168,0.35), 0 2px 10px rgba(0,0,0,0.3);
-    opacity: 0;
-    transition: opacity 0.6s ease;
+    width: 100%;
   }
-  .quiz-hero-btn.visible { opacity: 1; }
-  .quiz-hero-btn.pulse { animation: heroBtnPulse 2.2s ease-in-out infinite; }
-  .quiz-hero-btn-text {
-    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; line-height: 1.3;
-    padding: 0 14px;
+
+  .toggle-btn.activo-ida {
+    background: var(--azul);
+    border-color: var(--verde);
+    color: var(--blanco);
   }
-  @keyframes heroBtnPulse {
-    0%, 100% { transform: translateY(-50%) scale(1); box-shadow: 0 4px 24px rgba(168,197,168,0.35), 0 2px 10px rgba(0,0,0,0.3); }
-    50% { transform: translateY(-50%) scale(1.07); box-shadow: 0 4px 34px rgba(168,197,168,0.7), 0 2px 14px rgba(0,0,0,0.35); }
+
+  .toggle-btn.activo-vuelta {
+    background: var(--verde-claro);
+    border-color: var(--azul-light);
+    color: var(--blanco);
   }
-  @media (max-width: 900px) {
-    .quiz-hero-btn { display: none; }
+
+  .toggle-btn.activo-voy {
+    background: var(--azul);
+    border-color: var(--verde);
+    color: var(--blanco);
   }
+
+  .toggle-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .nota-container {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--gris-claro);
+  }
+
+  .nota-input {
+    width: 100%;
+    border: 1px solid var(--gris-claro);
+    border-radius: 7px;
+    padding: 5px 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: var(--texto);
+    background: var(--fondo);
+    resize: none;
+    outline: none;
+  }
+
+  .nota-input:focus {
+    border-color: var(--azul-light);
+  }
+
+  .sin-familia {
+    font-size: 10px;
+    color: var(--amarillo);
+    font-weight: 500;
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--gris-claro);
+  }
+
+  .version {
+    text-align: center;
+    padding: 12px;
+    font-size: 10px;
+    color: var(--gris);
+  }
+
+  .loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 50px 20px;
+    color: var(--gris);
+    gap: 10px;
+  }
+
+  .spinner {
+    width: 26px;
+    height: 26px;
+    border: 2px solid var(--gris-claro);
+    border-top-color: var(--verde);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--texto);
+    color: var(--blanco);
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    transition: transform 0.25s ease;
+    z-index: 1000;
+    white-space: nowrap;
+  }
+
+  .toast.visible { transform: translateX(-50%) translateY(0); }
+
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.visible { display: flex; }
+  .modal-box { background: white; border-radius: 16px; padding: 24px; max-width: 420px; width: 100%; max-height: 80vh; overflow-y: auto; }
+  .modal-box h3 { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: #2D2D2D; }
+  .modal-box p { font-size: 13px; color: #6B6B6B; line-height: 1.6; margin-bottom: 8px; }
+  .modal-close { width: 100%; padding: 12px; background: #2E6DA4; color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 8px; }
+  .modal-close:hover { background: #1E4F7A; }
+  .privacidad-link { text-align: center; font-size: 11px; color: #AAB8B2; padding: 4px 16px 0; cursor: pointer; text-decoration: underline; }
+  .privacidad-link:hover { color: #2E6DA4; }
 </style>
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-T9LPLE99YX"></script>
@@ -189,205 +358,506 @@
 </head>
 <body>
 
-<nav>
-  <div class="logo">
-    <svg class="logo-icon" width="22" height="22" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="30,52 6,18 54,6" stroke="#A8C5A8" stroke-width="4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
-      <circle cx="30" cy="52" r="5" fill="#A8C5A8"/>
-    </svg>
-    <span>Vertex<span style="color:var(--verde-light)">Sur</span></span>
-  </div>
-  <a href="mailto:agustinadelabarra@gmail.com" class="btn-contacto">Contactanos</a>
-</nav>
-
-<div class="hero">
-
-  <div class="hero-top-block">
-  <div class="badge-wrap">
-    <div class="badge-container">
-      <div class="badge-texto" id="badgeTexto"></div>
-      <div class="badge-track" id="badgeTrack"></div>
-      <div class="badge-spark" id="badgeSpark">
-        <svg width="60" height="60" viewBox="0 0 60 60">
-          <g transform="translate(30,30)">
-            <path d="M-2.3,0 L0,-52 L2.3,0 Z" fill="#A8C5A8" opacity="0.98" transform="rotate(0)"/>
-            <path d="M-2.3,0 L0,-52 L2.3,0 Z" fill="#A8C5A8" opacity="0.98" transform="rotate(180)"/>
-            <path d="M-1.75,0 L0,-40 L1.75,0 Z" fill="#A8C5A8" opacity="0.92" transform="rotate(90)"/>
-            <path d="M-1.75,0 L0,-40 L1.75,0 Z" fill="#A8C5A8" opacity="0.92" transform="rotate(270)"/>
-            <path d="M-1.5,0 L0,-34 L1.5,0 Z" fill="#A8C5A8" opacity="0.78" transform="rotate(45)"/>
-            <path d="M-1.5,0 L0,-34 L1.5,0 Z" fill="#A8C5A8" opacity="0.78" transform="rotate(135)"/>
-            <path d="M-1.15,0 L0,-26 L1.15,0 Z" fill="#A8C5A8" opacity="0.63" transform="rotate(225)"/>
-            <path d="M-1.15,0 L0,-26 L1.15,0 Z" fill="#A8C5A8" opacity="0.63" transform="rotate(315)"/>
-            <path d="M-0.8,0 L0,-17 L0.8,0 Z" fill="#A8C5A8" opacity="0.48" transform="rotate(22.5)"/>
-            <path d="M-0.8,0 L0,-17 L0.8,0 Z" fill="#A8C5A8" opacity="0.48" transform="rotate(67.5)"/>
-            <path d="M-0.8,0 L0,-17 L0.8,0 Z" fill="#A8C5A8" opacity="0.48" transform="rotate(112.5)"/>
-            <path d="M-0.8,0 L0,-17 L0.8,0 Z" fill="#A8C5A8" opacity="0.48" transform="rotate(157.5)"/>
-            <path d="M-0.7,0 L0,-13 L0.7,0 Z" fill="#A8C5A8" opacity="0.32" transform="rotate(202.5)"/>
-            <path d="M-0.7,0 L0,-13 L0.7,0 Z" fill="#A8C5A8" opacity="0.32" transform="rotate(247.5)"/>
-            <path d="M-0.7,0 L0,-13 L0.7,0 Z" fill="#A8C5A8" opacity="0.32" transform="rotate(292.5)"/>
-            <path d="M-0.7,0 L0,-13 L0.7,0 Z" fill="#A8C5A8" opacity="0.32" transform="rotate(337.5)"/>
-            <circle r="3.2" fill="#A8C5A8"/>
-          </g>
-        </svg>
-      </div>
-    </div>
-  </div>
-
-  <div class="titulo-wrap">
-    <h1>Transformación real, <span>hands-on.</span></h1>
-  </div>
-
-  <div class="subtitulo-wrap">
-    <p class="subtitulo">
-      Discovery, Innovación, AI, Gestión del Cambio y Adopción —<br>
-      del insight a los resultados.
-    </p>
-  </div>
-
-  <a href="diagnostico.html" class="quiz-hero-btn" id="quizHeroBtn">
-    <svg width="26" height="26" viewBox="0 0 60 60" fill="none">
-      <polygon points="30,52 6,18 54,6" stroke="#0C0E1A" stroke-width="4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
-      <circle cx="30" cy="52" r="5" fill="#0C0E1A"/>
-    </svg>
-    <span class="quiz-hero-btn-text">Pathway de transformación</span>
+<div class="header">
+  <div class="pool-nombre" id="poolNombre">Pool</div>
+  <select class="selector-familia" id="selectFamilia" onchange="onFamiliaChange()">
+    <option value="">¿Quién sos?</option>
+  </select>
+  <a class="btn-mapa" href="#" onclick="abrirMapa(event)"><img src="maps-icon.png" width="24" height="24" style="display:block;" alt="Maps"></a>
+  <a class="btn-mapa" id="btnSettings" href="#" title="Editar pool">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.604.852 1.001 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
   </a>
-  </div>
-
-  <div class="cards-wrap">
-    <div class="cards-grid">
-      <div class="card card-1">
-        <div class="card-numero">01</div>
-        <div class="card-nombre">Transformación</div>
-        <div class="card-desc">Diagnóstico, planificación e implementación hands-on.</div>
-        <div class="card-arrow">→</div>
-      </div>
-      <div class="card card-2">
-        <div class="card-numero">02</div>
-        <div class="card-nombre">AI <span>Roadmap</span></div>
-        <div class="card-desc">Un plan concreto para adoptar AI — desde los primeros casos hasta las iniciativas estratégicas.</div>
-        <div class="card-arrow">→</div>
-      </div>
-      <div class="card card-3">
-        <div class="card-numero">03</div>
-        <div class="card-nombre">Vertex<span>Lab</span></div>
-        <div class="card-desc">Un espacio para experimentar, prototipar y pensar sin límites.</div>
-        <div class="card-arrow">→</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer-wrap">
-    <div class="footer-copy">© 2026 VertexSur · v1.5</div>
-  </div>
-
 </div>
 
+<div class="nav-mes">
+  <button class="btn-mes" onclick="cambiarMes(-1)">‹</button>
+  <div class="mes-label" id="mesLabel">—</div>
+  <button class="btn-mes" onclick="cambiarMes(1)">›</button>
+</div>
+
+<div class="leyenda">
+  <div class="ley-item"><div class="dot dot-ok"></div> Normal</div>
+  <div class="ley-item"><div class="dot dot-warn"></div> Tránsito complicado</div>
+  <div class="ley-item"><div class="dot dot-cancel"></div> Cancelada</div>
+</div>
+
+<div class="fechas-list" id="fechasList">
+  <div class="loading"><div class="spinner"></div><span>Cargando...</span></div>
+</div>
+
+<div style="display:flex;gap:16px;justify-content:center;margin-bottom:4px"><div class="privacidad-link" onclick="document.getElementById('modalPrivacidad').classList.add('visible')">Privacidad</div><div class="privacidad-link" onclick="document.getElementById('modalInstrucciones').classList.add('visible')">Instrucciones</div></div>
+<div class="version">v1.5-db</div>
+<div class="toast" id="toast"></div>
+
 <script>
-  const palabras = ['Innovación', 'AI', 'Transformación', 'Personas', 'Comunidades'];
-  const badgeTexto = document.getElementById('badgeTexto');
-  const trackEl   = document.getElementById('badgeTrack');
-  const sparkEl   = document.getElementById('badgeSpark');
+// ── SUPABASE CONFIG ──────────────────────────────────────────────
+const SUPABASE_URL = "https://zvvcodeqfscqvunogppg.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2dmNvZGVxZnNjcXZ1bm9ncHBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NTgxMTksImV4cCI6MjA5NjEzNDExOX0.CrmSFILnBGoLcpzMW9QeAI_QUqbxwRWB-CTdB4Au11Y";
 
-  // Gradiente de opacidades — 20 letras a cada lado, caída suave
-  const opacidades = [1, 0.97, 0.93, 0.88, 0.82, 0.75, 0.67, 0.58, 0.50, 0.42, 0.34, 0.27, 0.21, 0.16, 0.12, 0.08, 0.06, 0.04, 0.02, 0.01, 0.005];
-
-  const MS_TOTAL  = 4500;
-  const MS_SPARK  = 1200;
-  const MS_PAUSA  = 500;
-
-  // Construir spans
-  const todosSpans = [];
-  palabras.forEach((palabra, pi) => {
-    if (pi > 0) {
-      const sep = document.createElement('span');
-      sep.className = 'badge-sep';
-      sep.textContent = '·';
-      badgeTexto.appendChild(sep);
+async function sbGet(table, params = "") {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`, {
+    headers: {
+      "apikey": SUPABASE_KEY,
+      "Authorization": `Bearer ${SUPABASE_KEY}`,
+      "Content-Type": "application/json"
     }
-    [...palabra].forEach(letra => {
-      const sp = document.createElement('span');
-      sp.className = 'badge-letra';
-      sp.textContent = letra;
-      badgeTexto.appendChild(sp);
-      todosSpans.push(sp);
-    });
   });
+  if (!res.ok) throw new Error(`Error ${res.status} en ${table}`);
+  return res.json();
+}
 
-  const N = todosSpans.length;
-  const travelMs = MS_TOTAL - MS_SPARK - MS_PAUSA;
-  // Proporciones iguales — mismo tempo visual en letras y línea
-  const letrasMs = travelMs * 0.60;
-  const lineaMs  = travelMs * 0.40;
+async function sbPost(table, body) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+    method: "POST",
+    headers: {
+      "apikey": SUPABASE_KEY,
+      "Authorization": `Bearer ${SUPABASE_KEY}`,
+      "Content-Type": "application/json",
+      "Prefer": "resolution=merge-duplicates,return=minimal"
+    },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) throw new Error(`Error ${res.status} al guardar en ${table}`);
+}
 
-  function setOpacidades(centerIdx) {
-    todosSpans.forEach((sp, i) => {
-      const dist = Math.abs(i - centerIdx);
-      const op = dist < opacidades.length ? opacidades[dist] : 0.02;
-      sp.style.opacity = op;
-    });
+async function sbPatch(table, filter, body) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${filter}`, {
+    method: "PATCH",
+    headers: {
+      "apikey": SUPABASE_KEY,
+      "Authorization": `Bearer ${SUPABASE_KEY}`,
+      "Content-Type": "application/json",
+      "Prefer": "return=minimal"
+    },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) throw new Error(`Error ${res.status} al actualizar en ${table}`);
+}
+
+// ── POOL KEY ─────────────────────────────────────────────────────
+const params = new URLSearchParams(window.location.search);
+const poolKey = params.get("pool") || "";
+if (!poolKey) {
+  document.body.innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;font-family:'DM Sans',sans-serif;background:#F4F1EC;padding:24px;text-align:center;">
+      <div style="font-size:48px;margin-bottom:16px;">🚗</div>
+      <div style="font-size:20px;font-weight:700;color:#1B4332;margin-bottom:8px;">Pool Manager</div>
+      <div style="font-size:14px;color:#888;max-width:280px;line-height:1.5;">Usá el link de tu pool para acceder. Pedíselo a la coordinadora del grupo.</div>
+    </div>`;
+  throw new Error("Pool no especificado");
+}
+
+document.getElementById("btnSettings").href = `tupools.html?editar=${encodeURIComponent(poolKey)}`;
+
+const VERSION = "1.0-db";
+const MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
+let familias = [];
+let disponibilidad = [];
+let fechasPool = [];
+let fechasGlobales = [];
+let tipoViaje = "ida-vuelta";
+let familiaSeleccionada = localStorage.getItem("familia_" + poolKey) || "";
+let mesActual = new Date().getMonth();
+let anioActual = new Date().getFullYear();
+let diasEntrenamiento = [3];
+let notasTimeout = {};
+
+function formatFecha(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth()+1).padStart(2,'0');
+  const d = String(date.getDate()).padStart(2,'0');
+  return `${y}-${m}-${d}`;
+}
+
+function normalizarFecha(f) {
+  if (!f) return "";
+  return String(f).substring(0,10);
+}
+
+function getDiasEntrenamiento(mes, anio) {
+  const dias = [];
+  const d = new Date(anio, mes, 1);
+  while (d.getMonth() === mes) {
+    if (diasEntrenamiento.includes(d.getDay())) dias.push(new Date(d));
+    d.setDate(d.getDate()+1);
+  }
+  return dias;
+}
+
+function parseDias(val) {
+  const map = {
+    "lunes":1,"martes":2,"miércoles":3,"miercoles":3,
+    "jueves":4,"viernes":5,"sábado":6,"sabado":6,"domingo":0
+  };
+  return String(val).toLowerCase().split(",").map(s => map[s.trim()]).filter(n => n !== undefined);
+}
+
+function getEstadoFecha(fechaStr) {
+  // Primero busca en fechas del pool
+  const enPool = fechasPool.find(f => normalizarFecha(f.fecha) === fechaStr);
+  if (enPool) return { 
+    estado: enPool.estado || "Activa", 
+    motivo: enPool.motivo || "", 
+    nota: enPool.nota || "",
+    idFecha: enPool.id
+  };
+  // Luego en fechas globales (feriados)
+  const enGlobal = fechasGlobales.find(f => normalizarFecha(f.fecha) === fechaStr);
+  if (enGlobal) return { 
+    estado: enGlobal.estado || "Cancelada", 
+    motivo: enGlobal.motivo || "", 
+    nota: "",
+    idFecha: null
+  };
+  return { estado: "Activa", motivo: "", nota: "", idFecha: null };
+}
+
+function getAsignados(fechaStr) {
+  const disp = disponibilidad.filter(d => normalizarFecha(d.fecha) === fechaStr);
+  const ida = disp.filter(d => d.ida === true).map(d => d.participante);
+  const vuelta = disp.filter(d => d.vuelta === true).map(d => d.participante);
+  const voy = disp.filter(d => d.ida === true).map(d => d.participante);
+  return { ida, vuelta, voy };
+}
+
+function getMiDisp(fechaStr) {
+  if (!familiaSeleccionada) return { ida: false, vuelta: false };
+  const d = disponibilidad.find(d => normalizarFecha(d.fecha) === fechaStr && d.participante === familiaSeleccionada);
+  if (!d) return { ida: false, vuelta: false };
+  return { ida: d.ida === true, vuelta: d.vuelta === true };
+}
+
+function renderFechas() {
+  const lista = document.getElementById("fechasList");
+  const dias = getDiasEntrenamiento(mesActual, anioActual);
+
+  if (dias.length === 0) {
+    lista.innerHTML = '<div style="text-align:center;padding:30px;color:var(--gris)">No hay días este mes</div>';
+    return;
   }
 
-  function ciclo() {
-    const startTime = performance.now();
-    const trackW = trackEl.offsetWidth;
-    const HAZ_W = 80;
+  const esIdaVuelta = tipoViaje === "ida-vuelta";
+  const esRoundTrip = tipoViaje === "round-trip";
+  const soloIda = tipoViaje === "ida";
+  const soloVuelta = tipoViaje === "vuelta";
 
-    const luz = document.createElement('div');
-    luz.style.cssText = `
-      position:absolute; top:50%; left:0px;
-      transform: translateY(-50%);
-      width:${HAZ_W}px; height:8px;
-      background: linear-gradient(to right, transparent, rgba(168,197,168,0.9), transparent);
-      border-radius:4px; pointer-events:none; opacity:0;
-    `;
-    trackEl.appendChild(luz);
+  lista.innerHTML = dias.map(fecha => {
+    const fechaStr = formatFecha(fecha);
+    const { estado, motivo, nota } = getEstadoFecha(fechaStr);
+    const { ida, vuelta, voy } = getAsignados(fechaStr);
+    const miDisp = getMiDisp(fechaStr);
 
-    // El haz termina cuando su centro llega al final del track
-    const lineaEnd = trackW - HAZ_W / 2;
+    const diaNum = fecha.getDate();
+    const mesNom = MESES[fecha.getMonth()].substring(0,3).toUpperCase();
 
-    function animate(now) {
-      const elapsed  = now - startTime;
-      const progress = Math.min(elapsed / travelMs, 1);
+    const cardClass = estado === "Cancelada" ? "cancelada" : estado === "Warning" ? "warning" : "";
+    const badgeClass = estado === "Cancelada" ? "badge-cancel" : estado === "Warning" ? "badge-warn" : "badge-ok";
+    const badgeText = estado === "Cancelada" ? "❌ Cancelada" : estado === "Warning" ? "⚠️ Tránsito" : "✅ Normal";
+    const cancelada = estado === "Cancelada";
 
-      if (elapsed <= letrasMs) {
-        const lp = elapsed / letrasMs;
-        const centerIdx = Math.round(lp * (N - 1));
-        setOpacidades(centerIdx);
-        luz.style.opacity = '0';
-      } else {
-        todosSpans.forEach(sp => sp.style.opacity = '0.2');
-        const lp = (elapsed - letrasMs) / lineaMs;
-        luz.style.opacity = '1';
-        // lineal — mismo tempo que letras
-        luz.style.left = (lp * lineaEnd) + 'px';
-      }
+    const idaOcupada = ida.length > 0 && !miDisp.ida;
+    const vueltaOcupada = vuelta.length > 0 && !miDisp.vuelta;
+    const voyOcupado = voy.length > 0 && !miDisp.ida;
 
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        trackEl.removeChild(luz);
-        todosSpans.forEach(sp => sp.style.opacity = '0.2');
-        sparkEl.classList.add('visible');
-        setTimeout(() => {
-          sparkEl.classList.remove('visible');
-          setTimeout(ciclo, MS_PAUSA);
-        }, MS_SPARK);
+    let asignacionesHTML = "";
+    if (esIdaVuelta) {
+      asignacionesHTML = `
+        <div class="grilla">
+          <div class="asig-box">
+            <div class="asig-label">🚗 Ida</div>
+            ${ida.length > 0 ? `<div class="asig-nombre">${ida.join(", ")}</div>` : `<div class="asig-vacio">Sin asignar</div>`}
+          </div>
+          <div class="asig-box">
+            <div class="asig-label">🏠 Vuelta</div>
+            ${vuelta.length > 0 ? `<div class="asig-nombre">${vuelta.join(", ")}</div>` : `<div class="asig-vacio">Sin asignar</div>`}
+          </div>
+        </div>`;
+    } else if (esRoundTrip) {
+      asignacionesHTML = `
+        <div class="asig-box" style="margin-bottom:0">
+          <div class="asig-label">🚗 Lleva y trae</div>
+          ${voy.length > 0 ? `<div class="asig-nombre">${voy.join(", ")}</div>` : `<div class="asig-vacio">Sin asignar</div>`}
+        </div>`;
+    } else if (soloIda) {
+      asignacionesHTML = `
+        <div class="asig-box">
+          <div class="asig-label">🚗 Ida</div>
+          ${ida.length > 0 ? `<div class="asig-nombre">${ida.join(", ")}</div>` : `<div class="asig-vacio">Sin asignar</div>`}
+        </div>`;
+    } else if (soloVuelta) {
+      asignacionesHTML = `
+        <div class="asig-box">
+          <div class="asig-label">🏠 Vuelta</div>
+          ${vuelta.length > 0 ? `<div class="asig-nombre">${vuelta.join(", ")}</div>` : `<div class="asig-vacio">Sin asignar</div>`}
+        </div>`;
+    }
+
+    let botonesHTML = "";
+    if (familiaSeleccionada && !cancelada) {
+      if (esIdaVuelta) {
+        botonesHTML = `
+          <div class="botones-disp grilla">
+            <button class="toggle-btn ${miDisp.ida ? 'activo-ida' : ''}"
+              onclick="toggleDisp(event,'${fechaStr}','ida')"
+              ${idaOcupada ? 'disabled' : ''}>Ida</button>
+            <button class="toggle-btn ${miDisp.vuelta ? 'activo-vuelta' : ''}"
+              onclick="toggleDisp(event,'${fechaStr}','vuelta')"
+              ${vueltaOcupada ? 'disabled' : ''}>Vuelta</button>
+          </div>`;
+      } else if (esRoundTrip) {
+        botonesHTML = `
+          <div class="botones-disp">
+            <button class="toggle-btn ${miDisp.ida ? 'activo-voy' : ''}" style="width:100%"
+              onclick="toggleDisp(event,'${fechaStr}','ida')"
+              ${voyOcupado ? 'disabled' : ''}>Voy 🚗</button>
+          </div>`;
+      } else if (soloIda) {
+        botonesHTML = `
+          <div class="botones-disp">
+            <button class="toggle-btn ${miDisp.ida ? 'activo-ida' : ''}" style="width:100%"
+              onclick="toggleDisp(event,'${fechaStr}','ida')"
+              ${idaOcupada ? 'disabled' : ''}>Ida</button>
+          </div>`;
+      } else if (soloVuelta) {
+        botonesHTML = `
+          <div class="botones-disp">
+            <button class="toggle-btn ${miDisp.vuelta ? 'activo-vuelta' : ''}" style="width:100%"
+              onclick="toggleDisp(event,'${fechaStr}','vuelta')"
+              ${vueltaOcupada ? 'disabled' : ''}>Vuelta</button>
+          </div>`;
       }
     }
 
-    requestAnimationFrame(animate);
+    const notaValor = nota || "";
+
+    return `
+    <div class="fecha-card ${cardClass}">
+      <div class="fecha-header">
+        <div class="fecha-dia">${diaNum} ${mesNom}</div>
+        <div class="fecha-badge ${badgeClass}">${badgeText}</div>
+      </div>
+      ${motivo ? `<div class="fecha-motivo">${motivo}</div>` : ""}
+      ${asignacionesHTML}
+      ${botonesHTML}
+      ${!familiaSeleccionada && !cancelada ? `<div class="sin-familia">Seleccioná tu familia arriba para cargar disponibilidad</div>` : ""}
+      ${!cancelada ? `
+      <div class="nota-container">
+        <input type="text" class="nota-input" placeholder="Nota del grupo" 
+          value="${notaValor.replace(/"/g, '&quot;')}"
+          onchange="guardarNota('${fechaStr}', this.value)"
+          oninput="notaChanged('${fechaStr}', this.value)">
+      </div>` : ""}
+    </div>`;
+  }).join("");
+
+  // Scroll a fecha actual solo en mes en curso
+  const hoy = formatFecha(new Date());
+  if (mesActual === new Date().getMonth() && anioActual === new Date().getFullYear()) {
+    setTimeout(() => {
+      const cards = document.querySelectorAll('.fecha-card');
+      let targetIndex = -1;
+      for (let i = 0; i < dias.length; i++) {
+        if (formatFecha(dias[i]) >= hoy) { targetIndex = i; break; }
+      }
+      if (targetIndex < 0 && cards.length > 0) targetIndex = cards.length - 1;
+      if (targetIndex >= 0 && cards[targetIndex]) {
+        cards[targetIndex].scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 500);
+  }
+}
+
+function notaChanged(fechaStr, valor) {
+  clearTimeout(notasTimeout[fechaStr]);
+  notasTimeout[fechaStr] = setTimeout(() => guardarNota(fechaStr, valor), 1500);
+}
+
+async function guardarNota(fechaStr, valor) {
+  clearTimeout(notasTimeout[fechaStr]);
+  const notaFinal = valor.trim() === "" ? null : valor.trim();
+  try {
+    // Buscar si ya existe la fila en fechas_pool (refrescar desde DB para tener ID actualizado)
+    const enDB = await sbGet("fechas_pool", `?pool_id=eq.${poolKey}&fecha=eq.${fechaStr}`);
+    if (enDB && enDB.length > 0) {
+      await sbPatch("fechas_pool", `id=eq.${enDB[0].id}`, { nota: notaFinal });
+      // Actualizar cache local
+      const local = fechasPool.find(f => normalizarFecha(f.fecha) === fechaStr);
+      if (local) local.nota = notaFinal;
+    } else {
+      const nuevaFila = { pool_id: poolKey, fecha: fechaStr, estado: "Activa", nota: notaFinal };
+      await sbPost("fechas_pool", nuevaFila);
+      // Refrescar desde DB para obtener el ID real
+      const nueva = await sbGet("fechas_pool", `?pool_id=eq.${poolKey}&fecha=eq.${fechaStr}`);
+      if (nueva && nueva.length > 0) fechasPool.push(nueva[0]);
+    }
+    showToast(notaFinal ? "✓ Nota guardada" : "✓ Nota borrada");
+  } catch(e) {
+    console.error(e);
+    showToast("Error al guardar nota");
+  }
+}
+
+async function toggleDisp(event, fechaStr, tipo) {
+  event.stopPropagation();
+  if (!familiaSeleccionada) { showToast("Primero elegí tu familia ↑"); return; }
+
+  let entry = disponibilidad.find(d => normalizarFecha(d.fecha) === fechaStr && d.participante === familiaSeleccionada);
+  if (!entry) {
+    entry = { fecha: fechaStr, participante: familiaSeleccionada, pool_id: poolKey, ida: false, vuelta: false };
+    disponibilidad.push(entry);
   }
 
-  window.addEventListener('load', () => setTimeout(ciclo, 600));
+  if (tipo === "ida") entry.ida = !entry.ida;
+  else entry.vuelta = !entry.vuelta;
+
+  // En round-trip, ida y vuelta van siempre juntos
+  if (tipoViaje === "round-trip") entry.vuelta = entry.ida;
+
+  renderFechas();
+  showToast("Guardando...");
+
+  try {
+    const existing = await sbGet("disponibilidad", 
+      `?pool_id=eq.${poolKey}&fecha=eq.${fechaStr}&participante=eq.${encodeURIComponent(familiaSeleccionada)}`);
+    if (existing && existing.length > 0) {
+      await sbPatch("disponibilidad", 
+        `pool_id=eq.${poolKey}&fecha=eq.${fechaStr}&participante=eq.${encodeURIComponent(familiaSeleccionada)}`,
+        { ida: entry.ida, vuelta: entry.vuelta });
+    } else {
+      await sbPost("disponibilidad", {
+        pool_id: poolKey,
+        fecha: fechaStr,
+        participante: familiaSeleccionada,
+        ida: entry.ida,
+        vuelta: entry.vuelta
+      });
+    }
+    showToast("✓ Guardado");
+  } catch(e) {
+    console.error(e);
+    showToast("Error al guardar");
+  }
+}
+
+function abrirMapa(e) {
+  e.preventDefault();
+  const activas = familias.filter(f => f.activa === true);
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  let url;
+  if (isMobile) {
+    const waypointList = activas.map(f => {
+      if (f.direccion) return encodeURIComponent(f.direccion + ", CABA, Argentina");
+      if (f.lat && f.lng) return `${f.lat},${f.lng}`;
+      return '';
+    }).filter(Boolean);
+    url = `https://maps.google.com/maps/dir/?api=1&waypoints=${waypointList.join("|")}&travelmode=driving`;
+  } else {
+    const waypoints = activas.map(f => {
+      if (f.direccion) return encodeURIComponent(f.direccion + ", CABA, Argentina");
+      if (f.lat && f.lng) return `${f.lat},${f.lng}`;
+      return '';
+    }).filter(Boolean).join("/");
+    url = `https://www.google.com/maps/dir/${waypoints}`;
+  }
+  window.open(url, "_blank");
+}
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("visible");
+  setTimeout(() => t.classList.remove("visible"), 2000);
+}
+
+function cambiarMes(dir) {
+  mesActual += dir;
+  if (mesActual > 11) { mesActual = 0; anioActual++; }
+  if (mesActual < 0) { mesActual = 11; anioActual--; }
+  actualizarMesLabel();
+  renderFechas();
+}
+
+function actualizarMesLabel() {
+  document.getElementById("mesLabel").textContent = `${MESES[mesActual].toUpperCase()} ${anioActual}`;
+}
+
+function onFamiliaChange() {
+  familiaSeleccionada = document.getElementById("selectFamilia").value;
+  localStorage.setItem("familia_" + poolKey, familiaSeleccionada);
+  renderFechas();
+}
+
+async function cargarDatos() {
+  try {
+    const [pool, parts, disp, fechasPl, fechasGl] = await Promise.all([
+      sbGet("pools", `?id=eq.${poolKey}`),
+      sbGet("participantes", `?pool_id=eq.${poolKey}&activa=eq.true&order=nombre`),
+      sbGet("disponibilidad", `?pool_id=eq.${poolKey}`),
+      sbGet("fechas_pool", `?pool_id=eq.${poolKey}`),
+      sbGet("fechas_globales", "")
+    ]);
+
+    if (!pool || pool.length === 0) {
+      showToast("Pool no encontrado");
+      return;
+    }
+
+    const poolData = pool[0];
+    familias = parts;
+    disponibilidad = disp;
+    fechasPool = fechasPl;
+    fechasGlobales = fechasGl;
+
+    document.getElementById("poolNombre").textContent = poolData.nombre;
+    document.title = poolData.nombre;
+
+    if (poolData.dias) diasEntrenamiento = parseDias(poolData.dias);
+    if (poolData.tipo_viaje) tipoViaje = poolData.tipo_viaje.toLowerCase();
+
+    const sel = document.getElementById("selectFamilia");
+    familias.forEach(f => {
+      const opt = document.createElement("option");
+      opt.value = f.nombre;
+      opt.textContent = f.nombre;
+      if (f.nombre === familiaSeleccionada) opt.selected = true;
+      sel.appendChild(opt);
+    });
+
+  } catch(e) {
+    console.error("Error cargando datos:", e);
+    showToast("Error de conexión");
+  }
+
+  actualizarMesLabel();
+  renderFechas();
+}
+
+cargarDatos();
 </script>
 
-<script>
-  setTimeout(() => {
-    const btn = document.getElementById('quizHeroBtn');
-    btn.classList.add('visible');
-    setTimeout(() => btn.classList.add('pulse'), 500);
-  }, 1200);
-</script>
 
+<div class="modal-overlay" id="modalPrivacidad">
+  <div class="modal-box">
+    <h3>Aviso de Privacidad</h3>
+    <p>Esta herramienta almacena únicamente el nombre y la dirección que ingresás voluntariamente para coordinar los viajes del grupo.</p>
+    <p>Los datos son compartidos con los otros miembros del pool y no se usan para ningún otro fin.</p>
+    <p>Si querés que tus datos sean eliminados, escribinos a <a href="mailto:cpoolcontacto@gmail.com" style="color:#2E6DA4">cpoolcontacto@gmail.com</a>.</p>
+    <button class="modal-close" onclick="document.getElementById('modalPrivacidad').classList.remove('visible')">Cerrar</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalInstrucciones">
+  <div class="modal-box">
+    <h3>¿Cómo funciona TuPool?</h3>
+    <p><b>TuPool</b> — Nuestro grupo en movimiento</p>
+    <p>Una herramienta para que tu grupo de siempre coordine sus viajes recurrentes — entrenamientos, clases, actividades semanales.</p>
+    <p><b>1.</b> Se crea el TuPool con nombre, origen/destino, días y tipo de viaje.</p>
+    <p><b>2.</b> Se genera un link único para compartir con todas las familias del grupo.</p>
+    <p><b>3.</b> Cada familia marca su disponibilidad — qué días puede manejar y cuándo necesita que la lleven.</p>
+    <p><b>4.</b> El pool se organiza solo — semana a semana, sin coordinación manual.</p>
+    <button class="modal-close" onclick="document.getElementById('modalInstrucciones').classList.remove('visible')">Cerrar</button>
+  </div>
+</div>
 </body>
 </html>
