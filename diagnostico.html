@@ -127,29 +127,23 @@
   .insight-text { font-size: 13px; line-height: 1.45; color: var(--indigo); }
 
   /* PASO 2 — SmartArt círculos + barras */
-  .smartart-wrap { position: relative; width: 100%; max-width: 480px; height: 382px; margin: 0 auto; }
+  .smartart-wrap { position: relative; width: 100%; max-width: 520px; height: 445px; margin: 0 auto; }
   .smartart-line { position: absolute; top: 0; left: 0; z-index: 1; }
-  .circle-sa { position: absolute; width: 70px; height: 70px; border-radius: 50%; background: #FFFFFF; border: 2.5px solid var(--verde); left: 10px; z-index: 3; display: flex; align-items: center; justify-content: center; }
-  .bar-sa { position: absolute; left: 45px; right: 0; height: 70px; background: var(--verde); border-radius: 6px; z-index: 2; display: flex; flex-direction: column; justify-content: center; padding: 0 16px 0 46px; cursor: pointer; transition: background 0.2s; }
+  .circle-sa { position: absolute; width: 77px; height: 77px; border-radius: 50%; background: #FFFFFF; border: 2.5px solid var(--verde); left: 12px; z-index: 3; display: flex; align-items: center; justify-content: center; }
+  .bar-sa { position: absolute; left: 50px; right: 0; height: 77px; background: var(--verde); border-radius: 6px; z-index: 2; display: flex; flex-direction: column; justify-content: center; padding: 0 18px 0 50px; cursor: pointer; transition: background 0.2s; }
   .bar-sa:hover, .bar-sa.selected { background: var(--indigo); }
-  .bar-sa-title { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 13px; color: #FFFFFF; }
-  .bar-sa-desc { font-size: 10.5px; color: rgba(255,255,255,0.75); line-height: 1.3; margin-top: 2px; max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; }
+  .bar-sa-title { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 14px; color: #FFFFFF; }
+  .bar-sa-desc { font-size: 11px; color: rgba(255,255,255,0.75); line-height: 1.3; margin-top: 2px; max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; }
   .bar-sa:hover .bar-sa-desc, .bar-sa.selected .bar-sa-desc { max-height: 30px; opacity: 1; }
-  .row-sa-1 { top: 0px; } .row-sa-2 { top: 78px; } .row-sa-3 { top: 156px; } .row-sa-4 { top: 234px; } .row-sa-5 { top: 312px; }
+  .row-sa-1 { top: 0px; } .row-sa-2 { top: 86px; } .row-sa-3 { top: 172px; } .row-sa-4 { top: 258px; } .row-sa-5 { top: 344px; }
 
   /* PASO 3 */
-  .insight-final { max-width: 390px; background: #F0F5F0; border: 2px solid var(--verde); border-radius: 13px; padding: 15px 19px; margin-bottom: 15px; text-align: left; box-shadow: 0 4px 16px rgba(107,140,107,0.15); }
-  .insight-final-row { font-size: 12.5px; line-height: 1.45; color: var(--indigo); margin-bottom: 8px; }
+  .insight-final { max-width: 420px; background: #F0F5F0; border: 2px solid var(--verde); border-radius: 14px; padding: 18px 22px; margin-bottom: 18px; text-align: left; box-shadow: 0 4px 16px rgba(107,140,107,0.15); }
+  .insight-final-row { font-size: 13.5px; line-height: 1.5; color: var(--indigo); margin-bottom: 10px; }
   .insight-final-row:last-child { margin-bottom: 0; }
-  .insight-final-label { font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--verde); display: block; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 1px; }
-  .form3 { display: flex; flex-direction: column; gap: 8px; max-width: 370px; width: 100%; }
-  .form3 input, .form3 textarea { font-family: 'DM Sans', sans-serif; font-size: 12.5px; padding: 9px 11px; border: 1px solid rgba(12,14,26,0.15); border-radius: 7px; background: #FFFFFF; color: var(--indigo); }
-  .form3 textarea { resize: none; height: 42px; }
-  .form3 button { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 12.5px; padding: 9px; background: var(--verde); color: #FFF; border: none; border-radius: 7px; cursor: pointer; transition: background 0.2s; }
-  .form3 button:hover { background: var(--verde-light); }
-  .form3-done { text-align: center; font-size: 13.5px; color: var(--verde); font-weight: 600; }
-  .form3-hint { text-align: center; font-size: 12px; color: var(--verde); background: #F0F5F0; border: 1px solid rgba(107,140,107,0.3); border-radius: 8px; padding: 8px 12px; margin-top: 8px; }
-  .form3 input.field-missing, .form3 textarea.field-missing { border-color: var(--verde-light); background: #FBFCE9; }
+  .insight-final-label { font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--verde); display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
+  .btn-diagnostico-contacto { display: inline-block; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 14px; padding: 12px 28px; background: var(--verde); color: #FFF; border: none; border-radius: 8px; cursor: pointer; transition: background 0.2s; text-decoration: none; }
+  .btn-diagnostico-contacto:hover { background: var(--indigo); }
 
   /* Cookie notice */
   .cookie-notice { flex-shrink: 0; background: rgba(0,0,0,0.35); color: #C8CDDA; font-size: 10.5px; text-align: center; padding: 6px 14px; }
@@ -228,32 +222,32 @@
     </div>
     <div class="light-section">
       <div class="smartart-wrap" id="cardsGrid">
-        <svg class="smartart-line" width="100%" height="382" viewBox="0 0 480 382">
-          <path d="M45,10 L45,35" stroke="#6B8C6B" stroke-width="2.5" fill="none"/>
-          <path d="M45,35 C63,59 27,89 45,113 C27,137 63,167 45,191 C63,215 27,245 45,269 C27,293 63,323 45,347" stroke="#6B8C6B" stroke-width="2.5" fill="none"/>
-          <path d="M45,347 L45,372" stroke="#6B8C6B" stroke-width="2.5" fill="none"/>
+        <svg class="smartart-line" width="100%" height="445" viewBox="0 0 520 445">
+          <path d="M50,12 L50,38.5" stroke="#6B8C6B" stroke-width="2.5" fill="none"/>
+          <path d="M50,38.5 C70,64.5 30,98.3 50,124.3 C30,150.3 70,184.1 50,210.1 C70,236.1 30,269.9 50,295.9 C30,321.9 70,355.7 50,381.7" stroke="#6B8C6B" stroke-width="2.5" fill="none"/>
+          <path d="M50,381.7 L50,410" stroke="#6B8C6B" stroke-width="2.5" fill="none"/>
         </svg>
-        <div class="circle-sa row-sa-1"><svg width="30" height="30" viewBox="0 0 46 46"><rect x="6" y="24" width="8" height="16" fill="#6B8C6B"/><rect x="19" y="14" width="8" height="26" fill="#6B8C6B"/><rect x="32" y="6" width="8" height="34" fill="#A8C5A8"/></svg></div>
+        <div class="circle-sa row-sa-1"><svg width="34" height="34" viewBox="0 0 46 46"><rect x="6" y="24" width="8" height="16" fill="#6B8C6B"/><rect x="19" y="14" width="8" height="26" fill="#6B8C6B"/><rect x="32" y="6" width="8" height="34" fill="#A8C5A8"/></svg></div>
         <div class="bar-sa row-sa-1" data-cat="C3" onclick="selectCard(this)">
           <div class="bar-sa-title">Decidir con datos</div>
           <div class="bar-sa-desc">Usar mejor lo que ya tenés</div>
         </div>
-        <div class="circle-sa row-sa-2"><svg width="30" height="30" viewBox="0 0 46 46"><circle cx="9" cy="23" r="5" fill="#6B8C6B"/><circle cx="23" cy="23" r="5" fill="#A8C5A8"/><circle cx="37" cy="23" r="5" fill="#6B8C6B"/><line x1="14" y1="23" x2="18" y2="23" stroke="#6B8C6B" stroke-width="2"/><line x1="28" y1="23" x2="32" y2="23" stroke="#6B8C6B" stroke-width="2"/></svg></div>
+        <div class="circle-sa row-sa-2"><svg width="34" height="34" viewBox="0 0 46 46"><circle cx="9" cy="23" r="5" fill="#6B8C6B"/><circle cx="23" cy="23" r="5" fill="#A8C5A8"/><circle cx="37" cy="23" r="5" fill="#6B8C6B"/><line x1="14" y1="23" x2="18" y2="23" stroke="#6B8C6B" stroke-width="2"/><line x1="28" y1="23" x2="32" y2="23" stroke="#6B8C6B" stroke-width="2"/></svg></div>
         <div class="bar-sa row-sa-2" data-cat="C1" onclick="selectCard(this)">
           <div class="bar-sa-title">Rediseñar procesos</div>
           <div class="bar-sa-desc">Simplificar cómo trabajás</div>
         </div>
-        <div class="circle-sa row-sa-3"><svg width="30" height="30" viewBox="0 0 46 46"><polygon points="23,4 40,23 23,42 6,23" fill="#A8C5A8"/><circle cx="23" cy="23" r="5" fill="#FFFFFF"/></svg></div>
+        <div class="circle-sa row-sa-3"><svg width="34" height="34" viewBox="0 0 46 46"><polygon points="23,4 40,23 23,42 6,23" fill="#A8C5A8"/><circle cx="23" cy="23" r="5" fill="#FFFFFF"/></svg></div>
         <div class="bar-sa row-sa-3" data-cat="C2" onclick="selectCard(this)">
           <div class="bar-sa-title">Innovar/crear algo nuevo</div>
           <div class="bar-sa-desc">Algo que no existe todavía</div>
         </div>
-        <div class="circle-sa row-sa-4"><svg width="30" height="30" viewBox="0 0 46 46"><circle cx="17" cy="23" r="14" fill="none" stroke="#6B8C6B" stroke-width="2.5"/><circle cx="29" cy="23" r="14" fill="none" stroke="#A8C5A8" stroke-width="2.5"/></svg></div>
+        <div class="circle-sa row-sa-4"><svg width="34" height="34" viewBox="0 0 46 46"><circle cx="17" cy="23" r="14" fill="none" stroke="#6B8C6B" stroke-width="2.5"/><circle cx="29" cy="23" r="14" fill="none" stroke="#A8C5A8" stroke-width="2.5"/></svg></div>
         <div class="bar-sa row-sa-4" data-cat="C4" onclick="selectCard(this)">
           <div class="bar-sa-title">Cambio organizacional</div>
           <div class="bar-sa-desc">Que las personas lo adopten</div>
         </div>
-        <div class="circle-sa row-sa-5"><svg width="30" height="30" viewBox="0 0 46 46"><circle cx="23" cy="23" r="16" fill="none" stroke="#6B8C6B" stroke-width="2.5" stroke-dasharray="4 4"/></svg></div>
+        <div class="circle-sa row-sa-5"><svg width="34" height="34" viewBox="0 0 46 46"><circle cx="23" cy="23" r="16" fill="none" stroke="#6B8C6B" stroke-width="2.5" stroke-dasharray="4 4"/></svg></div>
         <div class="bar-sa row-sa-5" data-cat="C5" onclick="selectCard(this)">
           <div class="bar-sa-title">Todavía no lo sé</div>
           <div class="bar-sa-desc">Sin foco definido todavía</div>
@@ -274,15 +268,7 @@
         <div class="insight-final-row"><span class="insight-final-label">Tu objetivo:</span> <span id="insightFinalObjetivo"></span></div>
         <div class="insight-final-row"><span class="insight-final-label">Nuestra propuesta:</span> <span id="insightFinalPropuesta"></span></div>
       </div>
-      <form class="form3" id="form3">
-        <input type="text" id="fNombre" placeholder="Nombre y apellido">
-        <input type="text" id="fEmpresa" placeholder="Empresa">
-        <input type="email" id="fMail" placeholder="Mail">
-        <textarea placeholder="Comentario (opcional)"></textarea>
-        <button type="submit">Sigamos la conversación</button>
-      </form>
-      <div class="form3-hint" id="form3Hint" style="display:none;"></div>
-      <div class="form3-done" id="form3Done" style="display:none;">¡Gracias! Te vamos a contactar pronto.</div>
+      <a href="contacto.html" id="btnContacto" class="btn-diagnostico-contacto">Sigamos la conversación</a>
     </div>
   </div>
 </div>
@@ -399,11 +385,18 @@
 
   function renderFinalInsight() {
     if (!state.cuadrante || !state.categoria) return;
-    document.getElementById('insightFinalDigital').textContent = bloqueA[quadToBloqueA[state.cuadrante]];
-    const objetivo = categoriaNombre[state.categoria];
-    document.getElementById('insightFinalObjetivo').textContent = objetivo.charAt(0).toUpperCase() + objetivo.slice(1) + '.';
-    const b = bloqueB[state.categoria];
-    document.getElementById('insightFinalPropuesta').textContent = b.charAt(0).toUpperCase() + b.slice(1);
+    const digital = bloqueA[quadToBloqueA[state.cuadrante]];
+    const objetivoRaw = categoriaNombre[state.categoria];
+    const objetivo = objetivoRaw.charAt(0).toUpperCase() + objetivoRaw.slice(1) + '.';
+    const propuestaRaw = bloqueB[state.categoria];
+    const propuesta = propuestaRaw.charAt(0).toUpperCase() + propuestaRaw.slice(1);
+
+    document.getElementById('insightFinalDigital').textContent = digital;
+    document.getElementById('insightFinalObjetivo').textContent = objetivo;
+    document.getElementById('insightFinalPropuesta').textContent = propuesta;
+
+    const params = new URLSearchParams({ digital, objetivo, propuesta });
+    document.getElementById('btnContacto').href = 'contacto.html?' + params.toString();
   }
 
   // Render también al llegar al paso 3 vía flecha
@@ -414,6 +407,7 @@
 
   document.getElementById('form3').addEventListener('submit', (e) => {
     e.preventDefault();
+    const form = e.target;
     const nombre = document.getElementById('fNombre');
     const empresa = document.getElementById('fEmpresa');
     const mail = document.getElementById('fMail');
@@ -431,9 +425,28 @@
     }
 
     hint.style.display = 'none';
-    trackEvent('quiz_paso3_contacto_enviado', { cuadrante: state.cuadrante, categoria: state.categoria });
-    document.getElementById('form3').style.display = 'none';
-    document.getElementById('form3Done').style.display = 'block';
+
+    const formData = new FormData(form);
+    formData.append('diagnóstico_cuadrante', state.cuadrante || '');
+    formData.append('diagnóstico_categoria', categoriaNombre[state.categoria] || '');
+
+    fetch(form.action, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    }).then(response => {
+      trackEvent('quiz_paso3_contacto_enviado', { cuadrante: state.cuadrante, categoria: state.categoria });
+      if (response.ok) {
+        form.style.display = 'none';
+        document.getElementById('form3Done').style.display = 'block';
+      } else {
+        hint.textContent = 'Algo falló al enviar — probá de nuevo en un momento, por favor.';
+        hint.style.display = 'block';
+      }
+    }).catch(() => {
+      hint.textContent = 'Algo falló al enviar — probá de nuevo en un momento, por favor.';
+      hint.style.display = 'block';
+    });
   });
 </script>
 

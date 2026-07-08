@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contacto — VertexSur</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg1: #0C0E1A;
+    --bg2: #12162E;
+    --verde: #6B8C6B;
+    --verde-light: #A8C5A8;
+    --claro: #F0F4F0;
+    --muted: #8A96B0;
+    --bg-claro: #F7F8F5;
+    --indigo: #0C0E1A;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg1); color: var(--claro); min-height: 100vh; }
+
+  nav { padding: 20px 40px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .logo { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 700; color: var(--claro); letter-spacing: -0.02em; display: flex; align-items: center; gap: 9px; text-decoration: none; }
+  .nav-links { display: flex; align-items: center; gap: 24px; }
+  .nav-link { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-link:hover { color: var(--claro); }
+  .btn-contacto { padding: 9px 20px; background: var(--verde); color: var(--claro); border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; transition: background 0.2s; }
+
+  main { max-width: 520px; margin: 0 auto; padding: 60px 40px 80px; display: flex; flex-direction: column; align-items: center; }
+
+  h1 { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; text-align: center; }
+  .subtitulo { color: var(--muted); font-size: 14px; text-align: center; margin-bottom: 28px; }
+
+  .insight-recap { width: 100%; background: var(--bg2); border: 2px solid var(--verde); border-radius: 14px; padding: 18px 22px; margin-bottom: 24px; display: none; }
+  .insight-recap.visible { display: block; }
+  .insight-recap-row { font-size: 13.5px; line-height: 1.5; color: var(--claro); margin-bottom: 10px; }
+  .insight-recap-row:last-child { margin-bottom: 0; }
+  .insight-recap-label { font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--verde-light); display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
+
+  .form-contacto { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+  .form-contacto input, .form-contacto textarea { font-family: 'DM Sans', sans-serif; font-size: 14px; padding: 11px 14px; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; background: var(--bg2); color: var(--claro); }
+  .form-contacto input::placeholder, .form-contacto textarea::placeholder { color: var(--muted); }
+  .form-contacto textarea { resize: none; height: 70px; }
+  .form-contacto button { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 14px; padding: 12px; background: var(--verde); color: var(--claro); border: none; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
+  .form-contacto button:hover { background: var(--verde-light); color: var(--bg1); }
+  .form-contacto input.field-missing, .form-contacto textarea.field-missing { border-color: var(--verde-light); background: #1a2035; }
+
+  .form-hint { text-align: center; font-size: 12.5px; color: var(--verde-light); background: var(--bg2); border: 1px solid rgba(107,140,107,0.4); border-radius: 8px; padding: 9px 12px; margin-top: 10px; display: none; }
+  .form-done { text-align: center; font-size: 15px; color: var(--verde-light); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">
+    <svg width="22" height="22" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="30,52 6,18 54,6" stroke="#A8C5A8" stroke-width="4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="30" cy="52" r="5" fill="#A8C5A8"/>
+    </svg>
+    <span>Vertex<span style="color:var(--verde-light)">Sur</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="quienes-somos.html" class="nav-link">Quiénes somos</a>
+    <a href="contacto.html" class="btn-contacto">Contactanos</a>
+  </div>
+</nav>
+
+<main>
+  <h1>Sigamos la conversación</h1>
+  <p class="subtitulo">Dejanos tus datos y coordinamos una charla.</p>
+
+  <div class="insight-recap" id="insightRecap">
+    <div class="insight-recap-row">
+      <span class="insight-recap-label">Tu madurez digital</span>
+      <span id="recapDigital"></span>
+    </div>
+    <div class="insight-recap-row">
+      <span class="insight-recap-label">Tu objetivo</span>
+      <span id="recapObjetivo"></span>
+    </div>
+    <div class="insight-recap-row">
+      <span class="insight-recap-label">Nuestra propuesta</span>
+      <span id="recapPropuesta"></span>
+    </div>
+  </div>
+
+  <form class="form-contacto" id="formContacto" action="https://formspree.io/f/xvzjjzbo" method="POST">
+    <input type="text" id="cNombre" name="nombre" placeholder="Nombre y apellido">
+    <input type="text" id="cEmpresa" name="empresa" placeholder="Empresa">
+    <input type="email" id="cMail" name="email" placeholder="Mail">
+    <textarea id="cComentario" name="comentario" placeholder="Comentario (opcional)"></textarea>
+    <button type="submit">Enviar</button>
+  </form>
+  <div class="form-hint" id="formHint"></div>
+  <div class="form-done" id="formDone" style="display:none;">¡Gracias! Te vamos a contactar pronto.</div>
+</main>
+
+<script>
+  // Si venimos del diagnóstico, mostrar el recap con lo que trae la URL
+  const params = new URLSearchParams(window.location.search);
+  const digital = params.get('digital');
+  const objetivo = params.get('objetivo');
+  const propuesta = params.get('propuesta');
+
+  if (digital && objetivo && propuesta) {
+    document.getElementById('recapDigital').textContent = digital;
+    document.getElementById('recapObjetivo').textContent = objetivo;
+    document.getElementById('recapPropuesta').textContent = propuesta;
+    document.getElementById('insightRecap').classList.add('visible');
+  }
+
+  document.getElementById('formContacto').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const nombre = document.getElementById('cNombre');
+    const empresa = document.getElementById('cEmpresa');
+    const mail = document.getElementById('cMail');
+    const hint = document.getElementById('formHint');
+    const campos = [nombre, empresa, mail];
+    const faltantes = campos.filter(c => !c.value.trim());
+
+    campos.forEach(c => c.classList.remove('field-missing'));
+
+    if (faltantes.length > 0) {
+      faltantes.forEach(c => c.classList.add('field-missing'));
+      hint.textContent = 'Nos falta algún dato para poder escribirte — ¿nos ayudás a completarlo? 🙂';
+      hint.style.display = 'block';
+      return;
+    }
+
+    hint.style.display = 'none';
+
+    const formData = new FormData(form);
+    if (digital) formData.append('diagnóstico_madurez', digital);
+    if (objetivo) formData.append('diagnóstico_objetivo', objetivo);
+    if (propuesta) formData.append('diagnóstico_propuesta', propuesta);
+
+    fetch(form.action, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    }).then(response => {
+      if (response.ok) {
+        form.style.display = 'none';
+        document.getElementById('formDone').style.display = 'block';
+      } else {
+        hint.textContent = 'Algo falló al enviar — probá de nuevo en un momento, por favor.';
+        hint.style.display = 'block';
+      }
+    }).catch(() => {
+      hint.textContent = 'Algo falló al enviar — probá de nuevo en un momento, por favor.';
+      hint.style.display = 'block';
+    });
+  });
+</script>
+
+</body>
+</html>
