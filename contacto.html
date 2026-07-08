@@ -16,37 +16,52 @@
     --bg-claro: #F7F8F5;
     --indigo: #0C0E1A;
   }
+  html { color-scheme: light; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg1); color: var(--claro); min-height: 100vh; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg-claro); color: var(--indigo); min-height: 100vh; }
 
-  nav { padding: 20px 40px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  nav { padding: 20px 40px; display: flex; align-items: center; justify-content: space-between; background: var(--bg1); border-bottom: 1px solid rgba(255,255,255,0.06); }
   .logo { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 700; color: var(--claro); letter-spacing: -0.02em; display: flex; align-items: center; gap: 9px; text-decoration: none; }
   .nav-links { display: flex; align-items: center; gap: 24px; }
   .nav-link { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none; transition: color 0.2s; }
   .nav-link:hover { color: var(--claro); }
   .btn-contacto { padding: 9px 20px; background: var(--verde); color: var(--claro); border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; transition: background 0.2s; }
 
-  main { max-width: 520px; margin: 0 auto; padding: 60px 40px 80px; display: flex; flex-direction: column; align-items: center; }
+  .page-header { background: var(--bg1); color: var(--claro); text-align: center; padding: 36px 40px 40px; }
+  .page-header h1 { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .page-header .subtitulo { color: #B8C0D4; font-size: 14px; }
 
-  h1 { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; text-align: center; }
-  .subtitulo { color: var(--muted); font-size: 14px; text-align: center; margin-bottom: 28px; }
+  main { max-width: 520px; margin: 0 auto; padding: 40px 40px 80px; display: flex; flex-direction: column; align-items: center; }
 
-  .insight-recap { width: 100%; background: var(--bg2); border: 2px solid var(--verde); border-radius: 14px; padding: 18px 22px; margin-bottom: 24px; display: none; }
+  .channels-row { display: flex; gap: 12px; width: 100%; margin-bottom: 28px; }
+  .channel-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 8px; background: #FFFFFF; border: 1.5px solid rgba(107,140,107,0.3); border-radius: 12px; text-decoration: none; color: var(--indigo); font-size: 12px; font-weight: 600; font-family: 'DM Sans', sans-serif; transition: border-color 0.2s, transform 0.2s; }
+  .channel-btn:hover { border-color: var(--verde); transform: translateY(-2px); }
+  .channel-btn svg { width: 22px; height: 22px; }
+
+  .insight-recap { width: 100%; background: #FFFFFF; border: 2px solid var(--verde); border-radius: 14px; padding: 18px 22px; margin-bottom: 24px; display: none; }
   .insight-recap.visible { display: block; }
-  .insight-recap-row { font-size: 13.5px; line-height: 1.5; color: var(--claro); margin-bottom: 10px; }
+  .insight-recap-row { font-size: 13.5px; line-height: 1.5; color: var(--indigo); margin-bottom: 10px; }
   .insight-recap-row:last-child { margin-bottom: 0; }
-  .insight-recap-label { font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--verde-light); display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
+  .insight-recap-label { font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--verde); display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
 
   .form-contacto { display: flex; flex-direction: column; gap: 12px; width: 100%; }
-  .form-contacto input, .form-contacto textarea { font-family: 'DM Sans', sans-serif; font-size: 14px; padding: 11px 14px; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; background: var(--bg2); color: var(--claro); }
+  .form-contacto input, .form-contacto textarea { font-family: 'DM Sans', sans-serif; font-size: 14px; padding: 11px 14px; border: 1px solid rgba(12,14,26,0.15); border-radius: 8px; background: #FFFFFF; color: var(--indigo); }
   .form-contacto input::placeholder, .form-contacto textarea::placeholder { color: var(--muted); }
   .form-contacto textarea { resize: none; height: 70px; }
-  .form-contacto button { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 14px; padding: 12px; background: var(--verde); color: var(--claro); border: none; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
-  .form-contacto button:hover { background: var(--verde-light); color: var(--bg1); }
-  .form-contacto input.field-missing, .form-contacto textarea.field-missing { border-color: var(--verde-light); background: #1a2035; }
+  .form-contacto > button { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 14px; padding: 12px; background: var(--verde); color: #FFFFFF; border: none; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
+  .form-contacto > button:hover { background: var(--indigo); }
+  .form-contacto input.field-missing, .form-contacto textarea.field-missing { border-color: var(--verde-light); background: #F0F5E9; }
 
-  .form-hint { text-align: center; font-size: 12.5px; color: var(--verde-light); background: var(--bg2); border: 1px solid rgba(107,140,107,0.4); border-radius: 8px; padding: 9px 12px; margin-top: 10px; display: none; }
-  .form-done { text-align: center; font-size: 15px; color: var(--verde-light); font-weight: 600; }
+  .form-hint { text-align: center; font-size: 12.5px; color: var(--verde); background: #F0F5F0; border: 1px solid rgba(107,140,107,0.4); border-radius: 8px; padding: 9px 12px; margin-top: 10px; display: none; }
+  .form-done { text-align: center; font-size: 15px; color: var(--verde); font-weight: 600; }
+
+  .phone-row { position: relative; display: flex; gap: 8px; }
+  .phone-select-wrap { position: relative; flex: 0 0 100px; }
+  .phone-select-display { width: 100%; height: 100%; font-family: 'DM Sans', sans-serif; font-size: 14px; padding: 11px 22px 11px 10px; border: 1px solid rgba(12,14,26,0.15); border-radius: 8px; background: #FFFFFF; color: var(--indigo); display: flex; align-items: center; pointer-events: none; box-sizing: border-box; }
+  .phone-select-display::after { content: ''; position: absolute; right: 8px; top: 50%; width: 8px; height: 8px; border-right: 1.5px solid #6B8C6B; border-bottom: 1.5px solid #6B8C6B; transform: translateY(-70%) rotate(45deg); }
+  .phone-select-wrap select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+  .phone-row input { flex: 1; min-width: 0; }
+  .char-count { font-size: 11px; color: var(--muted); text-align: right; margin-top: -6px; }
 </style>
 </head>
 <body>
@@ -65,9 +80,26 @@
   </div>
 </nav>
 
-<main>
+<div class="page-header">
   <h1>Sigamos la conversación</h1>
-  <p class="subtitulo">Dejanos tus datos y coordinamos una charla.</p>
+  <p class="subtitulo">Dejanos tus datos y coordinamos una reunión.</p>
+</div>
+
+<main>
+  <div class="channels-row">
+    <a href="mailto:agustinadelabarra@gmail.com" class="channel-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#6B8C6B" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 6l10 7 10-7"/></svg>
+      Mail
+    </a>
+    <a href="https://www.linkedin.com/company/vertexsur/" class="channel-btn" id="linkedinBtn" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="#6B8C6B"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V23h-4V8zm7 0h3.8v2.05h.05c.53-1 1.83-2.05 3.77-2.05C19.5 8 21 10.24 21 14.02V23h-4v-8.1c0-1.93-.03-4.4-2.68-4.4-2.68 0-3.09 2.1-3.09 4.26V23h-4V8z"/></svg>
+      LinkedIn
+    </a>
+    <a href="https://wa.me/5491155949217" class="channel-btn" id="whatsappBtn" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="#6B8C6B"><path d="M12 0C5.4 0 0 5.4 0 12c0 2.1.5 4.1 1.6 5.9L0 24l6.3-1.6c1.7.9 3.6 1.4 5.7 1.4 6.6 0 12-5.4 12-12S18.6 0 12 0zm0 22c-1.9 0-3.7-.5-5.3-1.5l-.4-.2-3.7 1 1-3.6-.2-.4C2.5 15.7 2 13.9 2 12 2 6.5 6.5 2 12 2s10 4.5 10 10-4.5 10-10 10zm5.5-7.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.3-.4.1-.2 0-.4 0-.5C10.1 9.3 9.6 8 9.4 7.5c-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1.1 2.7c.1.2 1.9 2.9 4.6 4 .6.3 1.1.4 1.5.5.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2-.1-.1-.3-.2-.6-.3z"/></svg>
+      WhatsApp
+    </a>
+  </div>
 
   <div class="insight-recap" id="insightRecap">
     <div class="insight-recap-row">
@@ -87,8 +119,29 @@
   <form class="form-contacto" id="formContacto" action="https://formspree.io/f/xvzjjzbo" method="POST">
     <input type="text" id="cNombre" name="nombre" placeholder="Nombre y apellido">
     <input type="text" id="cEmpresa" name="empresa" placeholder="Empresa">
+    <input type="text" id="cPuesto" name="puesto" placeholder="Puesto o cargo (opcional)">
     <input type="email" id="cMail" name="email" placeholder="Mail">
-    <textarea id="cComentario" name="comentario" placeholder="Comentario (opcional)"></textarea>
+    <div class="phone-row">
+      <div class="phone-select-wrap">
+        <div class="phone-select-display" id="cCodigoPaisDisplay">AR +54</div>
+        <select id="cCodigoPais">
+          <option value="+54" data-label="AR +54" selected>AR +54</option>
+          <option value="+598" data-label="UY +598">UY +598</option>
+          <option value="+56" data-label="CL +56">CL +56</option>
+          <option value="+595" data-label="PY +595">PY +595</option>
+          <option value="+591" data-label="BO +591">BO +591</option>
+          <option value="+55" data-label="BR +55">BR +55</option>
+          <option value="+34" data-label="ES +34">ES +34</option>
+          <option value="+1" data-label="US +1">US +1</option>
+          <option value="+52" data-label="MX +52">MX +52</option>
+          <option value="+57" data-label="CO +57">CO +57</option>
+          <option value="+51" data-label="PE +51">PE +51</option>
+        </select>
+      </div>
+      <input type="tel" id="cTelefono" name="telefono" placeholder="Teléfono">
+    </div>
+    <textarea id="cComentario" name="comentario" placeholder="Comentario (opcional)" maxlength="500"></textarea>
+    <div class="char-count"><span id="charCount">0</span>/500</div>
     <button type="submit">Enviar</button>
   </form>
   <div class="form-hint" id="formHint"></div>
@@ -96,7 +149,20 @@
 </main>
 
 <script>
-  // Si venimos del diagnóstico, mostrar el recap con lo que trae la URL
+  // Contador de caracteres del comentario
+  const comentario = document.getElementById('cComentario');
+  const charCount = document.getElementById('charCount');
+  comentario.addEventListener('input', () => {
+    charCount.textContent = comentario.value.length;
+  });
+
+  const telInput = document.getElementById('cTelefono');
+  const codigoPais = document.getElementById('cCodigoPais');
+  const codigoPaisDisplay = document.getElementById('cCodigoPaisDisplay');
+  codigoPais.addEventListener('change', () => {
+    codigoPaisDisplay.textContent = codigoPais.options[codigoPais.selectedIndex].dataset.label;
+  });
+
   const params = new URLSearchParams(window.location.search);
   const digital = params.get('digital');
   const objetivo = params.get('objetivo');
@@ -129,6 +195,10 @@
     }
 
     hint.style.display = 'none';
+
+    if (telInput.value.trim()) {
+      telInput.value = codigoPais.value + ' ' + telInput.value.trim();
+    }
 
     const formData = new FormData(form);
     if (digital) formData.append('diagnóstico_madurez', digital);
