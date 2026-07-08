@@ -88,8 +88,8 @@
 
   .light-section { width: 100%; flex: 1; background: var(--bg-claro); color: var(--indigo); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 14px 20px; overflow: hidden; }
 
-  .chart-frame { background: var(--bg-chart); border: 1px solid rgba(107,140,107,0.25); border-radius: 16px; padding: 26px 30px 22px; box-shadow: 0 4px 20px rgba(12,14,26,0.06); }
-  .quadrant-wrap { position: relative; width: 300px; aspect-ratio: 1/1; }
+  .chart-frame { background: var(--bg-chart); border: 1px solid rgba(107,140,107,0.25); border-radius: 16px; padding: 22px 26px 18px; box-shadow: 0 4px 20px rgba(12,14,26,0.06); }
+  .quadrant-wrap { position: relative; width: 330px; aspect-ratio: 1/1; }
   .quadrant { width: 100%; height: 100%; background: #FBFCFA; border: 1px solid rgba(12,14,26,0.1); border-radius: 14px; position: relative; cursor: crosshair; overflow: hidden; }
   .quad-bg { position: absolute; width: 50%; height: 50%; opacity: 0.35; }
   .q-tl { top: 0; left: 0; background: #D8DCEF; }
@@ -100,9 +100,9 @@
   .axis-v { left: 50%; top: 0; width: 1px; height: 100%; }
   .axis-h { top: 50%; left: 0; height: 1px; width: 100%; }
 
-  .axis-watermark { position: absolute; font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--verde); text-transform: uppercase; letter-spacing: 0.03em; opacity: 0.32; pointer-events: none; z-index: 1; font-size: 12px; white-space: nowrap; }
-  .wm-digital { top: 50%; left: 32%; transform: translate(-50%, -50%); }
-  .wm-ambicion { top: 32%; left: 50%; transform: translate(-50%, -50%) rotate(-90deg); }
+  .axis-watermark { position: absolute; font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--verde); text-transform: uppercase; letter-spacing: 0.03em; opacity: 0.55; pointer-events: none; z-index: 1; font-size: 12px; white-space: nowrap; }
+  .wm-digital { top: 47%; left: 32%; transform: translate(-50%, -50%); }
+  .wm-ambicion { top: 32%; left: 53%; transform: translate(-50%, -50%) rotate(-90deg); }
 
   .axis-sign { position: absolute; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 20px; color: var(--verde); opacity: 0.7; z-index: 2; }
   .sign-h-minus { left: 12px; top: 50%; transform: translateY(-50%); }
@@ -122,7 +122,7 @@
 
   .insight-card { margin-top: 16px; max-width: 400px; background: #F0F5F0; border: 2px solid var(--verde); border-radius: 12px; padding: 14px 20px; box-shadow: 0 4px 16px rgba(107,140,107,0.15); text-align: center; }
   .insight-tag { font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 700; color: var(--verde); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
-  .insight-box { margin-top: 16px; width: 362px; max-width: 100%; background: #F0F5F0; border: 2px solid var(--verde); border-radius: 12px; padding: 14px 20px; box-shadow: 0 4px 16px rgba(107,140,107,0.15); opacity: 0; transform: translateY(8px); transition: opacity 0.4s ease, transform 0.4s ease; text-align: center; box-sizing: border-box; }
+  .insight-box { margin-top: 16px; width: 384px; max-width: 100%; background: #F0F5F0; border: 2px solid var(--verde); border-radius: 12px; padding: 14px 20px; box-shadow: 0 4px 16px rgba(107,140,107,0.15); opacity: 0; transform: translateY(8px); transition: opacity 0.4s ease, transform 0.4s ease; text-align: center; box-sizing: border-box; }
   .insight-box.visible { opacity: 1; transform: translateY(0); }
   .insight-text { font-size: 13px; line-height: 1.45; color: var(--indigo); }
 
@@ -148,6 +148,8 @@
   .form3 button { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 12.5px; padding: 9px; background: var(--verde); color: #FFF; border: none; border-radius: 7px; cursor: pointer; transition: background 0.2s; }
   .form3 button:hover { background: var(--verde-light); }
   .form3-done { text-align: center; font-size: 13.5px; color: var(--verde); font-weight: 600; }
+  .form3-hint { text-align: center; font-size: 12px; color: var(--verde); background: #F0F5F0; border: 1px solid rgba(107,140,107,0.3); border-radius: 8px; padding: 8px 12px; margin-top: 8px; }
+  .form3 input.field-missing, .form3 textarea.field-missing { border-color: var(--verde-light); background: #FBFCE9; }
 
   /* Cookie notice */
   .cookie-notice { flex-shrink: 0; background: rgba(0,0,0,0.35); color: #C8CDDA; font-size: 10.5px; text-align: center; padding: 6px 14px; }
@@ -264,7 +266,7 @@
   <div class="slide" id="slide3">
     <div class="step-header">
       <div class="step-label">Paso 3 de 3</div>
-      <h1 class="step-title">Tu Pathway de transformación</h1>
+      <h1 class="step-title">Pathway de transformación</h1>
     </div>
     <div class="light-section">
       <div class="insight-final">
@@ -273,12 +275,13 @@
         <div class="insight-final-row"><span class="insight-final-label">Nuestra propuesta:</span> <span id="insightFinalPropuesta"></span></div>
       </div>
       <form class="form3" id="form3">
-        <input type="text" placeholder="Nombre y apellido" required>
-        <input type="text" placeholder="Empresa" required>
-        <input type="email" placeholder="Mail" required>
+        <input type="text" id="fNombre" placeholder="Nombre y apellido">
+        <input type="text" id="fEmpresa" placeholder="Empresa">
+        <input type="email" id="fMail" placeholder="Mail">
         <textarea placeholder="Comentario (opcional)"></textarea>
         <button type="submit">Sigamos la conversación</button>
       </form>
+      <div class="form3-hint" id="form3Hint" style="display:none;"></div>
       <div class="form3-done" id="form3Done" style="display:none;">¡Gracias! Te vamos a contactar pronto.</div>
     </div>
   </div>
@@ -297,9 +300,9 @@
 
   const bloqueA = {
     bl_ba: "Con procesos todavía poco sistematizados, el foco natural está en optimizar lo que ya tenés antes de sumar complejidad.",
-    bl_aa: "Con procesos todavía poco sistematizados, buscan transformar cómo trabajan estructuralmente.",
+    bl_aa: "Con procesos todavía poco sistematizados, el foco está en transformar cómo trabaja tu organización, no solo optimizarla.",
     al_ba: "Con sistemas ya integrados, el foco natural está en optimizar lo que ya tenés antes de sumar complejidad.",
-    al_aa: "Con sistemas ya integrados, buscan transformar cómo trabajan estructuralmente."
+    al_aa: "Con sistemas ya integrados, el foco está en transformar cómo trabaja tu organización, no solo optimizarla."
   };
   const quadToBloqueA = { tl: 'bl_aa', tr: 'al_aa', bl: 'bl_ba', br: 'al_ba' };
 
@@ -411,6 +414,23 @@
 
   document.getElementById('form3').addEventListener('submit', (e) => {
     e.preventDefault();
+    const nombre = document.getElementById('fNombre');
+    const empresa = document.getElementById('fEmpresa');
+    const mail = document.getElementById('fMail');
+    const hint = document.getElementById('form3Hint');
+    const campos = [nombre, empresa, mail];
+    const faltantes = campos.filter(c => !c.value.trim());
+
+    campos.forEach(c => c.classList.remove('field-missing'));
+
+    if (faltantes.length > 0) {
+      faltantes.forEach(c => c.classList.add('field-missing'));
+      hint.textContent = 'Nos falta algún dato para poder escribirte — ¿nos ayudás a completarlo? 🙂';
+      hint.style.display = 'block';
+      return;
+    }
+
+    hint.style.display = 'none';
     trackEvent('quiz_paso3_contacto_enviado', { cuadrante: state.cuadrante, categoria: state.categoria });
     document.getElementById('form3').style.display = 'none';
     document.getElementById('form3Done').style.display = 'block';

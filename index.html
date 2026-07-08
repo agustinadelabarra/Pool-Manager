@@ -53,6 +53,10 @@
   }
   .btn-contacto:hover { background: var(--verde-light); color: var(--bg1); }
 
+  .nav-links { display: flex; align-items: center; gap: 24px; }
+  .nav-link { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-link:hover { color: var(--claro); }
+
   .hero {
     flex: 1;
     display: grid;
@@ -197,7 +201,10 @@
     </svg>
     <span>Vertex<span style="color:var(--verde-light)">Sur</span></span>
   </div>
-  <a href="mailto:agustinadelabarra@gmail.com" class="btn-contacto">Contactanos</a>
+  <div class="nav-links">
+    <a href="quienes-somos.html" class="nav-link">Quiénes somos</a>
+    <a href="mailto:agustinadelabarra@gmail.com" class="btn-contacto">Contactanos</a>
+  </div>
 </nav>
 
 <div class="hero">
