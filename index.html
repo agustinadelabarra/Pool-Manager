@@ -44,7 +44,7 @@
     border-bottom: 1px solid rgba(255,255,255,0.06);
     flex-shrink: 0;
   }
-  .logo { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 700; color: var(--claro); letter-spacing: -0.02em; display: flex; align-items: center; gap: 9px; }
+  .logo { font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 700; color: var(--claro); letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
   .logo-icon { flex-shrink: 0; }
   .btn-contacto {
     padding: 9px 20px; background: var(--verde); color: var(--claro);
@@ -60,7 +60,7 @@
   .hero {
     flex: 1;
     display: grid;
-    grid-template-rows: 60fr 30fr 10fr;
+    grid-template-rows: 68fr 25fr 7fr;
     padding: 0 40px;
     overflow: hidden;
     position: relative;
@@ -70,6 +70,7 @@
     display: grid;
     grid-template-rows: 12fr 30fr 18fr;
     position: relative;
+    padding-top: 44px;
   }
 
   .badge-wrap { display: flex; align-items: center; }
@@ -114,13 +115,13 @@
   .badge-spark.visible { opacity: 1; transform: scale(1); }
 
   .titulo-wrap { display: flex; align-items: center; position: relative; }
-  h1 { font-family: 'Outfit', sans-serif; font-size: 54px; font-weight: 700; line-height: 1.08; letter-spacing: -0.03em; max-width: 700px; color: var(--claro); }
+  h1 { font-family: 'Outfit', sans-serif; font-size: 57px; font-weight: 700; line-height: 1.08; letter-spacing: -0.03em; max-width: 700px; color: var(--claro); }
   h1 span { color: var(--verde-light); }
 
   .subtitulo-wrap { display: flex; align-items: flex-start; padding-top: 8px; }
-  .subtitulo { font-size: 17px; color: var(--muted); max-width: 520px; line-height: 1.55; font-weight: 400; }
+  .subtitulo { font-size: 17.5px; color: var(--muted); max-width: 520px; line-height: 1.55; font-weight: 700; }
 
-  .cards-wrap { display: flex; align-items: center; }
+  .cards-wrap { display: flex; align-items: flex-end; padding-bottom: 26px; }
   .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; width: 100%; }
   .card {
     background: var(--bg2);
@@ -136,7 +137,7 @@
   .card-2::before { background: linear-gradient(to right, #6B8C6B, #A8C5A8); }
   .card-3::before { background: linear-gradient(to right, #2D3561, #6B8C6B); }
   .card-numero { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; color: var(--verde-light); opacity: 0.5; }
-  .card-nombre { font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 700; color: var(--claro); letter-spacing: -0.02em; }
+  .card-nombre { font-family: 'Outfit', sans-serif; font-size: 21px; font-weight: 700; color: var(--claro); letter-spacing: -0.02em; }
   .card-nombre span { color: var(--verde-light); }
   .card-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
   .card-arrow { font-size: 16px; color: var(--verde-light); opacity: 0; transition: opacity 0.2s; align-self: flex-end; margin-top: auto; }
@@ -195,7 +196,7 @@
 
 <nav>
   <div class="logo">
-    <svg class="logo-icon" width="22" height="22" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg class="logo-icon" width="26" height="26" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
       <polygon points="30,52 6,18 54,6" stroke="#A8C5A8" stroke-width="4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
       <circle cx="30" cy="52" r="5" fill="#A8C5A8"/>
     </svg>
@@ -256,26 +257,23 @@
       <polygon points="30,52 6,18 54,6" stroke="#0C0E1A" stroke-width="4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
       <circle cx="30" cy="52" r="5" fill="#0C0E1A"/>
     </svg>
-    <span class="quiz-hero-btn-text">Pathway de transformación</span>
+    <span class="quiz-hero-btn-text">Tu pathway de transformación</span>
   </a>
   </div>
 
   <div class="cards-wrap">
     <div class="cards-grid">
       <div class="card card-1">
-        <div class="card-numero">01</div>
         <div class="card-nombre">Transformación</div>
         <div class="card-desc">Diagnóstico, planificación e implementación hands-on.</div>
         <div class="card-arrow">→</div>
       </div>
       <div class="card card-2">
-        <div class="card-numero">02</div>
         <div class="card-nombre">AI <span>Roadmap</span></div>
         <div class="card-desc">Un plan concreto para adoptar AI — desde los primeros casos hasta las iniciativas estratégicas.</div>
         <div class="card-arrow">→</div>
       </div>
       <div class="card card-3">
-        <div class="card-numero">03</div>
         <div class="card-nombre">Vertex<span>Lab</span></div>
         <div class="card-desc">Un espacio para experimentar, prototipar y pensar sin límites.</div>
         <div class="card-arrow">→</div>
@@ -343,9 +341,10 @@
     luz.style.cssText = `
       position:absolute; top:50%; left:0px;
       transform: translateY(-50%);
-      width:${HAZ_W}px; height:8px;
-      background: linear-gradient(to right, transparent, rgba(168,197,168,0.9), transparent);
-      border-radius:4px; pointer-events:none; opacity:0;
+      width:${HAZ_W}px; height:2.5px;
+      background: linear-gradient(to right, transparent, rgba(168,197,168,1), transparent);
+      border-radius:2px; pointer-events:none; opacity:0;
+      box-shadow: 0 0 6px rgba(168,197,168,0.8);
     `;
     trackEl.appendChild(luz);
 
