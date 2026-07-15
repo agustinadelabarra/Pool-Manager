@@ -27,7 +27,7 @@
   /* Indicador de pasos */
   .steps-indicator {
     display: flex; align-items: center; justify-content: center;
-    gap: 14px; padding: 20px 20px 0;
+    gap: 14px; padding: 12px 20px 0;
     flex-shrink: 0;
   }
   .step-dot {
@@ -148,20 +148,29 @@
   /* Cookie notice */
   .cookie-notice { flex-shrink: 0; background: rgba(0,0,0,0.35); color: #C8CDDA; font-size: 10.5px; text-align: center; padding: 6px 14px; }
 
-  .mini-nav { position: absolute; top: 14px; left: 20px; z-index: 20; }
-  .mini-nav a { display: flex; align-items: center; gap: 7px; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 700; color: var(--claro); text-decoration: none; letter-spacing: -0.02em; }
+  nav { padding: 20px 40px; display: flex; align-items: center; justify-content: space-between; background: var(--indigo); border-bottom: 1px solid rgba(255,255,255,0.06); flex-shrink: 0; }
+  .logo { font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 700; color: var(--claro); letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-links { display: flex; align-items: center; gap: 24px; }
+  .nav-link { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: var(--muted-dark); text-decoration: none; transition: color 0.2s; }
+  .nav-link:hover { color: var(--claro); }
+  .btn-contacto { padding: 9px 20px; background: var(--verde); color: var(--claro); border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; transition: background 0.2s; }
 </style>
 </head>
 <body>
 
-<div class="mini-nav">
-  <a href="index.html">
-    <svg width="18" height="18" viewBox="0 0 60 60" fill="none">
+<nav>
+  <a href="index.html" class="logo">
+    <svg width="26" height="26" viewBox="0 0 60 60" fill="none">
       <polygon points="30,52 6,18 54,6" stroke="#A8C5A8" stroke-width="4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
       <circle cx="30" cy="52" r="5" fill="#A8C5A8"/>
     </svg>
-    <span>Vertex<span style="color:var(--verde-light)">Sur</span></span></a>
-</div>
+    <span>Vertex<span style="color:var(--verde-light)">Sur</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="quienes-somos.html" class="nav-link">Quiénes somos</a>
+    <a href="contacto.html" class="btn-contacto">Contactanos</a>
+  </div>
+</nav>
 
 <div class="steps-indicator">
   <div class="step-dot active" id="dot1">1</div>
