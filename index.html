@@ -40,7 +40,16 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
+    position: relative;
+    background: var(--bg1) url('hero-ginkgo.png') center/cover no-repeat;
   }
+  .hero-screen::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to right, rgba(12,14,26,0.88) 0%, rgba(12,14,26,0.55) 50%, rgba(12,14,26,0.3) 100%);
+    pointer-events: none;
+  }
+  .hero-screen > * { position: relative; z-index: 1; }
 
   nav {
     padding: 20px 40px;
@@ -177,11 +186,12 @@
   .section-title-icon { flex-shrink: 0; margin-top: 6px; }
   .section-title {
     font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 700;
-    letter-spacing: -0.02em; color: #3D5940; margin-bottom: 0;
+    letter-spacing: -0.02em; color: #3D5940; margin-bottom: 40px;
   }
 
-  .step-sequence { display: flex; flex-wrap: wrap; gap: 0; }
-  .step-item { display: flex; align-items: baseline; gap: 12px; flex: 1 1 45%; min-width: 220px; padding: 14px 16px 14px 0; }
+  .step-sequence { display: flex; flex-direction: column; gap: 0; }
+  .step-item { display: flex; align-items: baseline; gap: 14px; border-top: 1px solid rgba(12,14,26,0.08); padding: 16px 0; }
+  .step-item:first-child { border-top: none; padding-top: 0; }
   .step-num {
     flex-shrink: 0;
     color: var(--verde); font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 700;
@@ -367,7 +377,7 @@
     <div class="section-title">Diagnóstico, planificación e implementación hands-on.</div>
     <div class="step-sequence">
       <div class="step-item"><div class="step-num">1</div><div class="step-label">Diagnóstico</div></div>
-      <div class="step-item"><div class="step-num">2</div><div class="step-label">Propuesta y prototipado</div></div>
+      <div class="step-item"><div class="step-num">2</div><div class="step-label">Innovación y prototipado</div></div>
       <div class="step-item"><div class="step-num">3</div><div class="step-label">Desarrollo</div></div>
       <div class="step-item"><div class="step-num">4</div><div class="step-label">Implementación y adopción</div></div>
     </div>
@@ -387,7 +397,7 @@
     </div>
   </div>
   <div class="section-content">
-    <div class="section-title">Un plan concreto para tu transformación digital — desde el diagnóstico hasta las iniciativas estratégicas.</div>
+    <div class="section-title">Madurez digital, casos de éxito y un roadmap concreto para tu estrategia.</div>
     <div class="step-sequence">
       <div class="step-item"><div class="step-num">1</div><div class="step-label">Madurez digital</div></div>
       <div class="step-item"><div class="step-num">2</div><div class="step-label">Caso de éxito</div></div>
