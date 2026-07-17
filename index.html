@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<!-- VertexSur index.html — v1.7 (ajustes mobile: hero flex/min-height, footer-links en columna, sin overflow:hidden) -->
+<!-- VertexSur index.html — v1.9 (mobile: hero ajustado a 1 pantalla, fotos 340px uniformes, step-item mas espaciado) -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VertexSur</title>
@@ -224,15 +224,26 @@
   .first-scroll-section .section-card { padding-top: 70px; }
 
   @media (max-width: 800px) {
-    .scroll-section, .scroll-section.reverse { flex-direction: column; }
-    .section-card { flex: 0 0 220px; clip-path: none !important; width: 100%; }
-    .section-content { padding: 40px 24px; }
+    .scroll-section, .scroll-section.reverse { flex-direction: column; min-height: 0; }
+    .section-card { flex: 0 0 340px; min-height: 340px; clip-path: none !important; width: 100%; }
+    .section-content { padding: 28px 24px 32px; }
+    .section-title { font-size: 20px; margin-bottom: 16px; }
+    .step-item { padding: 32px 0; }
+    .step-num { font-size: 24px; }
+    .step-label { font-size: 14px; }
+    .case-list { gap: 12px; }
+    .case-item { padding-top: 10px; }
+    .case-name { font-size: 15px; margin-bottom: 2px; }
+    .case-desc { font-size: 12px; line-height: 1.4; }
+    .first-scroll-section { clip-path: none; margin-top: 0; }
+    .first-scroll-section .section-content { padding-top: 28px; }
+    .first-scroll-section .section-card { padding-top: 0; }
   }
 
 
   @media (max-width: 600px) {
     nav { padding: 16px 20px; }
-    .hero-screen { height: auto; min-height: 100svh; }
+    .hero-screen { height: auto; min-height: calc(100svh - 64px); }
     .hero {
       display: flex;
       flex-direction: column;
@@ -368,7 +379,7 @@
   </div>
 
   <div class="footer-wrap">
-    <div class="footer-copy">© 2026 VertexSur · v1.7</div>
+    <div class="footer-copy">© 2026 VertexSur · v1.9</div>
   </div>
 
 </div>
