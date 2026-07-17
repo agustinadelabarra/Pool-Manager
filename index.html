@@ -215,13 +215,13 @@
   .footer-channel:hover { border-color: var(--verde-light); background: rgba(168,197,168,0.12); }
   .footer-channel svg { width: 17px; height: 17px; }
 
-  #transformacion {
+  .first-scroll-section {
     position: relative;
     clip-path: polygon(0 70px, 100% 0, 100% 100%, 0 100%);
     margin-top: -70px;
   }
-  #transformacion .section-content { padding-top: 130px; }
-  #transformacion .section-card { padding-top: 70px; }
+  .first-scroll-section .section-content { padding-top: 130px; }
+  .first-scroll-section .section-card { padding-top: 70px; }
 
   @media (max-width: 800px) {
     .scroll-section, .scroll-section.reverse { flex-direction: column; }
@@ -348,8 +348,8 @@
 
   <div class="cards-wrap">
     <div class="footer-links">
-      <a href="#transformacion" class="footer-link">Transformación</a>
       <a href="#estrategia-digital" class="footer-link">Estrategia Digital</a>
+      <a href="#transformacion" class="footer-link">Transformación</a>
       <a href="#vertexlab" class="footer-link">VertexLab</a>
     </div>
   </div>
@@ -361,31 +361,8 @@
 </div>
 </div>
 
-<!-- SECCIÓN 1 — Transformación (card izquierda) -->
-<section class="scroll-section" id="transformacion">
-  <div class="section-card">
-    <img src="card-transformacion.png" alt="Transformación — capas de montaña">
-    <div class="section-card-label">
-      <svg width="28" height="28" viewBox="0 0 60 60" fill="none">
-        <polygon points="30,52 6,18 54,6" stroke="#F0F4F0" stroke-width="4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
-        <circle cx="30" cy="52" r="5" fill="#F0F4F0"/>
-      </svg>
-      Transformación
-    </div>
-  </div>
-  <div class="section-content">
-    <div class="section-title">Diagnóstico, planificación e implementación hands-on.</div>
-    <div class="step-sequence">
-      <div class="step-item"><div class="step-num">1</div><div class="step-label">Diagnóstico</div></div>
-      <div class="step-item"><div class="step-num">2</div><div class="step-label">Innovación y prototipado</div></div>
-      <div class="step-item"><div class="step-num">3</div><div class="step-label">Desarrollo</div></div>
-      <div class="step-item"><div class="step-num">4</div><div class="step-label">Implementación y adopción</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- SECCIÓN 2 — Estrategia Digital (card derecha) -->
-<section class="scroll-section reverse" id="estrategia-digital">
+<!-- SECCIÓN 1 — Estrategia Digital (card izquierda) -->
+<section class="scroll-section first-scroll-section" id="estrategia-digital">
   <div class="section-card">
     <img src="card-estrategia-digital.png" alt="Estrategia Digital — reflejo en el agua">
     <div class="section-card-label">
@@ -403,6 +380,29 @@
       <div class="step-item"><div class="step-num">2</div><div class="step-label">Caso de éxito</div></div>
       <div class="step-item"><div class="step-num">3</div><div class="step-label">Implementación</div></div>
       <div class="step-item"><div class="step-num">4</div><div class="step-label">Digital/AI Roadmap</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECCIÓN 2 — Transformación (card derecha) -->
+<section class="scroll-section reverse" id="transformacion">
+  <div class="section-card">
+    <img src="card-transformacion.png" alt="Transformación — capas de montaña">
+    <div class="section-card-label">
+      <svg width="28" height="28" viewBox="0 0 60 60" fill="none">
+        <polygon points="30,52 6,18 54,6" stroke="#F0F4F0" stroke-width="4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="30" cy="52" r="5" fill="#F0F4F0"/>
+      </svg>
+      Transformación
+    </div>
+  </div>
+  <div class="section-content">
+    <div class="section-title">Diagnóstico, planificación e implementación hands-on.</div>
+    <div class="step-sequence">
+      <div class="step-item"><div class="step-num">1</div><div class="step-label">Diagnóstico</div></div>
+      <div class="step-item"><div class="step-num">2</div><div class="step-label">Innovación y prototipado</div></div>
+      <div class="step-item"><div class="step-num">3</div><div class="step-label">Desarrollo</div></div>
+      <div class="step-item"><div class="step-num">4</div><div class="step-label">Implementación y adopción</div></div>
     </div>
   </div>
 </section>
