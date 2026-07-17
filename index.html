@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<!-- VertexSur index.html — v1.6 (3 secciones nuevas: Transformación / Estrategia Digital / VertexLab, con cards trapezoidales) -->
+<!-- VertexSur index.html — v1.7 (ajustes mobile: hero flex/min-height, footer-links en columna, sin overflow:hidden) -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VertexSur</title>
@@ -232,12 +232,25 @@
 
   @media (max-width: 600px) {
     nav { padding: 16px 20px; }
-    .hero { padding: 0 20px; grid-template-rows: 53fr 40fr 7fr; }
-    .hero-top-block { grid-template-rows: 10fr 25fr 18fr; }
+    .hero-screen { height: auto; min-height: 100svh; }
+    .hero {
+      display: flex;
+      flex-direction: column;
+      padding: 0 20px 28px;
+      overflow: visible;
+      gap: 24px;
+    }
+    .hero-top-block {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding-top: 36px;
+    }
     h1 { font-size: 34px; }
     .subtitulo { font-size: 15px; }
-    .footer-links { gap: 20px; flex-wrap: wrap; }
-    .footer-link { font-size: 13px; }
+    .cards-wrap { padding-right: 0; justify-content: flex-start; }
+    .footer-links { flex-direction: column; align-items: flex-start; gap: 10px; flex-wrap: nowrap; }
+    .footer-link { font-size: 14px; }
   }
 
   /* Botón diagnóstico — espacio derecho del hero */
@@ -355,7 +368,7 @@
   </div>
 
   <div class="footer-wrap">
-    <div class="footer-copy">© 2026 VertexSur · v1.6</div>
+    <div class="footer-copy">© 2026 VertexSur · v1.7</div>
   </div>
 
 </div>

@@ -154,6 +154,16 @@
   .nav-link { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: var(--muted-dark); text-decoration: none; transition: color 0.2s; }
   .nav-link:hover { color: var(--claro); }
   .btn-contacto { padding: 9px 20px; background: var(--verde); color: var(--claro); border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; transition: background 0.2s; }
+
+  /* ---- Fix mínimo mobile (MVP): evitar contenido inalcanzable, sin rediseño ---- */
+  @media (max-width: 600px) {
+    nav { padding: 12px 20px; }
+    html, body { height: auto; min-height: 100svh; overflow-y: auto; overflow-x: hidden; }
+    .carousel { min-height: 480px; overflow: visible; }
+    .slide { overflow: visible; }
+    .quadrant-wrap { width: min(305px, 72vw); }
+    .chart-frame { padding: 20px 16px; }
+  }
 </style>
 </head>
 <body>
