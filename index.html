@@ -225,7 +225,7 @@
   .first-scroll-section .section-card { padding-top: 70px; }
 
   @media (max-width: 800px) {
-    .scroll-section, .scroll-section.reverse { flex-direction: column; min-height: 0; }
+    .scroll-section, .scroll-section.reverse { flex-direction: column; min-height: 100svh; }
     .section-card { flex: 0 0 340px; min-height: 340px; clip-path: none !important; width: 100%; }
     .section-content { padding: 28px 24px 32px; }
     .section-title { font-size: 20px; margin-bottom: 16px; }
@@ -290,6 +290,20 @@
   }
   @media (max-width: 900px) {
     .quiz-hero-btn { display: none; }
+  }
+
+  /* Botón Pathway — versión mobile, en flujo normal debajo de las 3 secciones */
+  .mobile-pathway-btn { display: none; }
+  @media (max-width: 900px) {
+    .mobile-pathway-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; margin-top: 20px; padding: 14px 20px;
+      background: var(--verde); border: 2px solid var(--claro); border-radius: 12px;
+      font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 15px;
+      color: var(--claro); text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .mobile-pathway-btn:hover { background: var(--verde-light); color: var(--indigo); }
   }
 </style>
   <!-- Google Analytics -->
@@ -377,6 +391,8 @@
       <a href="#vertexlab" class="footer-link">VertexLab</a>
     </div>
   </div>
+
+  <a href="diagnostico.html" class="mobile-pathway-btn">Pathway</a>
 
   <div class="footer-wrap">
     <div class="footer-copy">© 2026 VertexSur · v2.1</div>
