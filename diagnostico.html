@@ -86,7 +86,7 @@
   h1.step-title { font-family: 'Outfit', sans-serif; font-size: 19px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 3px; }
   .step-subtitulo { color: #B8C0D4; font-size: 12px; max-width: 400px; margin: 0 auto; }
 
-  .light-section { width: 100%; flex: 1; background: var(--bg-claro); color: var(--indigo); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 20px; overflow: hidden; }
+  .light-section { width: 100%; flex: 1; background: var(--bg-claro); color: var(--indigo); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 20px; overflow-y: auto; overflow-x: hidden; }
 
   .chart-frame { background: var(--bg-chart); border: 1px solid rgba(107,140,107,0.25); border-radius: 16px; padding: 24px 40px; box-shadow: 0 4px 20px rgba(12,14,26,0.06); }
   .quadrant-wrap { position: relative; width: 305px; aspect-ratio: 1/1; }
@@ -138,7 +138,8 @@
   .row-sa-1 { top: 0px; } .row-sa-2 { top: 86px; } .row-sa-3 { top: 172px; } .row-sa-4 { top: 258px; } .row-sa-5 { top: 344px; }
 
   /* PASO 3 */
-  .insight-final { max-width: 420px; background: #F0F5F0; border: 2px solid var(--verde); border-radius: 14px; padding: 18px 22px; margin-bottom: 18px; text-align: left; box-shadow: 0 4px 16px rgba(107,140,107,0.15); }
+  .insight-final { max-width: 560px; background: #F0F5F0; border: 2px solid var(--verde); border-radius: 14px; padding: 18px 22px; margin-bottom: 18px; text-align: left; box-shadow: 0 4px 16px rgba(107,140,107,0.15); }
+  .insight-final-context { font-family: 'Outfit', sans-serif; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--verde); margin-bottom: 12px; }
   .insight-final-row { font-size: 13.5px; line-height: 1.5; color: var(--indigo); margin-bottom: 10px; }
   .insight-final-row:last-child { margin-bottom: 0; }
   .insight-final-label { font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--verde); display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
@@ -283,9 +284,10 @@
     </div>
     <div class="light-section">
       <div class="insight-final">
-        <div class="insight-final-row"><span class="insight-final-label">Tu madurez digital:</span> <span id="insightFinalDigital"></span></div>
-        <div class="insight-final-row"><span class="insight-final-label">Tu objetivo:</span> <span id="insightFinalObjetivo"></span></div>
-        <div class="insight-final-row"><span class="insight-final-label">Nuestra propuesta:</span> <span id="insightFinalPropuesta"></span></div>
+        <div class="insight-final-context" id="insightFinalContext"></div>
+        <div class="insight-final-row"><span class="insight-final-label">Lo que vemos</span> <span id="insightFinalDigital"></span></div>
+        <div class="insight-final-row"><span class="insight-final-label">Por dónde empezar</span> <span id="insightFinalObjetivo"></span></div>
+        <div class="insight-final-row"><span class="insight-final-label">Primer paso con VertexSur</span> <span id="insightFinalPropuesta"></span></div>
       </div>
       <a href="contacto.html" id="btnContacto" class="btn-diagnostico-contacto">Sigamos la conversación</a>
     </div>
@@ -303,6 +305,7 @@
 
   const state = { cuadrante: null, categoria: null };
 
+  // ---- PASO 1: mensaje de "punto de partida" por cuadrante ----
   const bloqueA = {
     bl_ba: "Con procesos todavía poco sistematizados, el foco natural está en optimizar lo que ya tenés antes de sumar complejidad.",
     bl_aa: "Con procesos todavía poco sistematizados, el foco está en transformar cómo trabaja tu organización, no solo optimizarla.",
@@ -311,20 +314,109 @@
   };
   const quadToBloqueA = { tl: 'bl_aa', tr: 'al_aa', bl: 'bl_ba', br: 'al_ba' };
 
-  const categoriaNombre = {
-    C1: "rediseñar procesos",
-    C2: "innovar y crear algo nuevo",
-    C3: "decidir con mejores datos",
-    C4: "gestionar un cambio organizacional",
-    C5: "explorar sin un foco definido todavía"
+  // ---- Etiquetas de contexto para Paso 3 ----
+  const cuadranteLabel = {
+    tl: 'Poco sistematizado · Transformar',
+    tr: 'Sistemas integrados · Transformar',
+    bl: 'Poco sistematizado · Optimizar',
+    br: 'Sistemas integrados · Optimizar'
+  };
+  const temaLabel = {
+    C1: 'Rediseñar procesos',
+    C2: 'Innovar / crear algo nuevo',
+    C3: 'Decidir con datos',
+    C4: 'Cambio organizacional',
+    C5: 'Todavía no lo sé'
   };
 
-  const bloqueB = {
-    C1: "un buen punto de partida para encarar el rediseño de procesos. ¿Te interesaría explorarlo?",
-    C2: "terreno fértil para entender mejor la experiencia de tus clientes y prototipar algo nuevo a partir de ahí.",
-    C3: "el siguiente paso es convertir los datos que ya generás en pronósticos y luego decisiones.",
-    C4: "el paso siguiente es diseñar en conjunto el plan de change management.",
-    C5: "buen punto de partida para explorarlo juntos, sin apurar una respuesta."
+  // ---- PASO 3: matriz completa de 16 combinaciones (Digitalización x Ambición x Tema) ----
+  const combos = {
+    tr_C2: {
+      vemos: "Tenés una base tecnológica sólida y querés ir más allá de optimizar lo que ya funciona. El desafío no es la tecnología — es identificar qué nuevo valor podés crear y cómo probarlo rápido antes de invertir a escala.",
+      comoEmpezar: "Explorar con metodología de diseño — entender mejor a tus clientes, identificar oportunidades no evidentes y prototipar una solución concreta antes de desarrollarla. Técnicas como entrevistas en profundidad, mapeo de experiencia del cliente y definición de un segmento inicial ayudan a focalizar antes de desarrollar.",
+      primerPaso: "Una sesión de discovery para mapear oportunidades y definir estrategia de producto."
+    },
+    tr_C3: {
+      vemos: "Tenés sistemas que generan datos pero probablemente no los estés aprovechando al máximo para tomar decisiones. El salto no es técnico — es aprender a leer lo que los datos ya te están diciendo y convertirlo en acción concreta.",
+      comoEmpezar: "Identificar qué decisiones se toman hoy de forma intuitiva y podrían apoyarse en datos. Técnicas como el mapeo de decisiones clave y dashboards simples ayudan a empezar. AI puede acelerar ese proceso — generando reportes automáticos o identificando patrones en grandes volúmenes de información.",
+      primerPaso: "Una sesión para mapear qué datos tenés, qué decisiones querés mejorar y qué tan lejos estás de poder hacerlo."
+    },
+    tr_C1: {
+      vemos: "El rediseño de procesos es una base sólida para la transformación. Con las preguntas correctas podemos ir desde una mejora puntual hasta un rediseño completo — la profundidad del cambio emerge del diagnóstico.",
+      comoEmpezar: "Mapear los procesos actuales para identificar cuáles agregan valor, cuáles generan fricciones y cuáles podrían eliminarse. Técnicas como el mapeo de procesos y el rediseño desde cero permiten cuestionar supuestos y proponer algo genuinamente diferente. AI puede acompañar ese rediseño — simulando escenarios o incorporando agentes de AI.",
+      primerPaso: "Una sesión de diagnóstico para mapear procesos clave, identificar qué cambiar y definir por dónde empezar."
+    },
+    tr_C4: {
+      vemos: "El cambio organizacional es el más complejo de gestionar — implica cambiar hábitos, roles y formas de trabajar arraigadas. El éxito depende tanto del plan como de cómo se acompaña a las personas en el proceso.",
+      comoEmpezar: "Diagnosticar el punto de partida — qué tan lista está la organización para el cambio, dónde están las resistencias y quiénes son los actores clave. Metodologías como ADKAR ayudan a estructurar el proceso de adopción, asegurando que el cambio se incorpore a la forma de trabajar.",
+      primerPaso: "Una sesión de diagnóstico para mapear el estado de la organización y definir un plan de change management adaptado a tu contexto."
+    },
+    br_C3: {
+      vemos: "Tenés sistemas que funcionan y querés sacarles más partido. El potencial está en usar mejor lo que ya generás — convertir los datos existentes en decisiones más rápidas y fundamentadas sin necesidad de grandes inversiones.",
+      comoEmpezar: "Identificar qué reportes o análisis se hacen hoy de forma manual y qué decisiones clave podrían mejorarse con información más oportuna. Dashboards simples permiten empezar rápido. AI puede acelerar ese proceso — clasificando información, identificando patrones o generando reportes automáticos.",
+      primerPaso: "Una sesión para mapear qué datos tenés disponibles y qué decisiones querés mejorar con ellos."
+    },
+    br_C1: {
+      vemos: "Tenés sistemas que funcionan y querés optimizar cómo se hacen las cosas. No se trata de cambiar la tecnología sino de cuestionar si los procesos actuales son los mejores para lo que necesitás hoy.",
+      comoEmpezar: "Mapear los procesos actuales para identificar cuáles agregan valor, cuáles generan fricciones y cuáles podrían eliminarse. Técnicas como el mapeo de procesos y el rediseño desde cero permiten cuestionar supuestos y proponer algo más eficiente. AI puede acompañar ese rediseño — automatizando tareas repetitivas o generando información en tiempo real.",
+      primerPaso: "Una sesión de diagnóstico para mapear procesos clave e identificar cuáles tienen mayor impacto si se rediseñan."
+    },
+    br_C2: {
+      vemos: "Querés innovar pero sin perder lo que ya funciona — y eso es una tensión inteligente. No toda innovación implica cambiar todo desde cero. A veces el mayor potencial está en mejorar lo que ya tenés y abrir espacios de experimentación en paralelo, sin poner en riesgo la operación actual.",
+      comoEmpezar: "Identificar qué procesos o productos existentes tienen potencial de mejora y cuáles son candidatos a innovación. Técnicas como el mapeo de oportunidades y sesiones de design thinking permiten explorar sin comprometer la operación. VertexLab es el espacio ideal para prototipar sin riesgo.",
+      primerPaso: "Una sesión para mapear qué optimizar, qué innovar y cómo hacerlo en paralelo sin comprometer lo que ya funciona."
+    },
+    br_C4: {
+      vemos: "Tenés una base tecnológica que funciona y querés optimizar cómo opera tu equipo — no cambiando todo desde cero sino mejorando cómo las personas trabajan con lo que ya tienen. El desafío no es técnico sino cultural y organizacional.",
+      comoEmpezar: "Diagnosticar el punto de partida — qué hábitos y formas de trabajar están frenando la optimización, dónde están las resistencias y quiénes son los actores clave para impulsar el cambio. Metodologías como ADKAR ayudan a estructurar el proceso de adopción sin imponer desde arriba.",
+      primerPaso: "Una sesión de diagnóstico para mapear el estado del equipo y definir un plan de adopción concreto."
+    },
+    tl_C2: {
+      vemos: "Avanzar sin una base clara de procesos y datos tiene riesgos — la transformación puede generar más caos que cambio. Por eso es importante paralelizar: construir la base mientras se avanza, para que la innovación tenga donde apoyarse. Con ese sustento, el camino hacia algo genuinamente nuevo es más sólido y sostenible.",
+      comoEmpezar: "Combinar un diagnóstico de procesos con exploración de oportunidades — para no frenar la innovación pero tampoco avanzar sin base. Técnicas como el mapeo de procesos y sesiones de design thinking ayudan a identificar qué ordenar primero y qué innovar en paralelo.",
+      primerPaso: "Una sesión de diagnóstico para entender qué base hay que consolidar y qué oportunidades de innovación vale la pena explorar desde ahora."
+    },
+    tl_C3: {
+      vemos: "Avanzar sin una base clara tiene riesgos — la disponibilidad y calidad de la información es crítica. El primer paso es trabajar sobre esa calidad antes de escalar. Por eso es importante paralelizar: ordenar los datos y procesos mientras se construye la capacidad de decidir con datos.",
+      comoEmpezar: "Empezar por la calidad y disponibilidad de los datos — sin esa base, cualquier análisis puede llevar a conclusiones equivocadas. En paralelo, ordenar los procesos más críticos y definir qué información necesitás para gestionarlos. AI puede acelerar ese proceso — generando reportes automáticos o identificando patrones en grandes volúmenes de información.",
+      primerPaso: "Una sesión para mapear qué datos tenés, qué calidad tienen y qué decisiones de transformación querés mejorar con ellos."
+    },
+    tl_C1: {
+      vemos: "Avanzar sin una base clara tiene riesgos — transformar sobre estructuras débiles puede generar más confusión que cambio. Por eso es importante paralelizar: ordenar mientras se rediseña. El rediseño de procesos es una base sólida para la transformación — con las preguntas correctas podemos ir desde una mejora puntual hasta un rediseño completo.",
+      comoEmpezar: "Mapear los procesos actuales para identificar cuáles agregan valor, cuáles generan fricciones y cuáles podrían eliminarse. Técnicas como el mapeo de procesos y el rediseño desde cero permiten cuestionar supuestos y proponer algo genuinamente diferente. AI puede acompañar ese rediseño — simulando escenarios o incorporando agentes de AI.",
+      primerPaso: "Una sesión de diagnóstico para mapear procesos clave, identificar qué cambiar y definir por dónde empezar."
+    },
+    tl_C4: {
+      vemos: "Avanzar sin una base clara tiene riesgos — gestionar el cambio organizacional sobre procesos poco definidos puede amplificar la resistencia y generar confusión. Por eso es importante paralelizar: consolidar la base mientras se acompaña el cambio. El éxito depende tanto del plan como de cómo se acompaña a las personas en el proceso.",
+      comoEmpezar: "Diagnosticar el punto de partida — qué tan lista está la organización para el cambio, dónde están las resistencias y quiénes son los actores clave. En paralelo, identificar qué procesos básicos hay que ordenar para que el cambio tenga donde apoyarse. Metodologías como ADKAR ayudan a estructurar el proceso de adopción.",
+      primerPaso: "Una sesión de diagnóstico para mapear el estado de la organización y los procesos, y definir un plan de adopción que contemple ambos."
+    },
+    bl_C3: {
+      vemos: "Avanzar sin una base clara tiene riesgos — la disponibilidad y calidad de la información es crítica. El primer paso es trabajar sobre esa calidad antes de escalar. Por eso es importante paralelizar: ordenar los datos y procesos mientras se construye la capacidad de decidir con datos.",
+      comoEmpezar: "Empezar por la calidad y disponibilidad de los datos — sin esa base, cualquier análisis puede llevar a conclusiones equivocadas. En paralelo, ordenar los procesos más críticos y definir qué información necesitás para gestionarlos mejor. Dashboards simples y AI para clasificar información o generar reportes automáticos son un buen punto de partida.",
+      primerPaso: "Una sesión para mapear qué procesos ordenar primero y qué datos necesitás para tomar mejores decisiones."
+    },
+    bl_C1: {
+      vemos: "Avanzar sin una base clara tiene riesgos — optimizar sobre procesos poco definidos puede dar resultados parciales. Por eso es importante paralelizar: ordenar y mejorar al mismo tiempo. Tenés oportunidad de ganar mucho ordenando lo que ya tenés — identificando dónde se pierde tiempo, dónde hay dependencia de personas clave y dónde un proceso más claro haría la diferencia.",
+      comoEmpezar: "Mapear los procesos actuales para identificar cuáles agregan valor, cuáles generan fricciones y cuáles podrían eliminarse. Técnicas como el mapeo de procesos y la identificación de tareas repetitivas ayudan a priorizar qué atacar primero. AI puede acelerar partes del proceso — automatizando tareas de alto volumen o generando reportes.",
+      primerPaso: "Una sesión de diagnóstico para mapear cómo opera tu empresa hoy y definir qué procesos tienen mayor impacto si se mejoran."
+    },
+    bl_C2: {
+      vemos: "Avanzar sin una base clara tiene riesgos — innovar sobre procesos poco definidos puede generar más dispersión que valor. Por eso es importante paralelizar: construir la base mientras se exploran oportunidades. No toda innovación implica cambiar todo desde cero — a veces el mayor potencial está en mejorar lo que ya tenés y abrir espacios de experimentación en paralelo.",
+      comoEmpezar: "Identificar qué procesos o productos existentes tienen potencial de mejora y cuáles son candidatos a innovación. Técnicas como el mapeo de oportunidades y sesiones de design thinking permiten explorar sin comprometer la operación. VertexLab es el espacio ideal para prototipar sin riesgo.",
+      primerPaso: "Una sesión para mapear qué optimizar, qué innovar y cómo hacerlo en paralelo sin comprometer lo que ya funciona."
+    },
+    bl_C4: {
+      vemos: "Avanzar sin una base clara tiene riesgos — gestionar el cambio organizacional sobre procesos poco definidos puede amplificar la resistencia. Por eso es importante paralelizar: consolidar la base mientras se acompaña el cambio. El éxito depende tanto del plan como de cómo se acompaña a las personas en el proceso.",
+      comoEmpezar: "Diagnosticar el punto de partida — qué tan lista está la organización para el cambio, dónde están las resistencias y quiénes son los actores clave. En paralelo, identificar qué procesos básicos hay que ordenar para que el cambio tenga donde apoyarse. Metodologías como ADKAR ayudan a estructurar el proceso de adopción.",
+      primerPaso: "Una sesión de diagnóstico para mapear el estado de la organización y los procesos, y definir un plan de adopción que contemple ambos."
+    }
+  };
+
+  const cualquierNivel = {
+    vemos: "No tener claro el foco todavía es un punto de partida más común de lo que parece. A veces la sensación de estancamiento o incapacidad de escalar es suficiente señal para empezar a explorar.",
+    comoEmpezar: "Una conversación abierta de diagnóstico, sin agenda previa, para entender cómo opera tu empresa hoy y qué oportunidades emergen naturalmente. A veces el foco aparece cuando alguien de afuera hace las preguntas correctas.",
+    primerPaso: "Una reunión exploratoria para entender tu contexto y ver juntos por dónde tiene más sentido empezar."
   };
 
   // ---- Navegación carrusel ----
@@ -399,21 +491,26 @@
     trackEvent('quiz_paso2_seleccion', { categoria: state.categoria });
   }
 
-  // ---- PASO 3: insight final + form ----
+  // ---- PASO 3: insight final combinando cuadrante + categoria ----
   document.getElementById('slide3').addEventListener('transitionstart', renderFinalInsight);
 
   function renderFinalInsight() {
     if (!state.cuadrante || !state.categoria) return;
-    const digital = bloqueA[quadToBloqueA[state.cuadrante]];
-    const objetivoRaw = categoriaNombre[state.categoria];
-    const objetivo = objetivoRaw.charAt(0).toUpperCase() + objetivoRaw.slice(1) + '.';
-    const propuestaRaw = bloqueB[state.categoria];
-    const propuesta = propuestaRaw.charAt(0).toUpperCase() + propuestaRaw.slice(1);
 
-    document.getElementById('insightFinalDigital').textContent = digital;
-    document.getElementById('insightFinalObjetivo').textContent = objetivo;
-    document.getElementById('insightFinalPropuesta').textContent = propuesta;
+    const combo = state.categoria === 'C5'
+      ? cualquierNivel
+      : combos[state.cuadrante + '_' + state.categoria];
 
+    const contexto = state.categoria === 'C5'
+      ? 'Cualquier nivel · ' + temaLabel[state.categoria]
+      : cuadranteLabel[state.cuadrante] + ' · ' + temaLabel[state.categoria];
+
+    document.getElementById('insightFinalContext').textContent = contexto;
+    document.getElementById('insightFinalDigital').textContent = combo.vemos;
+    document.getElementById('insightFinalObjetivo').textContent = combo.comoEmpezar;
+    document.getElementById('insightFinalPropuesta').textContent = combo.primerPaso;
+
+    trackEvent('quiz_paso3_view', { cuadrante: state.cuadrante, categoria: state.categoria });
   }
 
   // Render también al llegar al paso 3 vía flecha
@@ -421,50 +518,6 @@
     if (document.getElementById('slide3').classList.contains('active')) renderFinalInsight();
   });
   observer.observe(document.getElementById('slide3'), { attributes: true, attributeFilter: ['class'] });
-
-  document.getElementById('form3').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const nombre = document.getElementById('fNombre');
-    const empresa = document.getElementById('fEmpresa');
-    const mail = document.getElementById('fMail');
-    const hint = document.getElementById('form3Hint');
-    const campos = [nombre, empresa, mail];
-    const faltantes = campos.filter(c => !c.value.trim());
-
-    campos.forEach(c => c.classList.remove('field-missing'));
-
-    if (faltantes.length > 0) {
-      faltantes.forEach(c => c.classList.add('field-missing'));
-      hint.textContent = 'Nos falta algún dato para poder escribirte — ¿nos ayudás a completarlo? 🙂';
-      hint.style.display = 'block';
-      return;
-    }
-
-    hint.style.display = 'none';
-
-    const formData = new FormData(form);
-    formData.append('diagnóstico_cuadrante', state.cuadrante || '');
-    formData.append('diagnóstico_categoria', categoriaNombre[state.categoria] || '');
-
-    fetch(form.action, {
-      method: 'POST',
-      body: formData,
-      headers: { 'Accept': 'application/json' }
-    }).then(response => {
-      trackEvent('quiz_paso3_contacto_enviado', { cuadrante: state.cuadrante, categoria: state.categoria });
-      if (response.ok) {
-        form.style.display = 'none';
-        document.getElementById('form3Done').style.display = 'block';
-      } else {
-        hint.textContent = 'Algo falló al enviar — probá de nuevo en un momento, por favor.';
-        hint.style.display = 'block';
-      }
-    }).catch(() => {
-      hint.textContent = 'Algo falló al enviar — probá de nuevo en un momento, por favor.';
-      hint.style.display = 'block';
-    });
-  });
 </script>
 
 </body>
