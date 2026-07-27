@@ -55,23 +55,40 @@
     clip-path: polygon(0 0, 100% 0, 82% 100%, 0 100%);
   }
   .section-card img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(1.04) saturate(1.08) contrast(1.02); }
+  .section-card::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: rgba(107,140,107,0.28);
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
 
   .section-content {
     flex: 1;
     display: flex; flex-direction: column; justify-content: center;
-    padding: 60px 70px;
+    padding: 44px 70px;
   }
   .person-name {
-    font-family: 'Outfit', sans-serif; font-size: 34px; font-weight: 700;
-    letter-spacing: -0.02em; color: var(--bg1); margin-bottom: 28px;
+    font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 700;
+    letter-spacing: -0.02em; color: var(--bg1); margin-bottom: 0;
   }
+  .name-row { display: flex; align-items: center; gap: 12px; margin-top: 28px; margin-bottom: 20px; }
+  .name-row svg { flex-shrink: 0; }
+
 
   .bio p {
-    font-size: 15.5px; line-height: 1.7; color: var(--muted-dark);
-    text-align: justify; margin-bottom: 18px;
+    font-size: 13.5px; line-height: 1.55; color: var(--muted-dark);
+    text-align: justify; margin-bottom: 13px;
   }
   .bio p:last-child { margin-bottom: 0; }
   .bio strong { color: var(--bg1); font-weight: 600; }
+  .bio strong.cultura-tagline { color: var(--verde); }
+
+  .cultura-heading {
+    font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 700;
+    letter-spacing: -0.02em; color: var(--bg1);
+    margin-bottom: 20px;
+  }
 
   .site-footer { background: var(--bg1); color: var(--muted); text-align: center; padding: 28px 40px 20px; font-size: 11px; }
   .footer-channels { display: flex; justify-content: center; gap: 20px; margin-bottom: 14px; }
@@ -88,8 +105,11 @@
     .scroll-section { flex-direction: column; min-height: 0; }
     .section-card { flex: 0 0 340px; min-height: 340px; clip-path: none !important; width: 100%; }
     .section-content { padding: 28px 24px 32px; }
-    .person-name { font-size: 24px; margin-bottom: 16px; }
+    .person-name { font-size: 24px; margin-bottom: 0; }
+    .name-row { margin-top: 20px; margin-bottom: 14px; }
+    .name-row svg { width: 22px; height: 22px; }
     .bio p { font-size: 14px; text-align: left; margin-bottom: 14px; }
+    .cultura-heading { font-size: 24px; margin-bottom: 16px; }
   }
 
   @media (max-width: 600px) {
@@ -122,10 +142,24 @@
     <img src="card-quienes-somos.jpg" alt="Equipo VertexSur trabajando">
   </div>
   <div class="section-content">
-    <div class="person-name">Agustina de la Barra</div>
+    <div class="cultura-block">
+      <div class="cultura-heading" style="margin-top:0;">Nuestra cultura</div>
+      <div class="bio">
+        <p><strong class="cultura-tagline">Personas reales, equipos reales, transformación real.</strong> Creemos en la fuerza de los equipos para lograr transformaciones que perduran. Tejemos relaciones cercanas con cada cliente, acompañamos cada etapa y nos comprometemos con sus resultados.</p>
+        <p>Nuestras raíces son la ingeniería aplicada, el management y la convicción de que hace falta creatividad y algo de osadía para que el cambio suceda.</p>
+        <p>Trabajamos con libertad para crear, con respeto genuino por la diversidad y con la convicción de generar una diferencia real en cada cliente.</p>
+      </div>
+    </div>
+    <div class="name-row">
+      <svg width="30" height="30" viewBox="0 0 60 60" fill="none">
+        <polygon points="30,52 6,18 54,6" stroke="#6B8C6B" stroke-width="4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="30" cy="52" r="5" fill="#6B8C6B"/>
+      </svg>
+      <div class="person-name">Agustina de la Barra</div>
+    </div>
     <div class="bio">
       <p>Consultora especializada en transformación, procesos y cambio organizacional. Soy Ingeniera Industrial (UBA) y MBA (UTDT), con 25 años de experiencia global liderando programas de cambio operacional y digitalización en Argentina, Italia, México, Rumania, Estados Unidos y Canadá. Conduje equipos distribuidos en entornos industriales complejos, con foco en operaciones de Planificación, Logística y Supply Chain.</p>
-      <p>Hoy acompaño a pequeñas y medianas empresas y sus equipos a revisar cómo operan, incorporar tecnología con propósito y lograr cambios tangibles que perduren. VertexSur nace de esa convicción: <strong>transformación real, hands-on.</strong></p>
+      <p>Hoy acompaño a pequeñas y medianas empresas y sus equipos a revisar cómo operan, incorporar tecnología con propósito y lograr cambios tangibles que perduren.</p>
     </div>
   </div>
 </section>
