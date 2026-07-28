@@ -166,6 +166,14 @@
     .chart-frame { padding: 20px 16px; }
   }
 </style>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-T9LPLE99YX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-T9LPLE99YX");
+  </script>
 </head>
 <body>
 
@@ -297,10 +305,12 @@
 <div class="cookie-notice">Este sitio usa cookies de análisis (Google Analytics) para entender cómo se usa. Al navegar, aceptás su uso.</div>
 
 <script>
-  // ---- stub de GA4: reemplazar por gtag() real al integrar ----
+  // ---- GA4 activo ----
   function trackEvent(name, params) {
     console.log('[GA4 event]', name, params || {});
-    // gtag('event', name, params || {});
+    if (typeof gtag === 'function') {
+      gtag('event', name, params || {});
+    }
   }
 
   const state = { cuadrante: null, categoria: null };
