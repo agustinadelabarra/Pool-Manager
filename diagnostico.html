@@ -122,7 +122,7 @@
 
   .insight-card { margin-top: 16px; max-width: 400px; background: #F0F5F0; border: 2px solid var(--verde); border-radius: 12px; padding: 14px 20px; box-shadow: 0 4px 16px rgba(107,140,107,0.15); text-align: center; }
   .insight-tag { font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 700; color: var(--verde); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 3px; }
-  .insight-box { margin-top: 6px; width: 410px; min-height: 68px; max-width: 100%; background: #F0F5F0; border: 2px solid var(--verde); border-radius: 12px; padding: 7px 20px; box-shadow: 0 4px 16px rgba(107,140,107,0.15); opacity: 0; transform: translateY(8px); transition: opacity 0.4s ease, transform 0.4s ease; text-align: center; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; }
+  .insight-box { margin-top: 6px; width: 410px; height: 86px; max-width: 100%; background: #F0F5F0; border: 2px solid var(--verde); border-radius: 12px; padding: 7px 20px; box-shadow: 0 4px 16px rgba(107,140,107,0.15); opacity: 0; transform: translateY(8px); transition: opacity 0.4s ease, transform 0.4s ease; text-align: center; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; }
   .insight-box.visible { opacity: 1; transform: translateY(0); }
   .insight-text { font-size: 13px; line-height: 1.4; color: var(--indigo); }
 
@@ -207,8 +207,8 @@
   <div class="slide active" id="slide1">
     <div class="step-header">
       <div class="step-label">Paso 1 de 3</div>
-      <h1 class="step-title">¿Dónde estás hoy?</h1>
-      <p class="step-subtitulo">Ubicá a tu empresa en el plano de abajo.</p>
+      <h1 class="step-title">Tu diagnóstico empieza acá.</h1>
+      <p class="step-subtitulo">Saber dónde estás hoy es clave para transformar.</p>
     </div>
     <div class="light-section">
       <div class="chart-frame">
@@ -224,7 +224,7 @@
             <div class="quad-bg q-br"></div>
             <div class="axis-line axis-v"></div>
             <div class="axis-line axis-h"></div>
-            <div class="axis-watermark wm-digital">Digitalización</div>
+            <div class="axis-watermark wm-digital">Sistematización</div>
             <div class="axis-watermark wm-ambicion">Ambición</div>
             <div class="axis-sign sign-h-minus">–</div>
             <div class="axis-sign sign-h-plus">+</div>
@@ -469,6 +469,30 @@
   const marker = document.getElementById('marker');
   const insightBox = document.getElementById('insightBox');
   const insightTextP1 = document.getElementById('insightTextP1');
+
+  function updatePreview(clientX, clientY) {
+    const rect = quadrant.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+    if (x < 0 || y < 0 || x > rect.width || y > rect.height) return;
+    const half = rect.width / 2;
+    let key;
+    if (x < half && y < half) key = 'tl';
+    else if (x >= half && y < half) key = 'tr';
+    else if (x < half && y >= half) key = 'bl';
+    else key = 'br';
+    insightTextP1.textContent = bloqueA[quadToBloqueA[key]];
+    insightBox.classList.add('visible');
+  }
+
+  quadrant.addEventListener('mousemove', (e) => {
+    updatePreview(e.clientX, e.clientY);
+  });
+
+  quadrant.addEventListener('touchmove', (e) => {
+    const touch = e.touches[0];
+    if (touch) updatePreview(touch.clientX, touch.clientY);
+  }, { passive: true });
 
   quadrant.addEventListener('click', (e) => {
     const rect = quadrant.getBoundingClientRect();
